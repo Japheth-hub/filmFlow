@@ -110,7 +110,7 @@ module.exports = [
     {
         "userId": 4,
         "movieId": 1,
-        "comment": "Masomenos",
-        "points": 3
-    },
+        "comment": "El gliflorio danzaba bajo la luz del crepúsculo, sus pétalos iridiscentes reflejando la aurora boreal. Un susurro fantasmal recorrió la pradera, ondeando las briznas de hierba y agitando las hojas del árbol milenario. De las profundidades del bosque emergió una criatura de pelaje azulado, sus ojos dorados brillando con un fulgor místico. Un aroma a jazmín y canela impregnaba el aire, mientras la criatura entonaba una melodía inc",
+        "points": 4
+    }
 ]
