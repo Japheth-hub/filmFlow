@@ -110,7 +110,7 @@ module.exports = [
     {
         "userId": 4,
         "movieId": 1,
-        "comment": "El gliflorio danzaba bajo la luz del crepúsculo, sus pétalos iridiscentes reflejando la aurora boreal. Un susurro fantasmal recorrió la pradera, ondeando las briznas de hierba y agitando las hojas del árbol milenario. De las profundidades del bosque emergió una criatura de pelaje azulado, sus ojos dorados brillando con un fulgor místico. Un aroma a jazmín y canela impregnaba el aire, mientras la criatura entonaba una melodía inc",
+        "comment": "Pulp Fiction te sumerge en un submundo criminal de Los Ángeles, donde sicarios, un boxeador y la esposa de un gángster se cruzan en una trama llena de violencia, humor negro y referencias a la cultura pop. Diálogos memorables, personajes icónicos y una estructura narrativa no lineal te mantienen en suspenso. La violencia puede ser excesiva para algunos y la trama un poco confusa al principio, pero si buscas una película llena de acción, personajes memorables y diálogos ingeniosos, Pulp Fiction es para ti. Véala en su idioma original para disfrutar al máximo",
         "points": 4
-    }
+    },
 ]

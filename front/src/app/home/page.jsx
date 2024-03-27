@@ -48,7 +48,6 @@ const Home = () => {
     if(user){
       const upUser = async() => {
         const { data } = await axios.post(`${URL}users`, user)
-        console.log(data);
         //Creación de usuario en el localStorage
         if(!window.localStorage.getItem('FilmFlowUsr')){          
           window.localStorage.setItem(
@@ -73,7 +72,7 @@ const Home = () => {
         {!user ? <a href="/api/auth/login"><button>Login</button></a> : <h2>{user.nickname}</h2>}
       </div>
     </div>
-    <Carousel movie={movie} dim={['900px', '400px']}/>
+    <Carousel movie={movie} dim={['900px', '400px']} autoplay={5}/>
     <div>
       <Filters genres={genres}/>
     </div>

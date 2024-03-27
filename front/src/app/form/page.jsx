@@ -238,7 +238,7 @@ const MovieForm = () => {
               />
               {trailer && (
                 <div className={style["image-preview-container"]}>
-                  <video src={window.URL.createObjectURL(trailer)} alt="Preview" className={style["poster-preview"]} />
+                  <video src={window.URL.createObjectURL(trailer)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
             </div>
@@ -254,7 +254,7 @@ const MovieForm = () => {
               />
               {movie && (
                 <div className={style["image-preview-container"]}>
-                  <video src={window.URL.createObjectURL(movie)} alt="Preview" className={style["poster-preview"]} />
+                  <video src={window.URL.createObjectURL(movie)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
             </div>
