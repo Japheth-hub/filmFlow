@@ -2,11 +2,13 @@
 import axios from "axios";
 import Movies from "../movies/Movies";
 import Carousel from "../carousel/Carousel";
+import SearchBar from "../searchBar/searchBar";
 import { useState, useEffect } from "react";
 import Link from 'next/link';
 
 const Home = () => {
   const URL = process.env.NEXT_PUBLIC_URL
+  const [results, setResults] = useState([])
   const [movie, setMovie] = useState(
     [{
       id: 'cargando',
@@ -21,6 +23,20 @@ const Home = () => {
     getMovies()
   },[]);
 
+
+  const handleSearch = async (query) => {
+    try {
+      const response = await axios(` http://localhost:3001/movies?search=${query}`)
+      console.log('pelis', response);
+      const data = await response.data
+      console.log('ola', data)
+      setResults(data)
+    } catch (error) {
+      
+    }
+
+  }
+
   return (
   <div>
     {/* HEADER */}
@@ -31,7 +47,7 @@ const Home = () => {
       </div>
       {/* SEARCHBAR */}
       <div>
-        <h2>SearchBar</h2>
+        <SearchBar onSearch = {handleSearch}/>
       </div>
       <div>
         <h2>UserInfo</h2>
