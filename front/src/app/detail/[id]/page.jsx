@@ -44,17 +44,17 @@ const DetailContent = () => {
 
   const addToCart = async () => {
     try {
-      //Hardcodeado
-      await axios.post(`${URL}cart`, {
-        movieId: id,
-        auth: '1111'
-      });
-
-      //Usuario de auth0
+      //Hardcodeado para pruebas
       // await axios.post(`${URL}cart`, {
       //   movieId: id,
-      //   auth: user.sid
+      //   auth: '1111'
       // });
+
+      //Usuario de auth0
+      await axios.post(`${URL}cart`, {
+        movieId: id,
+        auth: user.sid
+      });
       alert('Movie added to cart successfully!');
     } catch (error) {
       console.error('Error adding movie to cart:', error);

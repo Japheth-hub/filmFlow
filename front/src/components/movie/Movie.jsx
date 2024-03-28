@@ -1,5 +1,4 @@
 import style from "./Movie.module.scss"
-import Buy from '../btnBuy/buy'
 import Link from "next/link";
 
 const Movie = ({ elem, dim }) => {
@@ -23,8 +22,6 @@ const Movie = ({ elem, dim }) => {
                 </div>
 
             </Link>
-            <div><Buy /*Aqui se le pasa el id del usuario */></Buy></div>
-
         </div>
     )
 }

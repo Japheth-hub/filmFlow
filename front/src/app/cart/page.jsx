@@ -15,10 +15,10 @@ const Cart = () => {
     const fetchData = async () => {
         try {
             //Usuario de auth0
-            // const response = await axios.get(`${URL}cart/${user.sid}`);
+            const response = await axios.get(`${URL}cart/${user.sid}`);
 
             //Hardcodeado
-            const response = await axios.get(`${URL}cart/${userId}`);
+            // const response = await axios.get(`${URL}cart/${userId}`);
 
             setCartData(response.data.movies);
         } catch (error) {
@@ -33,10 +33,10 @@ const Cart = () => {
     const handleDelete = async (id) => {
         try {
             //Usuario de auth0
-            // const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
+            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
 
             //Hardcodeado
-            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: userId}});
+            // const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: userId}});
 
             setCartData(cartData.filter(movie => movie.id !== id));
         } catch (error) {
@@ -70,7 +70,7 @@ const Cart = () => {
                     </div>
                 ))}
                 </div>
-                <Buy></Buy>
+                <Buy sid = {user.sid}></Buy>
             </div>
         </div>
     );
