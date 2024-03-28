@@ -8,9 +8,11 @@ import Button from '../../../components/button/Button'
 import Image from 'next/image'
 import cartIcon from '../../../img/cart-icon-white.svg'
 import Pill from '@/components/pill/Pill';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const DetailContent = () => {
   const { id } = useParams();
+  const { user } = useUser();
   const [movieData, setMovieData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -42,10 +44,17 @@ const DetailContent = () => {
 
   const addToCart = async () => {
     try {
+      //Hardcodeado
       await axios.post(`${URL}cart`, {
         movieId: id,
-        auth: '3333'
+        auth: '1111'
       });
+
+      //Usuario de auth0
+      // await axios.post(`${URL}cart`, {
+      //   movieId: id,
+      //   auth: user.sid
+      // });
       alert('Movie added to cart successfully!');
     } catch (error) {
       console.error('Error adding movie to cart:', error);

@@ -54,9 +54,12 @@ const Nav = (props)=> {
 
                     
                     <div className={styles.toRight}> 
-                        <li >
-                            <Image src={cart} alt="Cart" width={30} height={30} />
-                        </li>
+
+                        <Link href="/cart">
+                            <li >
+                                <Image src={cart} alt="Cart" width={30} height={30} />
+                            </li>
+                        </Link>
 
                         <li >
                             <Image src={userpic} alt="Account" width={30} height={30} onClick={handleAccountClick} />
