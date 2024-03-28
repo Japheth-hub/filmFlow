@@ -5,7 +5,7 @@ module.exports = async()=>{
     let count = 0
     for (genre of genres) {
         const [newGenre, created] = await Genre.findOrCreate({
-        where: { name: genre },
+        where: { name: genre.name,emoji:genre.emoji,label:genre.label },
         });
 
         if (created) {

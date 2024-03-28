@@ -1,0 +1,12 @@
+@import "../../scss/variables.scss";
+.footer {
+  color: $neutralLight;
+  height: 200px;
+  padding: 20px;
+  background-color: $mainColor;
+  padding-top: 50px;
+  .logo {
+    width: 200px;
+    height: auto;
+  }
+}

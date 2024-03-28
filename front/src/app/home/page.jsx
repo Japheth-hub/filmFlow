@@ -1,12 +1,14 @@
 'use client'
 import axios from "axios";
-import Movies from "../movies/Movies";
-import Carousel from "../carousel/Carousel";
-import SearchBar from "../searchBar/searchBar";
+import Movies from "../../components/movies/Movies";
+import Carousel from "../../components/carousel/Carousel";
+import SearchBar from "../../components/searchBar/searchBar";
 import { useState, useEffect } from "react";
-import Link from 'next/link';
+import Filters from "../filters/Filters";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const Home = () => {
+  const {error, isLoading, user} = useUser()
   const URL = process.env.NEXT_PUBLIC_URL
   const [results, setResults] = useState([])
   const [movie, setMovie] = useState(
@@ -15,67 +17,68 @@ const Home = () => {
       title: 'cargando'
     }]
   )
+  const [genres, setGenres] = useState(
+    [{
+      id: 'cargando',
+      name: 'cargando'
+    }]
+  )
+
   useEffect(() => {
     const getMovies = async() => {
-      let { data } = await axios.get(`${URL}fake`)
+      let { data } = await axios.get(`${URL}movies`)
       setMovie(data)
     }
+    const getGenres = async() => {
+      let { data } = await axios.get(`${URL}genres`)
+      let listGenre = data
+      listGenre.unshift({
+        id: '-1',
+        name: 'Search',
+        label: 'Search',
+        emoji:"🔍"
+      })
+      setGenres(data)
+    }
     getMovies()
+    getGenres();
+
   },[]);
 
+  useEffect( () => {
+    if(user){
+      console.log("Usuario validado, creando LS");
+      const upUser = async() => {
+        const { data } = await axios.post(`${URL}users`, user)
+        console.log(data);
 
-  const handleSearch = async (query) => {
-    try {
-      const response = await axios(` http://localhost:3001/movies?search=${query}`)
-      console.log('pelis', response);
-      const data = await response.data
-      console.log('ola', data)
-      setResults(data)
-    } catch (error) {
-      
+        //Creación de usuario en el localStorage
+        window.localStorage.setItem(
+          'FilmFlowUsr', JSON.stringify(user)
+        )
+      }
+      upUser()
     }
 
-  }
+  }, [user])
+
+
 
   return (
   <div>
-    {/* HEADER */}
     <div className="container">
-      {/* TITLE */}
-      <div> 
-        <h1>FilmFlow</h1>
-      </div>
-      {/* SEARCHBAR */}
       <div>
-        <SearchBar onSearch = {handleSearch}/>
-      </div>
-      <div>
-        <h2>UserInfo</h2>
+        {!user ? <a href="/api/auth/login"><button>Login</button></a> : <h2>{user.nickname}</h2>}
       </div>
     </div>
-    {/* FORM MOVIE*/}
-    <div className="container">
-      <Link href="/form">
-        <button>Ir a Formulario</button>
-      </Link>
-    </div>
-    {/* CARROUSEL */}
-    <Carousel movie={movie}/>
-    {/* FILTROS RÁPIDOS */}
+    <Carousel movie={movie} dim={['900px', '400px']}/>
     <div>
-      <h3>Section filters</h3> 
+      <Filters genres={genres}/>
     </div>
-    {/* COLLECTIONS */}
     <div>
       <h3>Novedades</h3>
       <Movies movie={movie} />
       <h5>Ver más..</h5>
-    </div>
-    {/* FOOTER */}
-    <div>
-      <div>
-        <h4>FOOTER</h4>
-      </div>
     </div>
   </div>
   );

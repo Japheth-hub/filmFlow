@@ -1,13 +1,20 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-    sequelize.define('Movie', {
+    sequelize.define('movie', {
         name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
         poster: {
-            //Provisional
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        trailer: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        movie: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -32,11 +39,7 @@ module.exports = (sequelize) => {
         status: {
             type: DataTypes.ENUM('approved', 'pending', 'declined'),
             allowNull: true,
-        },
-        isActive: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-        },
+        }
     },
     {paranoid : true})
 }

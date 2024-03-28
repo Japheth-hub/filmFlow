@@ -1,0 +1,28 @@
+@import "../scss/variables.scss";
+.leftArrow,
+.rightArrow {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  font-size: 50px;
+  font-weight: 700;
+  z-index: 1;
+  cursor: pointer;
+  opacity: 0.7;
+  width: 30px;
+}
+
+/* Arrows */
+.leftArrow {
+  left: 0;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.rightArrow {
+  right: 0;
+  &:hover {
+    opacity: 1;
+  }
+}

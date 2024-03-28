@@ -5,13 +5,15 @@ const orderFunction = require('../helpers/order')
 
 module.exports = async function getMovies(query){
     let {search, genre, orderType, order} = query;
-    type = orderType || ""; /*Tipo de orden (duration, name)*/ 
-    order = order || "asc"; /*Orden ascendente o descendente, por default ascendente */
+    type = orderType || ""; 
+    order = order || "asc"; 
     try {
         let data = {}
         let options = {
             include:{
-                model:Genre
+                model:Genre,
+                attributes:["id","name"],
+                through: { attributes: [] }
             }
         }; 
 
@@ -24,18 +26,28 @@ module.exports = async function getMovies(query){
         }
 
         if(genre){    
-            genre = genre.split(',').map((item) => item.trim());
+            genre = genre.split(',').map((item) => item.trim().toLowerCase());
             options.include = {
                 ...options.include,
                 where: { 
                     name: { 
-                      [Op.or]: genre // Filtra por uno o más géneros
+                      [Op.or]: genre
                     }
                 },
             }
         }
+
+
+        if(orderType){    
+            options = {
+                ...options,
+                order: [
+                    [orderType, order.toLowerCase()]
+                ]
+            }
+        }
         
-        const movies = await Movie.findAll({...options})
+        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","country","status"]})
 
         if(movies.length === 0){
             return data.message = 'No hay Peliculas'

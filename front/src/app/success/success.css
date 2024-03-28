@@ -1,0 +1,28 @@
+.success{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin: 10% auto;
+}
+.successIcon{
+    font-size: 5rem;
+}
+.successTitle{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.success a{
+    text-decoration: none;
+    color: black;
+    font-size: 2rem;
+    border: 1px solid black;
+    padding: 5px 10px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 10px black;
+}
+.success a:hover{
+    box-shadow: none;
+}

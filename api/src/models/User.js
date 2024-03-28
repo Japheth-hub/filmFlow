@@ -5,37 +5,33 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    family_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    given_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     email: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    token: {
+    sid: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
     },
-    img: {
+    picture: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: true,
     },
-    dob: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    isActive: {
-        type: DataTypes.BOOLEAN,
+    roleId: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
-    roleID: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-  });
+  },
+  {paranoid : true});
 };
 

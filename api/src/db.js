@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
 
-const sequelize = new Sequelize(
+const sequelize = new Sequelize( 
   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
   {
     logging: false,
@@ -33,12 +33,19 @@ let capsEntries = entries.map((entry) => [
 ]);
 
 sequelize.models = Object.fromEntries(capsEntries);
-const { User, Movie, Genre } = sequelize.models;
+const { User, Movie, Genre, Review,Role } = sequelize.models;
 
-Movie.belongsToMany(Genre, {
-  through: "movie_genre",
-});
+Movie.belongsToMany(Genre, { through: "movie_genre" });
 Genre.belongsToMany(Movie, { through: "movie_genre" });
+
+Movie.hasMany(Review)
+Review.belongsTo(Movie)
+
+User.hasMany(Review)
+User.hasOne(Role)
+Role.belongsTo(User)
+Review.belongsTo(User)
+
 
 module.exports = {
   ...sequelize.models,

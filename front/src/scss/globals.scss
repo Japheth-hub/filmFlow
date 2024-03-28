@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import "./variables.scss";
+
+html,
+body {
+  color: black;
+  background-color: #e9e9e9;
+  height: 100%;
+  margin: 0;
+  font-family: $secondaryFont;
+}
+
+.wrapper {
+  margin: auto;
+  max-width: 1200px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: $mainFont;
+}
+
+.container {
+  display: flex;
+  flex-flow: row wrap;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+@media only screen and (max-width: $breakpointSM) {
+  .container {
+    display: flex;
+    flex-flow: column;
+    text-align: center;
+    justify-items: stretch;
+    justify-content: stretch;
+    align-content: stretch;
+    align-items: center;
+    font-size: 0.75em;
+  }
+
+  .movie-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .back-button {
+    margin-bottom: 20px;
+  }
+
+  .form-wrapper {
+    width: 400px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    font-weight: bold;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 90%;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .genre-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .genre-list li {
+    margin-bottom: 5px;
+  }
+
+  .poster-preview {
+    max-width: 200px;
+  }
+
+  .submit-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  .error-message {
+    color: red;
+  }
+
+  .success-message {
+    color: green;
+  }
+
+  .containerCarousel {
+    flex-direction: row;
+  }
+}

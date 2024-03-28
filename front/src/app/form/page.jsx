@@ -1,189 +1,273 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import style from './form.module.css'
+
 
 const MovieForm = () => {
+
+  const URL = process.env.NEXT_PUBLIC_URL
+
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
-  const [genre, setGenre] = useState([]);
+  const [genreOptions, setGenreOptions] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
   const [description, setDescription] = useState('');
   const [duration, setDuration] = useState('');
-  const [posterUrl, setPosterUrl] = useState('');
+  const [poster, setPoster] = useState(null);
+  const [trailer, setTrailer] = useState(null);
+  const [movie, setMovie] = useState(null);
   const [country, setCountry] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  useEffect(() => {
+    axios.get(`${URL}genres`)
+      .then(response => {
+        const genreNames = response.data.map(genre => genre.name);
+        setGenreOptions(genreNames);
+      })
+      .catch(error => {
+        console.error('Error fetching genre options:', error);
+      });
+  }, []);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const response = await axios.post('http://localhost:3001/movies', {
+      //Promesas relacionadas a Cloudinary:
+      const posterData = new Promise((resolve, reject) => {
+        const posterReader = new FileReader();
+        posterReader.readAsDataURL(poster);
+        posterReader.onload = () => resolve(posterReader.result);
+        posterReader.onerror = reject;
+      });
+  
+      const trailerData = new Promise((resolve, reject) => {
+        const trailerReader = new FileReader();
+        trailerReader.readAsDataURL(trailer);
+        trailerReader.onload = () => resolve(trailerReader.result);
+        trailerReader.onerror = reject;
+      });
+      
+      const movieData = new Promise((resolve, reject) => {
+        const movieReader = new FileReader();
+        movieReader.readAsDataURL(movie);
+        movieReader.onload = () => resolve(movieReader.result);
+        movieReader.onerror = reject;
+      });
+  
+      const [posterDataURL, movieDataURL, trailerDataURL] = await Promise.all([posterData, trailerData, movieData]);
+      //
+  
+      const data = {
         name: movieName,
         director: director,
-        genres: genre.join(','),
+        genres: selectedGenres.join(','),
         description: description,
-        duration: parseFloat(duration),
-        poster: posterUrl,
+        duration: duration,
         country: country,
-      });
-
+        posterFile: posterDataURL,
+        trailerFile: trailerDataURL,
+        movieFile: movieDataURL,
+      };
+      console.log(data)
+  
+      // Envía los datos al backend
+      const movieResponse = axios.post(`${URL}movies`, data);
+      
       setSuccessMessage('Formulario enviado correctamente');
       setErrorMessage('');
-      console.log('Server response:', response.data);
-      
+      console.log('Server response:', movieResponse);
+  
+      // Resetea los campos del formulario
       setMovieName('');
       setDirector('');
-      setGenre([]);
+      setSelectedGenres([]);
       setDescription('');
       setDuration('');
-      setPosterUrl('');
+      setPoster(null);
+      setTrailer(null);
+      setMovie(null);
       setCountry('');
-
     } catch (error) {
       setSuccessMessage('');
       setErrorMessage('Error al enviar datos: ' + error.message);
       console.error('Error sending data:', error);
     }
   };
+  
 
-  const handlePosterUrlChange = (e) => {
-    setPosterUrl(e.target.value);
+  const handlePosterChange = (e) => {
+    setPoster(e.target.files[0]);
+  };
+  const handleTrailerChange = (e) => {
+    setTrailer(e.target.files[0]);
+  };
+  const handleMovieChange = (e) => {
+    setMovie(e.target.files[0]);
   };
 
-  const toggleGenre = (selectedGenre) => {
-    if (genre.includes(selectedGenre)) {
-      setGenre(genre.filter((g) => g !== selectedGenre));
+  const toggleGenre = (genre) => {
+    if (selectedGenres.includes(genre)) {
+      setSelectedGenres(selectedGenres.filter(selectedGenre => selectedGenre !== genre));
     } else {
-      setGenre([...genre, selectedGenre]);
+      setSelectedGenres([...selectedGenres, genre]);
     }
   };
-
   return (
-    <div className="movie-form-container">
-      <Link href="/">
-        <button className="back-button">Ir a Inicio</button>
+    <div className={style["movie-form-container"]}>
+      <div className={style["form-wrapper"]}>
+      <Link href="/home">
+        <button className={style["back-button"]}>Ir a home</button>
       </Link>
-      <div className="form-wrapper">
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
         <form onSubmit={handleSubmit} className="form">
-          <div className="form-group">
-            <label htmlFor="movieName" className="form-label">Nombre de la Película:</label>
+          <div className={style["form-group"]}>
+            <label htmlFor="movieName" className={style["form-label"]}>Nombre de la Película:</label>
             <input
               type="text"
               id="movieName"
               value={movieName}
               onChange={(e) => setMovieName(e.target.value)}
-              className="form-input"
+              className={style["form-input"]}
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="director" className="form-label">Director:</label>
+          <div className={style["form-group"]}>
+            <label htmlFor="director" className={style["form-label"]}>Director:</label>
             <input
               type="text"
               id="director"
               value={director}
               onChange={(e) => setDirector(e.target.value)}
-              className="form-input"
+              className={style["form-input"]}
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="genre" className="form-label">Género:</label>
+          <div className={style["form-group"]}>
+            <label htmlFor="genre" className={style["form-label"]}>Género:</label>
             <select
-              id="genre"
-              value={genre}
-              onChange={(e) => toggleGenre(e.target.value)}
-              className="form-input"
+                id="genre"
+                value={selectedGenres}
+                onChange={(e) => toggleGenre(e.target.value)}
+                className={style["form-input"]}
             >
-          <option value="">Select a genre</option>
-          <option value="Action">Acción</option>
-          <option value="Adventure">Aventura</option>
-          <option value="Animation">Animación</option>
-          <option value="Comedy">Comedia</option>
-          <option value="Crime">Crimen</option>
-          <option value="Documentary">Documental</option>
-          <option value="Drama">Drama</option>
-          <option value="Family">Familia</option>
-          <option value="Fantasy">Fantasía</option>
-          <option value="History">Historia</option>
-          <option value="Horror">Horror</option>
-          <option value="Music">Musica</option>
-          <option value="Mystery">Misterio</option>
-          <option value="Romance">Romance</option>
-          <option value="Science Fiction">Ciencia ficción</option>
-          <option value="TV Movie">Película de televisión</option>
-          <option value="Thriller">Suspenso</option>
-          <option value="War">Guerra</option>
-          <option value="War">Western</option>
-        </select>
-        <ul className="genre-list">
-        {genre.map((g) => (
-                <li key={g}>
-                  {g}{' '}
-                  <button type="button" onClick={() => toggleGenre(g)}>
-                    Eliminar
+              <option value="">Selecciona géneros</option>
+              {genreOptions.map(genre => (
+                <option key={genre} value={genre}>{genre}</option>
+              ))}
+            </select>
+            <ul className={style["genre-list"]}>
+              {selectedGenres.map(selectedGenre => (
+                <li key={selectedGenre}>
+                  {selectedGenre}{' '}
+                  <button type="button" onClick={() => toggleGenre(selectedGenre)}>
+                    x
                   </button>
                 </li>
               ))}
-               </ul>
+            </ul>
           </div>
-          <div className="form-group">
-            <label htmlFor="description" className="form-label">Breve descripción:</label>
+          <div className={style["form-group"]}>
+            <label htmlFor="description" className={style["form-label"]}>Breve descripción:</label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="form-textarea"
+              className={style["form-input"]}
               required
             ></textarea>
           </div>
-          <div className="form-group">
-            <label htmlFor="duration" className="form-label">Duración (en minutos):</label>
+          <div className={style["form-group"]}>
+            <label htmlFor="duration" className={style["form-label"]}>Duración (en minutos):</label>
             <input
               type="number"
               id="duration"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
-              className="form-input"
+              className={style["form-input"]}
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="posterUrl" className="form-label">URL del Póster:</label>
-            <input
-              type="text"
-              id="posterUrl"
-              value={posterUrl}
-              onChange={handlePosterUrlChange}
-              className="form-input"
-              required
-            />
-            {posterUrl && (
-              <div>
-                <img src={posterUrl} alt="Preview" className="poster-preview" />
-              </div>
-            )}
-          </div>
-          <div className="form-group">
-            <label htmlFor="country" className="form-label">País:</label>
+          <div className={style["form-group"]}>
+            <label htmlFor="country" className={style["form-label"]}>País:</label>
             <input
               type="text"
               id="country"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="form-input"
+              className={style["form-input"]}
               required
             />
           </div>
-          <button type="submit" className="submit-button">Enviar</button>
+          <div className={style["file-group"]}>
+           <div className={style["form-group"]}>
+            <label htmlFor="posterFile" className={style["form-label"]}>Seleccionar Póster:</label>
+            <div className={style["file-upload-container"]}>
+              <input
+                type="file"
+                id="posterFile"
+                onChange={handlePosterChange}
+                className={style["form-input"]}
+                accept="image/*"
+                required
+              />
+              </div>
+              {poster && (
+                <div className={style["image-preview-container"]}>
+                  <img src={window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
+                </div>
+              )}
+
+            </div>
+            <div className={style["form-group"]}>
+              <label htmlFor="trailerFile" className={style["form-label"]}>Seleccionar Trailer:</label>
+              <input 
+                type="file"
+                id="trailerFile"
+                onChange={handleTrailerChange}
+                className={style["form-input"]}
+                accept="video/*"
+                required
+              />
+              {trailer && (
+                <div className={style["image-preview-container"]}>
+                  <video src={window.URL.createObjectURL(trailer)} alt="Preview" className={style["poster-preview"]} />
+                </div>
+              )}
+            </div>
+            <div className={style["form-group"]}>
+              <label htmlFor="movieFile" className={style["form-label"]}>Seleccionar Película:</label>
+              <input
+                type="file"
+                id="movieFile"
+                onChange={handleMovieChange}
+                className={style["form-input"]}
+                accept="video/*"
+                required
+              />
+              {movie && (
+                <div className={style["image-preview-container"]}>
+                  <video src={window.URL.createObjectURL(movie)} alt="Preview" className={style["poster-preview"]} />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className={style["submit-button-container"]}>
+            <button type="submit" className={style["submit-button"]}>Enviar</button>
+          </div>
         </form>
       </div>
     </div>
   );
 };
 
-export default MovieForm
+
+export default withPageAuthRequired(MovieForm)
+
 

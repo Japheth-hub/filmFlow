@@ -1,0 +1,59 @@
+.card {
+  display: flex;
+  position: relative;
+  justify-content: right;
+  align-items: center;
+  height: 100%;
+  .info {
+    position: relative;
+    width: 400px;
+    color: white;
+    z-index: 2;
+    margin-right: 100px;
+    text-align: left;
+    h3 {
+      font-size: 3em;
+    }
+  }
+  .image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    z-index: 1;
+    text-align: left;
+    img {
+      width: 60%;
+      height: 100%;
+      object-fit: cover;
+    }
+    &:before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: rgb(0, 0, 0);
+      background: -moz-linear-gradient(
+        260deg,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      background: -webkit-linear-gradient(
+        260deg,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      background: linear-gradient(
+        260deg,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+    }
+  }
+}

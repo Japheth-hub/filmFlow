@@ -1,0 +1,12 @@
+@import "../../scss/variables.scss";
+.card {
+  margin: 15px;
+}
+
+.order {
+  max-width: 200px;
+  overflow-wrap: break-word;
+  font-family: $mainFont;
+  font-size: 1.5em;
+  font-weight: 700;
+}

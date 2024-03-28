@@ -1,0 +1,24 @@
+@import "../../scss/variables.scss";
+.genre {
+  background-color: $mainColor;
+  margin: 5px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .emoji {
+    text-align: center;
+    font-size: 2.5em;
+  }
+
+  .name {
+    text-align: center;
+    margin: 0;
+    color: $neutralLight;
+    text-transform: capitalize;
+    margin-top: -10px;
+    font-family: $mainFont;
+  }
+}

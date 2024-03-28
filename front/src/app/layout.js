@@ -1,4 +1,6 @@
-import "./globals.css";
+import "../scss/globals.scss";
+import { UserProvider } from '@auth0/nextjs-auth0/client'
+
 
 export const metadata = {
   title: "FilmFlow",
@@ -8,7 +10,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <UserProvider>
+        <body>
+          
+            {children}
+          
+        </body>
+      </UserProvider>
     </html>
   );
 }
