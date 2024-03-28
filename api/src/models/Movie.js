@@ -39,7 +39,11 @@ module.exports = (sequelize) => {
         status: {
             type: DataTypes.ENUM('approved', 'pending', 'declined'),
             allowNull: true,
-        }
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
     },
     {paranoid : true})
 }

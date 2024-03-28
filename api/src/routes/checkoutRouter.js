@@ -1,9 +1,9 @@
 const { Router } = require("express");
-const postCheckoutHandler = require('../handlers/postCheckoutHandler')
+const postCheckoutHandler = require("../handlers/postCheckoutHandler");
+const checkoutRouter = Router();
 
 
-const checkoutRouter = Router()
+checkoutRouter.post("/", postCheckoutHandler);
 
-checkoutRouter.post('/', postCheckoutHandler)
 
-module.exports = checkoutRouter
+module.exports = checkoutRouter;

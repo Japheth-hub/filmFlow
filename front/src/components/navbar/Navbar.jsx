@@ -1,102 +1,95 @@
-import Link from "next/link";
-import Account from "../account/Account";
-import styles from "./Navbar.module.css";
-import SearchBar from "../searchBar/searchBar";
-import axios from "axios";
-import { useState } from "react";
-import { UseUser, useUser } from "@auth0/nextjs-auth0/client";
+import Link from 'next/link'
+import Image from 'next/image'
+import { useState } from 'react';
+import styles from './Navbar.module.scss'
+import logoimg from '../../img/logo-white-expanded.png';
+import userpic from '../../img/userpic.png'
+import cart from '../../img/shopping-cart.png'
+import { UseUser, useUser } from '@auth0/nextjs-auth0/client'
+import Button from '../../components/button/Button'
+import { useRouter } from 'next/navigation';
 
+const Nav = (props)=> {
 
-const Nav = () => {
-  const { user } = useUser();
-  const [results, setResults] = useState([]);
-  const [searched, setSearched] = useState(false);
- 
+    const {data} = props;
+    const {user} = useUser();
+    const router = useRouter();
 
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [search,setSearch] = useState("");
 
-  const handleSearch = async (query) => {
-    console.log("hola", query);
+    const handleAccountClick = () => {
+      setShowDropdown(!showDropdown);
+    };
 
-    if (!query || query.trim() === ""|| query.length < 3) {
-      console.log("La consulta de búsqueda está vacía.");
-      setResults([]);
-      setSearched(false);
-      return;
+    const handleSubmit = ()=>{
+        router.push(`/filters/search?s=${search}`);
     }
 
-    try {
-      const response = await axios(
-        `http://localhost:3001/movies?search=${query}`,
-      );
-      console.log("respo", response);
-      const data = response.data;
-      console.log("pelis", data);
-      if (data === "No hay Peliculas") {
-        console.log("No se encontraron películas con ese nombre.");
-        setResults([]);
-        setSearched(true);
-        
-      }  else  {
-        const top3Results = data.slice(0, 3);
-
-        setResults(top3Results);
-        setSearched(true);
-      }
-    } catch (error) {
-      console.error("Error al realizar la búsqueda:", error);
-    }
-  };
-
-
-  
-
-  return (
-    <nav>
-      <ul className={styles.navList}>
-        <li>
-          <Link href="/home">FilmFlow</Link>
-        </li>
-
-        <li>
-          <SearchBar onSearch={handleSearch} />
-          <div className={styles.searchResultsContainer}>
-            <ul className={styles.movieList}>
-              {results.map((result, index) => (
-                <li key={index}>
-                  <div className={styles.card}>
-                    <div>{result.name}</div>
+    return(
+        <nav className={styles.nav}>
+            <div className="wrapper">
+                <ul className={styles.navList}>
                     <div>
-                      <img
-                        src={result.poster}
-                        alt={result.name}
-                        className={styles.searchbar__image}
-                      />
+                        
+                        <li>
+                            <Link href ='/home'>
+                                
+                                <Image className={styles.logo} src={logoimg} alt="Logo" />
+                                
+                            </Link>
+                        </li>
+
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {searched && results.length === 0 && (
-            <p>No se encontraron películas con ese nombre.</p>
-          )}
+                    
 
-        </li>
-        
+                    <div className={styles.searchBar}>
+                    <li >
+                        <input type="text" placeholder="Search" value={search} onChange={(event)=>setSearch(event.target.value)}/>
+                        <span className={styles.searchButton} onClick={handleSubmit}>🔎</span>
+                        
+                    </li> 
+                    </div>
+                    
 
-        <li>
-          <Account />
-          {user ? (
-            <a href="/api/auth/logout">
-              <button>Logout</button>
-            </a>
-          ) : (
-            ""
-          )}
-        </li>
-      </ul>
-    </nav>
-  );
-};
+                    
+                    <div className={styles.toRight}> 
+                        <li >
+                            <Image src={cart} alt="Cart" width={30} height={30} />
+                        </li>
+
+                        <li >
+                            <Image src={userpic} alt="Account" width={30} height={30} onClick={handleAccountClick} />
+                                {showDropdown && (
+                                <div className={styles.dropdown}>
+
+                                    <ul>
+
+                                    <li>
+                                        <Link href="#">
+                                            My Account
+                                        </Link>
+                                    </li>
+
+                                    <li> 
+                                        <Link href="/form">
+                                            Form
+                                        </Link>
+                                    </li>
+
+                                    <li>
+                                        {user ? <a href="/api/auth/logout"><button>Log out</button></a> : ""}
+                                    </li>
+
+                                    </ul>
+                                </div>
+                            )}
+                        </li>   
+                    </div>
+                </ul>
+            </div>
+        </nav>
+    )
+}
 
 export default Nav;

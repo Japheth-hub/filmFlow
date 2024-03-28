@@ -7,8 +7,8 @@ const sampleMovies = [
         duration: 154, 
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
-        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
     },
     {
         name: "The Matrix",
@@ -18,8 +18,8 @@ const sampleMovies = [
         duration: 136, // duración en minutos
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg",
-        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481608/movies/yeavhvtaaixdgrbmjzji.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481686/movies/fwdnfrum84epvy27licn.mp4"
     },
     {
         name: "Forrest Gump",
@@ -29,8 +29,8 @@ const sampleMovies = [
         duration: 142, // duración en minutos
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/6/67/Forrest_Gump_poster.jpg",
-        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482111/movies/t5qwv1lxuv34n608rcbg.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481958/movies/mbwjnhvu2iueltsi9lcq.mp4"
     },
     {
         name: "The Lord of the Rings: The Fellowship of the Ring",
@@ -40,8 +40,8 @@ const sampleMovies = [
         duration: 178, // duración en minutos
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
-        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481957/trailers/wmmjmiks0cqfzayr6kbj.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482110/trailers/zwqqv8zb9v7nwgxn5jp9.mp4"
     },
     {
         name: "Inglourious Basterds",
@@ -94,7 +94,7 @@ const sampleMovies = [
         description: "Lion cub and future king Simba searches for his identity. His eagerness to please others and penchant for testing his boundaries sometimes gets him into trouble.",
         duration: 89,
         country: "United States",
-        poster: "https://image.tmdb.org/t/p/original/2CAL2433ZeIihfX1Hb2139CX0pW.jpg",
+        poster: "https://media.themoviedb.org/t/p/w220_and_h330_face/b0MxU37dNmMwKtoPVYPKOZSIrIn.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
         movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
     },
@@ -160,7 +160,7 @@ const sampleMovies = [
         description: "A rat who can cook makes an unusual alliance with a young kitchen worker at a famous restaurant.",
         duration: 111,
         country: "United States",
-        poster: "https://image.tmdb.org/t/p/original/y89kFMNYXNKMdlZjR2yg7nQtcQH.jpg",
+        poster: "https://m.media-amazon.com/images/I/71AgTmoFdEL._AC_UF894,1000_QL80_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
         movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
     },
@@ -171,7 +171,7 @@ const sampleMovies = [
         description: "Amélie is an innocent and naive girl in Paris with her own sense of justice. She decides to help those around her and, along the way, discovers love.",
         duration: 122,
         country: "France",
-        poster: "https://image.tmdb.org/t/p/original/2TeJfUZMGolfDdW6DKhfIWqvq8y.jpg",
+        poster: "https://image.tmdb.org/t/p/original/mYvUib00miJWxWkiXhy3QnrCj96.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
         movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
     },

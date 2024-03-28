@@ -1,7 +1,9 @@
 const { Movie,Genre } = require('../db')
 const cloudinary = require('cloudinary').v2;
 require("dotenv").config();
+const validateMovieData = require('../services/validateMovieData');
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+const isAdmin = require('../services/isAdmin');
 
 cloudinary.config({ 
   cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -9,15 +11,20 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-module.exports = async (body) => {
+module.exports = async (req) => {
     try {
+        const user = req.user;
         const data = {}
+        const errors= {};
+        const body = req.body;
+        const validation = validateMovieData(body);
 
-        let { name, director, genres, description, duration, country, posterFile, movieFile, trailerFile} = body;
-
-        if (![name, director, genres, description, duration, country, posterFile, movieFile, trailerFile].every(Boolean)) {
-            return data.message = "Faltan datos"
+        if(!validation.status){
+           return {status:false,errors:validation.errors}
         }
+
+        let { name, director, genres, description, duration, country, posterFile, trailerFile, movieFile} = body;
+       
         const status = "pending" 
 
         //Cloudinary:
@@ -39,7 +46,7 @@ module.exports = async (body) => {
         //Posteo del trailer en Cloudinary
         const cloudinaryTrailerResponse = await new Promise((resolve, reject) => {
             cloudinary.uploader
-                .upload(trailerFile, { resource_type: "video", folder: "trailers" }, (err, result) => {
+                .upload(trailerFile, { resource_type: "video", folder: "movies" }, (err, result) => {
                     if (err) {
                         reject(err);
                     }
@@ -50,7 +57,7 @@ module.exports = async (body) => {
         //Posteo de la pelicula en el Cloudinary
         const cloudinaryMovieResponse = await new Promise((resolve, reject) => {
             cloudinary.uploader
-                .upload(movieFile, { resource_type: "video", folder: "movies" }, (err, result) => {
+                .upload(movieFile, { resource_type: "video", folder: "trailers" }, (err, result) => {
                     if (err) {
                         reject(err);
                     }
@@ -60,13 +67,14 @@ module.exports = async (body) => {
 
         //Guardo las URL recibidas en las variables que voy a mandar a la DB
         const poster = cloudinaryPosterResponse.secure_url;
-        const trailer = cloudinaryTrailerResponse.secure_url;
-        const movie = cloudinaryMovieResponse.secure_url;
+        const trailer = cloudinaryMovieResponse.secure_url;
+        const movie = cloudinaryTrailerResponse.secure_url;
         //
-
+        
+        const userId = isAdmin(user) ? undefined : user.id;
         const [movieDB, created] = await Movie.findOrCreate({
             where: { name },
-            defaults: { poster, movie, trailer, director, description, duration, country, status },
+            defaults: { poster, movie, trailer, director, description, duration, country, status, userId },
         });
 
         
@@ -84,11 +92,12 @@ module.exports = async (body) => {
         }
 
         if (!created) {
-            return data.message = "Ya hay una pelicula con ese nombre"
+            return { status:false, message:"Ya hay una película con ese nombre"};
         }
 
-        return data.movie = movieDB
+        return {status:true,movie:movieDB}
     } catch (error) {
+        console.log(error);
         return error
     }
 }

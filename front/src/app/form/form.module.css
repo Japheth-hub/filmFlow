@@ -72,7 +72,7 @@
 
   .image-preview-container {
     width: 150px;
-    height: 300px;
+    height: 150px;
     overflow: hidden; /* Para recortar la imagen si es más grande que el contenedor */
   }
   

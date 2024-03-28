@@ -6,6 +6,7 @@ import SearchBar from "../../components/searchBar/searchBar";
 import { useState, useEffect } from "react";
 import Filters from "../filters/Filters";
 import { useUser } from '@auth0/nextjs-auth0/client';
+import Link from "next/link";
 
 const Home = () => {
   const {error, isLoading, user} = useUser()
@@ -34,7 +35,7 @@ const Home = () => {
       let listGenre = data
       listGenre.unshift({
         id: '-1',
-        name: 'Search',
+        name: 'search',
         label: 'Search',
         emoji:"🔍"
       })
@@ -47,15 +48,19 @@ const Home = () => {
 
   useEffect( () => {
     if(user){
-      console.log("Usuario validado, creando LS");
       const upUser = async() => {
         const { data } = await axios.post(`${URL}users`, user)
-        console.log(data);
-
         //Creación de usuario en el localStorage
-        window.localStorage.setItem(
-          'FilmFlowUsr', JSON.stringify(user)
-        )
+        if(!window.localStorage.getItem('FilmFlowUsr')){          
+          window.localStorage.setItem(
+            'FilmFlowUsr', JSON.stringify(user)
+            //Agregar ROL de usuario
+            )
+        }
+        else{
+          console.log('Ya existe el LS');
+        }
+
       }
       upUser()
     }
@@ -71,14 +76,14 @@ const Home = () => {
         {!user ? <a href="/api/auth/login"><button>Login</button></a> : <h2>{user.nickname}</h2>}
       </div>
     </div>
-    <Carousel movie={movie} dim={['900px', '400px']}/>
+    <Carousel movie={movie} dim={['900px', '400px']} autoplay={5}/>
     <div>
       <Filters genres={genres}/>
     </div>
     <div>
       <h3>Novedades</h3>
       <Movies movie={movie} />
-      <h5>Ver más..</h5>
+      <Link href={`/filters/Search`}><h6>Ver más..</h6></Link>
     </div>
   </div>
   );

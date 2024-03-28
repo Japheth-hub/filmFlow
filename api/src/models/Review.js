@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
     "review",
     {
       comment: {
-        type: DataTypes.STRING(500),
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       points : {

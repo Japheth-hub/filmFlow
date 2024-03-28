@@ -4,11 +4,19 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const server = express();
 const router = require('./routes')
+const postWebhookHandler = require('../src/handlers/postWebhookHandler')
+
 
 server.name = "API";
 
-server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-server.use(bodyParser.json({ limit: "50mb" }));
+
+//Esta ruta necesita estar aqui, ya que no debe ser procesada ------------------
+server.post("/checkout/webhook",express.raw({ type: 'application/json' }), postWebhookHandler);
+//------------------------------------------------------------------------------
+
+
+server.use(bodyParser.urlencoded({ extended: true, limit: "200mb" }));
+server.use(bodyParser.json({ limit: "200mb" }));
 
 server.use(cookieParser());
 server.use(morgan("dev"));

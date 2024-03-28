@@ -1,7 +1,7 @@
 @import "../../scss/variables.scss";
 .footer {
   color: $neutralLight;
-  height: 200px;
+  height: 300px;
   padding: 20px;
   background-color: $mainColor;
   padding-top: 50px;
@@ -9,4 +9,22 @@
     width: 200px;
     height: auto;
   }
+}
+
+.order{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: stretch;
+  justify-content: space-evenly;
+  margin: 0px;
+  padding: 0px;
+}
+.institutional{
+  text-align: justify;
+  max-width: 200px;
+  font-size: .75em;
+}
+.noDecoration{
+  list-style-type: none;
+  font-size: 1em;
 }

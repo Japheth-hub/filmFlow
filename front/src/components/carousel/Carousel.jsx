@@ -2,13 +2,23 @@ import style from "./Carousel.module.scss";
 import { useEffect, useState } from "react";
 import CarouselItem from "../carouselItem/CarouselItem";
 
-const Carousel = ({ movie, dim }) => {
+const Carousel = ({ movie, dim, autoplay }) => {
     const [movieIndex, setMovieIndex] = useState(0);
     const [arrMovie, setArrMovie] = useState(movie);
     const URL = process.env.NEXT_PUBLIC_URL
+    
     useEffect(() => {
         setArrMovie(movie)
     }, [movie]);
+    
+    useEffect(() => {
+        if(autoplay){
+        const interval = setInterval(() => {
+            changeMovie('next')
+        }, 1000*autoplay)
+        return () => clearInterval(interval);
+    }})
+    
     const changeMovie = (direct) => {
         if(direct === 'prev'){
             if(movieIndex > 0) return setMovieIndex(movieIndex-1)

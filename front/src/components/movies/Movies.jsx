@@ -40,12 +40,7 @@ const Movies = ({movie}) => {
             {
             movie.map((elem, index) => {
                 if(index >= elemIndex.bottom && index <= elemIndex.top){
-                    return (<Link 
-                        className={style.link}
-                        href={`/`}
-                        key={elem.id}>                                     
-                            <Movie elem={elem}/>
-                    </Link>)
+                    return <Movie key={elem.id} elem={elem}/>
                 }})
             }
             <div className={style.leftArrow} onClick={() => changeMovie('prev')}>&#10092;</div>
