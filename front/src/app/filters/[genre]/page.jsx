@@ -1,11 +1,28 @@
 "use client";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Movie from "../../../components/movie/Movie";
 import style from "./page.module.css";
-import {useSearchParams} from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { upState } from "../../../lib/filters/filterSlice"
+import { useDispatch, useSelector, useStore } from "react-redux";
 
 const Filter = ({ params }) => {
+
+  //REDUX
+    //Initialize the store with the product information
+    const store = useStore()
+    const initialized = useRef(false)
+    if (!initialized.current) {
+      store.dispatch(upState())
+      initialized.current = true
+    }
+    const name = useSelector(state => state.filterReducer.searchArgs)
+    console.log("selector", name);
+    //useSelector(state => state.filterReducer.searchArgs)
+    const dispatch = useDispatch()
+    // console.log("dispatch", name);
+
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('s') || "";
   const URL = process.env.NEXT_PUBLIC_URL;
@@ -89,6 +106,7 @@ const Filter = ({ params }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     applyFilter();
+    dispatch(upState(URL2))
   };
 
   return (
@@ -148,8 +166,7 @@ const Filter = ({ params }) => {
               <input
                 type="Submit"
                 value="Aplicar"
-                onChange={handleChange}
-                onClick={() => applyFilter()}
+                onSubmit={handleSubmit}
               />
             </div>
           </fieldset>
