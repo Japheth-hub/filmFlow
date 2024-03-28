@@ -8,8 +8,8 @@ export const filterSlice = createSlice({
     name: "filters",
     initialState,
     reducers: {
-        upState: (state) => {
-            state.searchArgs = "params"
+        upState: (state, action) => {
+            state.searchArgs = action.payload
         }
     }
 })
