@@ -2,8 +2,8 @@ const postReviews = require('../controllers/postReviews')
 
 module.exports = async (req, res) => {
     try {
-        const {userId, movieId, comment, points} = req.body
-        const data = await postReviews(userId, movieId, comment, points)
+        const {userSid, movieId, comment, points} = req.body
+        const data = await postReviews(userSid, movieId, comment, points)
         if(data.message){
             res.status(404).json(data.message)
             return

@@ -13,15 +13,15 @@ const Cart = () => {
     const totalPrice = cartData.reduce((total, movie) => total + movie.price, 0);
 
     
-    const userId = "1111"
+    // const userId = "1111"
 
     const fetchData = async () => {
         try {
-            //Usuario de auth0
-            // const response = await axios.get(`${URL}cart/${user.sid}`);
+            // Usuario de auth0
+            const response = await axios.get(`${URL}cart/${user.sid}`);
 
             //Hardcodeado
-            const response = await axios.get(`${URL}cart/${userId}`);
+            // const response = await axios.get(`${URL}cart/${userId}`);
 
             setCartData(response.data.movies);
         } catch (error) {
@@ -36,10 +36,10 @@ const Cart = () => {
     const handleDelete = async (id) => {
         try {
             //Usuario de auth0
-            // const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
+            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
 
             //Hardcodeado
-            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: userId}});
+            // const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: userId}});
 
             setCartData(cartData.filter(movie => movie.id !== id));
         } catch (error) {
