@@ -1,8 +1,8 @@
 const postCart = require('../controllers/postCart')
 const req = {
     "user": {
-        id: 3,
-        sid: '3333',
+        id: 1,
+        sid: '1111',
     },
     "body": {
     "movies": [
