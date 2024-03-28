@@ -22,6 +22,8 @@ const MovieForm = () => {
   const [country, setCountry] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
+
 
   useEffect(() => {
     axios.get(`${URL}genres`)
@@ -36,6 +38,7 @@ const MovieForm = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); 
   
     try {
       //Promesas relacionadas a Cloudinary:
@@ -99,8 +102,8 @@ const MovieForm = () => {
       setErrorMessage('Error al enviar datos: ' + error.message);
       console.error('Error sending data:', error);
     }
+    setIsLoading(false); // Desactivar estado de carga después de enviar el formulario
   };
-  
 
   const handlePosterChange = (e) => {
     setPoster(e.target.files[0]);
@@ -260,7 +263,9 @@ const MovieForm = () => {
             </div>
           </div>
           <div className={style["submit-button-container"]}>
-            <button type="submit" className={style["submit-button"]}>Enviar</button>
+            <button type="submit" className={style["submit-button"]} disabled={isLoading}>
+              {isLoading ? 'Enviando...' : 'Enviar'}
+            </button>
           </div>
         </form>
       </div>
