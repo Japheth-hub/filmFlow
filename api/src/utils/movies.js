@@ -219,6 +219,171 @@ const sampleMovies = [
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
         movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
     },
+    {
+        name: "The Prestige",
+        director: "Christopher Nolan",
+        genres: "Drama, Mystery, Sci-Fi",
+        description: "Two stage magicians engage in competitive one-upmanship in an attempt to create the ultimate stage illusion.",
+        duration: 130,
+        country: "United States",
+        poster: "https://image.tmdb.org/t/p/original/tRNlZbgNCNOpLpbPEz5L8G8A0JN.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "Eternal Sunshine of the Spotless Mind",
+        director: "Michel Gondry",
+        genres: "Drama, Romance, Sci-Fi",
+        description: "When their relationship turns sour, a couple undergoes a medical procedure to have each other erased from their memories.",
+        duration: 108,
+        country: "United States",
+        poster: "https://image.tmdb.org/t/p/original/5Usvr9gugSBYPoDGlpuKoSzyk0g.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "City of God",
+        director: "Fernando Meirelles, Kátia Lund",
+        genres: "Crime, Drama",
+        description: "In the slums of Rio, two kids' paths diverge as one struggles to become a photographer and the other a kingpin.",
+        duration: 130,
+        country: "Brazil",
+        poster: "https://i.ebayimg.com/images/g/OSkAAOSwO0Ra8NKH/s-l1600.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "The Grand Budapest Hotel",
+        director: "Wes Anderson",
+        genres: "Adventure, Comedy, Crime",
+        description: "A writer encounters the owner of an aging high-class hotel, who tells him of his early years serving as a lobby boy in the hotel's glorious years under an exceptional concierge.",
+        duration: 99,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/M/MV5BMzM5NjUxOTEyMl5BMl5BanBnXkFtZTgwNjEyMDM0MDE@._V1_.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "The Departed",
+        director: "Martin Scorsese",
+        genres: "Crime, Drama, Thriller",
+        description: "An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.",
+        duration: 151,
+        country: "United States",
+        poster: "https://image.tmdb.org/t/p/original/nT97ifVT2J1yMQmeq20Qblg61T.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "Inception",
+        director: "Christopher Nolan",
+        genres: "Action, Adventure, Sci-Fi",
+        description: "A thief who enters the dreams of others to steal their secrets gets a shot at redemption when he is offered a task to implant an idea into the mind of a CEO.",
+        duration: 148,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/I/71DwIcSgFcS.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "Good Will Hunting",
+        director: "Gus Van Sant",
+        genres: "Drama, Romance",
+        description: "Will Hunting, a janitor at M.I.T., has a gift for mathematics, but needs help from a psychologist to find direction in his life.",
+        duration: 126,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/I/71JBbULtGSL._AC_UF894,1000_QL80_.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "The Truman Show",
+        director: "Peter Weir",
+        genres: "Comedy, Drama, Sci-Fi",
+        description: "An insurance salesman discovers his whole life is actually a reality TV show.",
+        duration: 103,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/I/51k3X4-sm6L._AC_UF894,1000_QL80_.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "Spirit",
+        director: "Kelly Asbury, Lorna Cook",
+        genres: "Animation, Adventure, Family",
+        description: "A wild stallion is captured by humans and slowly loses the will to resist training, yet, throughout his struggles for freedom, the hope of one day returning home to his herd keeps him going.",
+        duration: 83,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/I/61Xwd30pi6L._AC_UF894,1000_QL80_.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "Whiplash",
+        director: "Damien Chazelle",
+        genres: "Drama, Music",
+        description: "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.",
+        duration: 106,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/I/61PwPadu4-L._AC_UF894,1000_QL80_.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "La La Land",
+        director: "Damien Chazelle",
+        genres: "Comedy, Drama, Music",
+        description: "While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.",
+        duration: 128,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/I/816O+CBx0ML.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "Coco",
+        director: "Lee Unkrich, Adrian Molina",
+        genres: "Animation, Adventure, Family",
+        description: "Aspiring musician Miguel, confronted with his family's ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer.",
+        duration: 105,
+        country: "United States",
+        poster: "https://m.media-amazon.com/images/I/817aStLW2rL._AC_UF894,1000_QL80_.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+    },
+    {
+        name: "Kimetsu no Yaiba: The Infinity Train",
+        director: "Haruo Sotozaki",
+        genres: "Animation, Action, Adventure",
+        description: "Tanjiro, Inosuke, and Zenitsu board the Infinity Train with the Flame Pillar, Kyojuro Rengoku, to defeat a demon terrorizing and killing demon slayers!",
+        duration: 117,
+        country: "Japan",
+        poster: "https://image.tmdb.org/t/p/original/84smrN4fDixyBHonQPko34JnFVY.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
+    },
+    {
+        name: "Mission: Impossible",
+        director: "Brian De Palma",
+        genres: "Action, Adventure, Thriller",
+        description: "An American agent, under false suspicion of disloyalty, must discover and expose the real spy without the help of his organization.",
+        duration: 110,
+        country: "United States",
+        poster: "https://filmartgallery.com/cdn/shop/products/Mission-Impossible-Vintage-Movie-Poster-Original-1-Sheet-27x41_ae1e1e64-23cb-45fd-a8dc-bb6625e01daf.jpg?v=1663224951",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
+    },
+    {
+        name: "Train to Busan",
+        director: "Sang-ho Yeon",
+        genres: "Action, Horror, Thriller",
+        description: "While a zombie virus breaks out in South Korea, passengers struggle to survive on the train from Seoul to Busan.",
+        duration: 118,
+        country: "South Korea",
+        poster: "https://m.media-amazon.com/images/M/MV5BMTkwOTQ4OTg0OV5BMl5BanBnXkFtZTgwMzQyOTM0OTE@._V1_.jpg",
+        trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
+    },
 ];
 
 module.exports = sampleMovies;
