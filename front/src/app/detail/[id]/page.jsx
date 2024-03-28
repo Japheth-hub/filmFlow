@@ -9,9 +9,11 @@ import Image from 'next/image'
 import cartIcon from '../../../img/cart-icon-white.svg'
 import Pill from '@/components/pill/Pill';
 import AddToCart from '../../../components/addToCart/AddToCart';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const DetailContent = () => {
   const { id } = useParams();
+  const { user } = useUser();
   const [movieData, setMovieData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
