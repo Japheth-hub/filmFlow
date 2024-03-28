@@ -8,11 +8,13 @@ import Button from '../../../components/button/Button'
 import Image from 'next/image'
 import cartIcon from '../../../img/cart-icon-white.svg'
 import Pill from '@/components/pill/Pill';
+import AddToCart from '../../../components/addToCart/AddToCart';
 
 const DetailContent = () => {
   const { id } = useParams();
   const [movieData, setMovieData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState(null);
   const [mediaType, setMediaType] = useState('trailer');
   const URL = process.env.NEXT_PUBLIC_URL;
@@ -40,18 +42,7 @@ const DetailContent = () => {
     fetchData();
   }, [id]);
 
-  const addToCart = async () => {
-    try {
-      await axios.post(`${URL}cart`, {
-        movieId: id,
-        auth: '3333'
-      });
-      alert('Movie added to cart successfully!');
-    } catch (error) {
-      console.error('Error adding movie to cart:', error);
-      alert('An error occurred while adding the movie to the cart.');
-    }
-  };
+  
 
   const capitalize = (string) => {
     return string.toUpperCase();
@@ -101,7 +92,8 @@ const DetailContent = () => {
             <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>
-            <Button callback={addToCart} emoji={<Image alt="" src={cartIcon}/>} label="Agregar al carrito"/>
+            {movieData && <AddToCart movie={movieData} />}
+            
           </div>
         </div>
       </div>

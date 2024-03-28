@@ -8,7 +8,6 @@ module.exports = async (req, res) => {
             return res.status(404).json(data)
         }
 
-        console.log(data)
         return res.status(200).json(data)
     } catch (error) {
         console.log(error)
