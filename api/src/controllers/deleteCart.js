@@ -1,5 +1,5 @@
 const { Cart } = require('../db');
-
+const createCart = require('../services/createCart')
 module.exports = async (req) => {
   try {
     const data = {};
@@ -15,9 +15,14 @@ module.exports = async (req) => {
     });
 
     if(rows){
-      return data.exit = 'Pelicula eliminada con exito del carrito'
+      data.exit = 'Pelicula eliminada con exito del carrito'
     }
-    return data.message = 'Pelicula no existe'
+
+    data.movies = await createCart(user);
+
+    return data;
+    
+    
   } catch (error) {
     console.error('Error al eliminar la película del carrito:', error);
     return error

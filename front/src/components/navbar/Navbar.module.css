@@ -1,0 +1,50 @@
+.navList {
+    
+    list-style-type: none;
+    padding: 1%;
+    margin: 0;
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%;
+}
+  
+.navList li {
+    flex: 1;
+    margin-right: 20px; 
+    position: relative;
+}
+  
+.navList li:last-child {
+    margin-right: 0; 
+}
+
+.navList a{
+    font-size: 20px;
+}
+
+.searchResultsContainer {
+    position: absolute;
+    z-index: 2;
+}
+.movieList {
+    list-style-type: none; /* Elimina el marcador de lista */
+    padding: 0; /* Elimina el relleno predeterminado */
+    margin: 0; /* Elimina el margen predeterminado */
+}
+
+.card {
+    
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    width: 400px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchbar__image {
+    width: 100px; /* Ajusta el ancho de la imagen */
+    height: auto; /* Mantén la proporción de aspecto */
+    margin-right: 10px; /* Espacio entre la imagen y el texto */
+}

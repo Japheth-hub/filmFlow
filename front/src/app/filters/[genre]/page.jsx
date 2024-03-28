@@ -1,18 +1,24 @@
 "use client";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Movie from "../../../components/movie/Movie";
 import style from "./page.module.css";
-import {useSearchParams} from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 const Filter = ({ params }) => {
+
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('s') || "";
   const URL = process.env.NEXT_PUBLIC_URL;
   let URL2 = URL;
-  params.genre !== "search"
-    ? (URL2 = URL2 + `movies?search=&genre=${params.genre}`)
-    : (URL2 = URL + `movies?search=${searchQuery}`);
+
+  let condicion = params.genre.split("%3D")
+
+  condicion[0] !== "search"
+    ? condicion[1] !== "search" 
+      ?(URL2 = URL2 + `movies?search=&genre=${condicion[1]}`)
+      :(URL2 = URL + `movies?search=${searchQuery}`)
+    : (URL2 = URL + `movies?search=${condicion[1]}`);
   const [urlFilter, setUrlFilter] = useState([URL2]);
   const [movies, setMovies] = useState([
     {
@@ -89,6 +95,7 @@ const Filter = ({ params }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     applyFilter();
+    dispatch(upState(URL2))
   };
 
   return (
@@ -148,8 +155,7 @@ const Filter = ({ params }) => {
               <input
                 type="Submit"
                 value="Aplicar"
-                onChange={handleChange}
-                onClick={() => applyFilter()}
+                onSubmit={handleSubmit}
               />
             </div>
           </fieldset>

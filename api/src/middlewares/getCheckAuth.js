@@ -1,6 +1,6 @@
 const { User } = require("../db");
 module.exports = async (req, res, next) => {
-  console.log("Se recibe");
+
   const { auth } = req.params;
 
   if (!auth)

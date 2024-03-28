@@ -8,10 +8,9 @@ module.exports = async (req, res) => {
             return res.status(404).json(data)
         }
 
-        console.log(data)
         return res.status(200).json(data)
     } catch (error) {
-        console.log(error)
+        console.log("Error del middleware:", error)
         return res.status(500).json(error)
     }
 }
