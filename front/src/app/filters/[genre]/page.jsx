@@ -4,32 +4,21 @@ import { useState, useEffect, useRef } from "react";
 import Movie from "../../../components/movie/Movie";
 import style from "./page.module.css";
 import { useSearchParams } from 'next/navigation'
-import { upState } from "../../../lib/filters/filterSlice"
-import { useDispatch, useSelector, useStore } from "react-redux";
 
 const Filter = ({ params }) => {
-
-  //REDUX
-    //Initialize the store with the product information
-    const store = useStore()
-    const initialized = useRef(false)
-    if (!initialized.current) {
-      store.dispatch(upState())
-      initialized.current = true
-    }
-    const name = useSelector(state => state.filterReducer.searchArgs)
-    console.log("selector", name);
-    //useSelector(state => state.filterReducer.searchArgs)
-    const dispatch = useDispatch()
-    // console.log("dispatch", name);
 
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('s') || "";
   const URL = process.env.NEXT_PUBLIC_URL;
   let URL2 = URL;
-  params.genre !== "search"
-    ? (URL2 = URL2 + `movies?search=&genre=${params.genre}`)
-    : (URL2 = URL + `movies?search=${searchQuery}`);
+
+  let condicion = params.genre.split("%3D")
+
+  condicion[0] !== "search"
+    ? condicion[1] !== "search" 
+      ?(URL2 = URL2 + `movies?search=&genre=${condicion[1]}`)
+      :(URL2 = URL + `movies?search=${searchQuery}`)
+    : (URL2 = URL + `movies?search=${condicion[1]}`);
   const [urlFilter, setUrlFilter] = useState([URL2]);
   const [movies, setMovies] = useState([
     {

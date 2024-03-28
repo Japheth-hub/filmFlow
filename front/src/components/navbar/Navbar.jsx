@@ -99,11 +99,7 @@ const Nav = (props)=> {
                         <p>No se encontraron películas con ese nombre.</p>
                       )}
                     </div>
-                    <Link href= '/filter'>
                     
-                    <button>Search</button>
-                    
-                    </Link>
 
                     
                     <div className={styles.toRight}> 
