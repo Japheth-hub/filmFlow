@@ -3,7 +3,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Movie from "../../../components/movie/Movie";
 import style from "./page.module.css";
-import {useSearchParams} from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import Button from '../../../components/button/Button'
 
 const Filter = ({ params }) => {
   const searchParams = useSearchParams();
@@ -145,12 +146,8 @@ const Filter = ({ params }) => {
               </select>
             </div>
             <div>
-              <input
-                type="Submit"
-                value="Aplicar"
-                onChange={handleChange}
-                onClick={() => applyFilter()}
-              />
+                  <Button emoji={"🔎"} label={"Buscar"}  callback={handleSubmit}/>
+            
             </div>
           </fieldset>
         </form>
