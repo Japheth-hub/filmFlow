@@ -40,7 +40,7 @@ const Movies = ({movie}) => {
             {
             movie.map((elem, index) => {
                 if(index >= elemIndex.bottom && index <= elemIndex.top){
-                    return <Movie elem={elem}/>
+                    return <Movie key={elem.id} elem={elem}/>
                 }})
             }
             <div className={style.leftArrow} onClick={() => changeMovie('prev')}>&#10092;</div>

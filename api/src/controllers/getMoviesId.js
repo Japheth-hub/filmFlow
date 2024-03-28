@@ -7,7 +7,7 @@ module.exports = async (id)=>{
             include:[
                 {
                     model:Genre,
-                    attributes:["id","name"],
+                    attributes:["id","name","label","emoji"],
                     through: { attributes: [] }
                 },
                 {

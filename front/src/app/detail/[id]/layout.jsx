@@ -6,13 +6,13 @@ import GoBack from '@/components/goBack/GoBack'
 
 export default function layout({children}) {
   return (
-    <>
+    <div>
       <Navbar />
       <div className="wrapper">  
         <GoBack />
         {children}
       </div>
         <Footer />
-    </>
+    </div>
   )
 }

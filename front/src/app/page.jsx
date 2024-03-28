@@ -51,7 +51,7 @@ const Landing = () => {
     <div className="container">
       <div>
         <h1>Landing</h1>
-          <Carousel movie={movie} dim={['600px', '400px']} autoplay={0}/>
+          <Carousel movie={movie} dim={['600px', '400px']} autoplay={null}/>
       </div>
       <div>
         {!user ? <a href="/api/auth/login"><button>Login</button></a> : ""}

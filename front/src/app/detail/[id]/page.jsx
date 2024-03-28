@@ -1,9 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import style from '../detail.module.css';
-import Link from 'next/link';
+import style from '../detail.module.scss';
+import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import Button from '../../../components/button/Button'
+import Image from 'next/image'
+import cartIcon from '../../../img/cart-icon-white.svg'
+import Pill from '@/components/pill/Pill';
 
 const DetailContent = () => {
   const { id } = useParams();
@@ -12,6 +16,10 @@ const DetailContent = () => {
   const [error, setError] = useState(null);
   const [mediaType, setMediaType] = useState('trailer');
   const URL = process.env.NEXT_PUBLIC_URL;
+  const router = useRouter();
+  const goToCategory = (genre) => {
+    router.push(`/filters/${genre}`); // Utiliza router.push para navegar a la página especificada por la ruta (path)
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,20 +88,20 @@ const DetailContent = () => {
 
   return (
     <div className={style['detail-content']}>
-      <Link href="/home">
-        <button className={style['back-button']}>Ir a home</button>
-      </Link>
+     
       <div className={style['poster-description-container']}>
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
           <div className={style['description-container-info']}>
             <span className={style['italic-dark']}><h3>{name}</h3></span>
-            <p><span className={style['italic-dark']}>Directed by:</span> {director}</p>
-            <p><span className={style['italic-dark']}>Duration:</span> {duration} minutes</p>
-            <p><span className={style['italic-dark']}>Country:</span> {country}</p>
-            <p><span className={style['italic-dark']}>Description:</span> {description}</p>
-            <p><span className={style['italic-dark']}>Genres:</span> {genres.map((genre) => capitalize(genre.name)).join(', ')}</p>
-            <button className={style['back-button']} onClick={addToCart}>Agregar al carrito</button>
+            <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
+            <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
+            <p><span className={style['italic-dark']}>País:</span> {country}</p>
+            <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
+            <div className={style.genres}>
+              {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
+            </div>
+            <Button callback={addToCart} emoji={<Image alt="" src={cartIcon}/>} label="Agregar al carrito"/>
           </div>
         </div>
       </div>
