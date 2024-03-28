@@ -23,7 +23,7 @@ module.exports = async (req) => {
            return {status:false,errors:validation.errors}
         }
 
-        let { name, director, genres, description, duration, country, posterFile, trailerFile, movieFile} = body;
+        let { name, director, genres, description, country, posterFile, trailerFile, movieFile} = body;
        
         const status = "pending" 
 
@@ -69,6 +69,7 @@ module.exports = async (req) => {
         const poster = cloudinaryPosterResponse.secure_url;
         const trailer = cloudinaryMovieResponse.secure_url;
         const movie = cloudinaryTrailerResponse.secure_url;
+        const duration = cloudinaryTrailerResponse.duration;
         //
         
         const userId = isAdmin(user) ? undefined : user.id;

@@ -15,7 +15,6 @@ const MovieForm = () => {
   const [genreOptions, setGenreOptions] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [description, setDescription] = useState('');
-  const [duration, setDuration] = useState('');
   const [poster, setPoster] = useState(null);
   const [trailer, setTrailer] = useState(null);
   const [movie, setMovie] = useState(null);
@@ -64,14 +63,13 @@ const MovieForm = () => {
       });
   
       const [posterDataURL, movieDataURL, trailerDataURL] = await Promise.all([posterData, trailerData, movieData]);
-      //
+
   
       const data = {
         name: movieName,
         director: director,
         genres: selectedGenres.join(','),
         description: description,
-        duration: duration,
         country: country,
         posterFile: posterDataURL,
         trailerFile: trailerDataURL,
@@ -79,20 +77,16 @@ const MovieForm = () => {
         auth:"3333"
       };
       
-  
-      // Envía los datos al backend
       const movieResponse = await axios.post(`${URL}movies`, data);
       console.log(movieResponse.data);
       setSuccessMessage('Formulario enviado correctamente');
       setErrorMessage('');
       console.log('Server response:', movieResponse);
-  
-      // Resetea los campos del formulario
+
       setMovieName('');
       setDirector('');
       setSelectedGenres([]);
       setDescription('');
-      setDuration('');
       setPoster(null);
       setTrailer(null);
       setMovie(null);
@@ -102,7 +96,7 @@ const MovieForm = () => {
       setErrorMessage('Error al enviar datos: ' + error.message);
       console.error('Error sending data:', error);
     }
-    setIsLoading(false); // Desactivar estado de carga después de enviar el formulario
+    setIsLoading(false); 
   };
 
   const handlePosterChange = (e) => {
@@ -188,17 +182,6 @@ const MovieForm = () => {
             ></textarea>
           </div>
           <div className={style["form-group"]}>
-            <label htmlFor="duration" className={style["form-label"]}>Duración (en minutos):</label>
-            <input
-              type="number"
-              id="duration"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              className={style["form-input"]}
-              required
-            />
-          </div>
-          <div className={style["form-group"]}>
             <label htmlFor="country" className={style["form-label"]}>País:</label>
             <input
               type="text"
@@ -210,7 +193,7 @@ const MovieForm = () => {
             />
           </div>
           <div className={style["file-group"]}>
-           <div className={style["form-group"]}>
+            <div className={style["form-group"]}>
             <label htmlFor="posterFile" className={style["form-label"]}>Seleccionar Póster:</label>
             <div className={style["file-upload-container"]}>
               <input
