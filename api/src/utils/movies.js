@@ -107,7 +107,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Toy Story",
@@ -140,7 +140,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/6EiRUJpuoeQPghrs3YNktfnqOVh.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Interstellar",
@@ -195,7 +195,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "The Silence of the Lambs",
@@ -217,7 +217,7 @@ const sampleMovies = [
         country: "Japan",
         poster: "https://m.media-amazon.com/images/M/MV5BNGYyNmI3M2YtNzYzZS00OTViLTkxYjAtZDIyZmE1Y2U1ZmQ2XkEyXkFqcGdeQXVyMTA4NjE0NjEy._V1_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "The Prestige",
@@ -250,7 +250,7 @@ const sampleMovies = [
         country: "Brazil",
         poster: "https://i.ebayimg.com/images/g/OSkAAOSwO0Ra8NKH/s-l1600.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "The Grand Budapest Hotel",
@@ -283,7 +283,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/71DwIcSgFcS.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Good Will Hunting",
@@ -305,7 +305,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/51k3X4-sm6L._AC_UF894,1000_QL80_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Spirit",
@@ -338,7 +338,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/816O+CBx0ML.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Coco",
@@ -349,7 +349,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/817aStLW2rL._AC_UF894,1000_QL80_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Kimetsu no Yaiba: The Infinity Train",
@@ -371,7 +371,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://filmartgallery.com/cdn/shop/products/Mission-Impossible-Vintage-Movie-Poster-Original-1-Sheet-27x41_ae1e1e64-23cb-45fd-a8dc-bb6625e01daf.jpg?v=1663224951",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Train to Busan",

@@ -13,7 +13,7 @@ module.exports = async(user)=>{
   
         for (const movieId of movieIds) {
           const movie = await Movie.findByPk(movieId, {
-            attributes: ["id", "name", "poster"],
+            attributes: ["id", "name", "poster", "price",],
           });
           movies.push(movie.toJSON());
         }

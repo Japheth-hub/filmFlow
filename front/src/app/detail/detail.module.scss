@@ -128,7 +128,12 @@
     display: flex;
   }
 }
-
+.success-message {
+  background-color: green;
+  color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+}
 @media (max-width: $breakpointMD) {
   .container-info {
     flex-direction: column;

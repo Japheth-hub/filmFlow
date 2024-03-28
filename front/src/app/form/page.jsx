@@ -15,13 +15,14 @@ const MovieForm = () => {
   const [genreOptions, setGenreOptions] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [description, setDescription] = useState('');
-  const [duration, setDuration] = useState('');
   const [poster, setPoster] = useState(null);
   const [trailer, setTrailer] = useState(null);
   const [movie, setMovie] = useState(null);
   const [country, setCountry] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
+
 
   useEffect(() => {
     axios.get(`${URL}genres`)
@@ -36,6 +37,7 @@ const MovieForm = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); 
   
     try {
       //Promesas relacionadas a Cloudinary:
@@ -61,14 +63,13 @@ const MovieForm = () => {
       });
   
       const [posterDataURL, movieDataURL, trailerDataURL] = await Promise.all([posterData, trailerData, movieData]);
-      //
+
   
       const data = {
         name: movieName,
         director: director,
         genres: selectedGenres.join(','),
         description: description,
-        duration: duration,
         country: country,
         posterFile: posterDataURL,
         trailerFile: trailerDataURL,
@@ -76,20 +77,15 @@ const MovieForm = () => {
         auth:"3333"
       };
       
-  
-      // Envía los datos al backend
       const movieResponse = await axios.post(`${URL}movies`, data);
       console.log(movieResponse.data);
       setSuccessMessage('Formulario enviado correctamente');
       setErrorMessage('');
       console.log('Server response:', movieResponse);
-  
-      // Resetea los campos del formulario
       setMovieName('');
       setDirector('');
       setSelectedGenres([]);
       setDescription('');
-      setDuration('');
       setPoster(null);
       setTrailer(null);
       setMovie(null);
@@ -99,8 +95,8 @@ const MovieForm = () => {
       setErrorMessage('Error al enviar datos: ' + error.message);
       console.error('Error sending data:', error);
     }
+    setIsLoading(false); 
   };
-  
 
   const handlePosterChange = (e) => {
     setPoster(e.target.files[0]);
@@ -185,17 +181,6 @@ const MovieForm = () => {
             ></textarea>
           </div>
           <div className={style["form-group"]}>
-            <label htmlFor="duration" className={style["form-label"]}>Duración (en minutos):</label>
-            <input
-              type="number"
-              id="duration"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              className={style["form-input"]}
-              required
-            />
-          </div>
-          <div className={style["form-group"]}>
             <label htmlFor="country" className={style["form-label"]}>País:</label>
             <input
               type="text"
@@ -207,7 +192,7 @@ const MovieForm = () => {
             />
           </div>
           <div className={style["file-group"]}>
-           <div className={style["form-group"]}>
+            <div className={style["form-group"]}>
             <label htmlFor="posterFile" className={style["form-label"]}>Seleccionar Póster:</label>
             <div className={style["file-upload-container"]}>
               <input
@@ -224,7 +209,6 @@ const MovieForm = () => {
                   <img src={window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
-
             </div>
             <div className={style["form-group"]}>
               <label htmlFor="trailerFile" className={style["form-label"]}>Seleccionar Trailer:</label>
@@ -260,7 +244,9 @@ const MovieForm = () => {
             </div>
           </div>
           <div className={style["submit-button-container"]}>
-            <button type="submit" className={style["submit-button"]}>Enviar</button>
+            <button type="submit" className={style["submit-button"]} disabled={isLoading}>
+              {isLoading ? 'Enviando...' : 'Enviar'}
+            </button>
           </div>
         </form>
       </div>

@@ -6,11 +6,13 @@
   }
   
   .back-button {
-    margin-bottom: 20px;
-    margin-top: 5px;
-    border-radius: 3px;
-    background-color: transparent;
-    border-color: rgb(67, 64, 64);
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
   }
   
   .form-wrapper {
@@ -103,10 +105,14 @@
   }
 
   .submit-button{
-    margin-top: 10px;
-    padding: 5px;
-    border-radius: 3px;
-    font-size: 20px;
+    background-color: #333;
+    color: white;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
   }
 
   .submit-button-container {
