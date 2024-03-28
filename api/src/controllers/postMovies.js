@@ -70,12 +70,13 @@ module.exports = async (req) => {
         const trailer = cloudinaryMovieResponse.secure_url;
         const movie = cloudinaryTrailerResponse.secure_url;
         const duration = cloudinaryTrailerResponse.duration;
+        const price = 25
         //
         
         const userId = isAdmin(user) ? undefined : user.id;
         const [movieDB, created] = await Movie.findOrCreate({
             where: { name },
-            defaults: { poster, movie, trailer, director, description, duration, country, status, userId },
+            defaults: { poster, movie, trailer, director, description, duration, country, status, userId, price },
         });
 
         

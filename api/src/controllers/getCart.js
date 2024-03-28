@@ -17,7 +17,7 @@ module.exports = async (req) => {
 
       for (const movieId of movieIds) {
         const movie = await Movie.findByPk(movieId, {
-          attributes: ["id", "name", "poster"],
+          attributes: ["id", "name", "poster", "price"],
         });
         movies.push(movie);
       }

@@ -210,7 +210,6 @@ const MovieForm = () => {
                   <img src={window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
-
             </div>
             <div className={style["form-group"]}>
               <label htmlFor="trailerFile" className={style["form-label"]}>Seleccionar Trailer:</label>
