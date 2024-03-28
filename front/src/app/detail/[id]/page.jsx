@@ -4,17 +4,14 @@ import axios from 'axios';
 import style from '../detail.module.scss';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
-import Button from '../../../components/button/Button'
-import Image from 'next/image'
-import cartIcon from '../../../img/cart-icon-white.svg'
 import Pill from '@/components/pill/Pill';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import AddToCart from '../../../components/addToCart/AddToCart';
 
 const DetailContent = () => {
   const { id } = useParams();
-  const { user } = useUser();
   const [movieData, setMovieData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState(null);
   const [mediaType, setMediaType] = useState('trailer');
   const URL = process.env.NEXT_PUBLIC_URL;
@@ -42,25 +39,7 @@ const DetailContent = () => {
     fetchData();
   }, [id]);
 
-  const addToCart = async () => {
-    try {
-      //Hardcodeado
-      await axios.post(`${URL}cart`, {
-        movieId: id,
-        auth: '1111'
-      });
-
-      //Usuario de auth0
-      // await axios.post(`${URL}cart`, {
-      //   movieId: id,
-      //   auth: user.sid
-      // });
-      alert('Movie added to cart successfully!');
-    } catch (error) {
-      console.error('Error adding movie to cart:', error);
-      alert('An error occurred while adding the movie to the cart.');
-    }
-  };
+  
 
   const capitalize = (string) => {
     return string.toUpperCase();
@@ -110,7 +89,8 @@ const DetailContent = () => {
             <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>
-            <Button callback={addToCart} emoji={<Image alt="" src={cartIcon}/>} label="Agregar al carrito"/>
+            {movieData && <AddToCart movie={movieData} />}
+            
           </div>
         </div>
       </div>

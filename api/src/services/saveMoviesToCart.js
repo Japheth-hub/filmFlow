@@ -35,7 +35,7 @@ module.exports = async () => {
     try {
         const created = await postCart(req)
         if(created) {
-            console.log('Successfully created 4 reviews')
+            console.log('Successfully created 4 on the cart')
         }
     } catch (error) {
         return error
