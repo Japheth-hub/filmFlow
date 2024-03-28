@@ -4,11 +4,9 @@ import Image from 'next/image'
 import cartIcon from '../../img/cart-icon-white.svg'
 import axios from 'axios';
 import { useEffect } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
 const URL = process.env.NEXT_PUBLIC_URL;
 
 export default function AddToCart({movie}) {
-    // const { user } = useUser();
     const [cart, setCart] = useState([]);
     const [label, setLabel] = useState("Agregar a carrito");
     const user = checkUserLogin();
@@ -45,6 +43,7 @@ export default function AddToCart({movie}) {
         setCart(newCart);
         localStorage.setItem("cart", JSON.stringify(newCart));
     }
+    
     const addToCart = async () => {
         if (!user){
             const newCart = [...cart,{...movie}];
@@ -92,7 +91,6 @@ export default function AddToCart({movie}) {
         }else{
             setLabel("Agregar al carrito")
         }
-        console.log(cart);
       }, [cart]);
 
 
