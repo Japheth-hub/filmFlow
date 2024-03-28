@@ -82,7 +82,6 @@ const MovieForm = () => {
       setSuccessMessage('Formulario enviado correctamente');
       setErrorMessage('');
       console.log('Server response:', movieResponse);
-
       setMovieName('');
       setDirector('');
       setSelectedGenres([]);
