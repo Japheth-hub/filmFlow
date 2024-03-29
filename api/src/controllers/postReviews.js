@@ -1,7 +1,6 @@
 const {Review, User, Movie} = require('../db')
 
 module.exports = async (userSid, movieId, comment, points) => {
-module.exports = async (userSid, movieId, comment, points) => {
     try {
         const error = {}
         const user = await User.findOne({
@@ -9,11 +8,7 @@ module.exports = async (userSid, movieId, comment, points) => {
                     sid: userSid
                 }
         })
-        const user = await User.findOne({
-            where: {
-                sid: userSid
-            }
-        })
+        
         const movie = await Movie.findByPk(movieId)
         if(!user){
             error.message = 'No existe este usuario'

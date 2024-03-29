@@ -95,7 +95,7 @@ const DetailContent = () => {
 
       await axios.post(`${URL}reviews`, { userSid, movieId, comment, points });
 
-      const newReviewData = { id: reviewsData.length + 1, user: { name: userSid, picture: user.picture }, points, comment };
+      const newReviewData = { id: reviewsData.length + 1, user: { name: user.name, picture: user.picture }, points, comment };
       console.log(user)
       setReviewsData([...reviewsData, newReviewData]);
       setSuccessMessage('Review submitted successfully.');
