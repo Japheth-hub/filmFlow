@@ -23,7 +23,7 @@ module.exports = async (req) => {
            return {status:false,errors:validation.errors}
         }
 
-        let { name, director, genres, description, duration, country, posterFile, trailerFile, movieFile} = body;
+        let { name, director, genres, description, country, posterFile, trailerFile, movieFile} = body;
        
         const status = "pending" 
 
@@ -69,12 +69,14 @@ module.exports = async (req) => {
         const poster = cloudinaryPosterResponse.secure_url;
         const trailer = cloudinaryMovieResponse.secure_url;
         const movie = cloudinaryTrailerResponse.secure_url;
+        const duration = cloudinaryTrailerResponse.duration;
+        const price = 25
         //
         
         const userId = isAdmin(user) ? undefined : user.id;
         const [movieDB, created] = await Movie.findOrCreate({
             where: { name },
-            defaults: { poster, movie, trailer, director, description, duration, country, status, userId },
+            defaults: { poster, movie, trailer, director, description, duration, country, status, userId, price },
         });
 
         
