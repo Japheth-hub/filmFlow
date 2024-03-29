@@ -19,9 +19,11 @@ const DetailContent = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [reviewsData, setReviewsData] = useState([]);
   const user = checkUserLogin();
+
   const goToCategory = (genre) => {
     router.push(`/filters/${genre}`); // Utiliza router.push para navegar a la página especificada por la ruta (path)
   };
+
   function checkUserLogin (){
     const user = window.localStorage.getItem('FilmFlowUsr');
     if(user){
@@ -83,9 +85,23 @@ const DetailContent = () => {
     duration,
     country,
     genres,
-    reviews,
   } = movieData;
   
+  const handleRatingChange = (rating) => {
+    setNewReview({ ...newReview, points: rating });
+  };
+const renderStarSelector = () => {
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    const filled = i <= newReview.points ? style['filled'] : ''; 
+    stars.push(
+      <span key={i} className={`${style['star']} ${filled}`} onClick={() => handleRatingChange(i)}>
+        &#9733;
+      </span>
+    );
+  }
+  return stars;
+};
   const handleReviewSubmit = async () => {
     try {
       const userSid = user.sid;
@@ -139,7 +155,9 @@ const DetailContent = () => {
           {successMessage && <div className={style['success-message']}>{successMessage}</div>}
           <div className={style['review-form']}>
             <label>Rating:</label>
-            <input type="number" min="1" max="5" value={newReview.points} onChange={(e) => setNewReview({ ...newReview, points: parseInt(e.target.value) })} />
+            <div className={style['star-selector']}>
+              {renderStarSelector()}
+            </div>
             <label>Comment:</label>
             <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
             <button onClick={handleReviewSubmit}>Submit Review</button>
