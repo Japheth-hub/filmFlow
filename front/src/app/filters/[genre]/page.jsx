@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Movie from "../../../components/movie/Movie";
 import style from "./page.module.css";
 import { useSearchParams } from 'next/navigation'
+import Button from '../../../components/button/Button'
 
 const Filter = ({ params }) => {
 
@@ -152,11 +153,10 @@ const Filter = ({ params }) => {
               </select>
             </div>
             <div>
-              <input
-                type="Submit"
-                value="Aplicar"
-                onSubmit={handleSubmit}
-              />
+
+                  <Button emoji={"🔎"} label={"Buscar"}  callback={handleSubmit}/>
+            
+
             </div>
           </fieldset>
         </form>

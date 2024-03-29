@@ -9,7 +9,8 @@ const URL = process.env.NEXT_PUBLIC_URL;
 export default function AddToCart({movie}) {
     const [cart, setCart] = useState([]);
     const [label, setLabel] = useState("Agregar a carrito");
-    const user = checkUserLogin();
+    let user = null;
+    
     const handleAddCart = ()=>{
         if(!checkMovieCart()){
             addToCart();
@@ -19,7 +20,7 @@ export default function AddToCart({movie}) {
     }
 
     function checkUserLogin (){
-        const user = window.localStorage.getItem('FilmFlowUsr');
+        const user = localStorage.getItem('FilmFlowUsr');
         if(user){
             return JSON.parse(user);
         }else{
@@ -95,6 +96,7 @@ export default function AddToCart({movie}) {
 
 
       useEffect(() => {
+        user = checkUserLogin();
         if(!user){
 
             const localCart = JSON.parse(window.localStorage.getItem('cart'))
