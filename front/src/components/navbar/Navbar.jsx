@@ -80,6 +80,7 @@ const Nav = (props)=> {
                       <div className={styles.searchResultsContainer}>
                         <ul className={styles.movieList}>
                           {quickSearch.map((result, index) => (
+                          <Link href = {`/detail/${result.id}`}>
                             <li key={index}>
                               <div className={styles.card}>
                                 <div>{result.name}</div>
@@ -88,10 +89,11 @@ const Nav = (props)=> {
                                     src={result.poster}
                                     alt={result.name}
                                     className={styles.searchbar__image}
-                                  />
+                                    />
                                 </div>
                               </div>
                             </li>
+                          </Link>
                           ))}
                         </ul>
                       </div>
@@ -99,16 +101,17 @@ const Nav = (props)=> {
                         <p>No se encontraron películas con ese nombre.</p>
                       )}
                     </div>
+                    <Link href= '/filter'>
                     
+                    <button>Search</button>
+                    
+                    </Link>
 
                     
                     <div className={styles.toRight}> 
-
-                        <Link href="/cart">
-                            <li >
-                                <Image src={cart} alt="Cart" width={30} height={30} />
-                            </li>
-                        </Link>
+                        <li >
+                            <Image src={cart} alt="Cart" width={30} height={30} />
+                        </li>
 
                         <li >
                             <Image src={userpic} alt="Account" width={30} height={30} onClick={handleAccountClick} />
