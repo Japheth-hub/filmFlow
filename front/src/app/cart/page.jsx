@@ -1,15 +1,17 @@
 'use client'
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Buy from '../../components/btnBuy/buy'
 import style from './cart.module.scss'
 import Link from 'next/link';
+import AddToCart from '../../components/addToCart/AddToCart'
 
 const Cart = () => {
     const URL = process.env.NEXT_PUBLIC_URL;
     const { error, isLoading, user } = useUser();
     const [cartData, setCartData] = useState([]);
+    const [localStorageData, setLocalStorageData] = useState(null);
     const totalPrice = cartData.reduce((total, movie) => total + movie.price, 0);
 
     
@@ -17,21 +19,17 @@ const Cart = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`${URL}cart/${user.sid}`);
+            const localCart = JSON.parse(window.localStorage.getItem('cart'));
+            console.log(localCart);
+            if(localCart){
+                setCartData(localCart)
+            }
 
-            //Hardcodeado
-            // const response = await axios.get(`${URL}cart/${userId}`);
-
-            setCartData(response.data.movies);
         } catch (error) {
             console.error('Error fetching movie data:', error);
         }
     };
-    
-    if (!isLoading && cartData.length === 0) {
-        fetchData()
-    }
-    
+  
     const handleDelete = async (id) => {
         try {
             //Usuario de auth0
@@ -45,6 +43,26 @@ const Cart = () => {
             console.error('Error deleting movie from cart:', error);
         }
     }
+
+    useEffect(() => {
+        fetchData();
+        const handleStorageChange = (event) => {
+            console.log("hola");
+          if (event.storageArea === localStorage) {
+            // Actualizar el estado con los nuevos datos del almacenamiento local
+            setLocalStorageData(event.newValue);
+            fetchData();
+          }
+        };
+    
+        // Agregar el evento de escucha para cambios en el almacenamiento local
+        window.addEventListener('storage', handleStorageChange);
+    
+        // Eliminar el evento de escucha al desmontar el componente
+        return () => {
+          window.removeEventListener('storage', handleStorageChange);
+        };
+      }, []); // Se ejecuta solo una vez al montar el componente
     
     if (error) {
         return (
@@ -56,6 +74,11 @@ const Cart = () => {
             <div>Loading</div>
         )
     }
+
+
+ 
+
+  
 
     return (
         <div className={style.pageContainer}>
@@ -74,7 +97,8 @@ const Cart = () => {
                     <div className={style.price}>
                     <p>{movie.price}$</p>
                     </div>
-                    <button className={style.buttonDelete} onClick={() => handleDelete(movie.id)}>X</button>
+                    {/* <button className={style.buttonDelete} onClick={() => handleDelete(movie.id)}>X</button> */}
+                    <AddToCart movie={movie}/>
                 </div>
                 </div>
             ))}
