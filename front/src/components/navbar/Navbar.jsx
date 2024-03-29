@@ -82,7 +82,7 @@ const Nav = (props)=> {
                           {quickSearch.map((result, index) => (
                           <Link href = {`/detail/${result.id}`}>
                             <li key={index}>
-                              <div className={styles.card}>
+                              <div className={styles.card} onClick={()=>router.push(`/detail/${result.id}`)}>
                                 <div>{result.name}</div>
                                 <div>
                                   <img
@@ -110,7 +110,7 @@ const Nav = (props)=> {
                     
                     <div className={styles.toRight}> 
                         <li >
-                            <Image src={cart} alt="Cart" width={30} height={30} />
+                            <Link href='/cart'><Image src={cart} alt="Cart" width={30} height={30} /></Link>
                         </li>
 
                         <li >
@@ -121,7 +121,7 @@ const Nav = (props)=> {
                                     <ul>
 
                                     <li>
-                                        <Link href=""/account"">
+                                        <Link href="/account">
                                             My Account
                                         </Link>
                                     </li>

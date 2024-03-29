@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import styles from './searchBar.module.css'
 import Link from "next/link"
+import Button from "../button/Button"
 
 const searchBar = ({onSearch}) => {
     
@@ -28,7 +29,7 @@ const searchBar = ({onSearch}) => {
             />
             <Link href= {`/filters/search=${query}`}>
                     
-                <button>Search</button>
+            <Button emoji={"🔎"}/>
                     
            </Link>
             
