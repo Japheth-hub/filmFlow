@@ -98,7 +98,6 @@ export default function AddToCart({movie}) {
       useEffect(() => {
         const auth = checkUserLogin(); 
         setUser(auth)
-        console.log(user);
         const localCart = JSON.parse(window.localStorage.getItem('cart'));
 
         if(localCart){
