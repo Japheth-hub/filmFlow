@@ -199,6 +199,8 @@ const Filter = ({ params }) => {
                 value="Limpiar"
                 onClick={() => cleanFilter()}
               />
+
+              <Button emoji={""} label={"Clean"}  callback={cleanFilter}/>
             </div>
           </fieldset>
         </form>

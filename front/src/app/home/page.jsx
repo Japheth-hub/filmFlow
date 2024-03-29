@@ -49,6 +49,7 @@ const Home = () => {
   useEffect( () => {
     if(user){
       const upUser = async() => {
+        
         const { data } = await axios.post(`${URL}users`, user)
         //Creación de usuario en el localStorage
         if(!window.localStorage.getItem('FilmFlowUsr')){          
