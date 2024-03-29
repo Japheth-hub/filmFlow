@@ -9,7 +9,7 @@ const URL = process.env.NEXT_PUBLIC_URL;
 export default function AddToCart({movie}) {
     const [cart, setCart] = useState([]);
     const [label, setLabel] = useState("Agregar a carrito");
-    let user = null;
+    const [user,setUser] = useState(null);
     
     const handleAddCart = ()=>{
         if(!checkMovieCart()){
@@ -20,9 +20,9 @@ export default function AddToCart({movie}) {
     }
 
     function checkUserLogin (){
-        const user = localStorage.getItem('FilmFlowUsr');
-        if(user){
-            return JSON.parse(user);
+        const auth = localStorage.getItem('FilmFlowUsr');
+        if(auth){
+            return JSON.parse(auth);
         }else{
             return false
         }
@@ -46,18 +46,18 @@ export default function AddToCart({movie}) {
     }
     
     const addToCart = async () => {
+        console.log(user);
         if (!user){
             const newCart = [...cart,{...movie}];
             saveCart(newCart)
         }else{
-          
           try {
             const remoteCart = await axios.post(`${URL}cart`, {
                 movieId:movie.id,
                 auth: user.sid
             });
 
-            setCart(remoteCart.data.movies);
+            saveCart(remoteCart.data.movies);
             
           } catch (error) {
             console.error('Error adding movie to cart:', error);
@@ -80,7 +80,7 @@ export default function AddToCart({movie}) {
                 headers:{}
               });
 
-            setCart(remoteCart.data.movies);
+            saveCart(remoteCart.data.movies);
            
         }
         
@@ -96,26 +96,29 @@ export default function AddToCart({movie}) {
 
 
       useEffect(() => {
-        user = checkUserLogin();
-        if(!user){
+        const auth = checkUserLogin(); 
+        setUser(auth)
+        console.log(user);
+        const localCart = JSON.parse(window.localStorage.getItem('cart'));
 
-            const localCart = JSON.parse(window.localStorage.getItem('cart'))
-            if(localCart){
-                setCart(localCart)
-            }
+        if(localCart){
+            setCart(localCart)
         }else{
-            (async()=>{
-           
-               try {
-                const remoteCart =  await axios.get(`${URL}cart/${user.sid}`);
-                setCart(remoteCart.data.movies);
-    
-               } catch (error) {
-                console.log(error);
-               }
-           
-            })();
+            if(auth){
+                (async()=>{
+               
+                   try {
+                    const remoteCart =  await axios.get(`${URL}cart/${user.sid}`);
+                    setCart(remoteCart.data.movies);
+        
+                   } catch (error) {
+                    console.log(error);
+                   }
+               
+                })();
+            }
         }
+
         
         
       }, [])
