@@ -2,6 +2,7 @@
 import axios from "axios";
 import Movies from "../../components/movies/Movies";
 import Carousel from "../../components/carousel/Carousel";
+import SearchBar from "../../components/searchBar/searchBar";
 import { useState, useEffect } from "react";
 import Filters from "../filters/Filters";
 import { useUser } from '@auth0/nextjs-auth0/client';
@@ -10,6 +11,7 @@ import Link from "next/link";
 const Home = () => {
   const {error, isLoading, user} = useUser()
   const URL = process.env.NEXT_PUBLIC_URL
+  const [results, setResults] = useState([])
   const [movie, setMovie] = useState(
     [{
       id: 'cargando',
@@ -64,6 +66,8 @@ const Home = () => {
     }
 
   }, [user])
+
+
 
   return (
   <div>

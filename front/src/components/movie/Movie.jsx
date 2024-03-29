@@ -1,6 +1,6 @@
 import style from "./Movie.module.scss"
 import Link from "next/link";
-
+import AddToCart from '../addToCart/AddToCart';
 const Movie = ({ elem, dim }) => {
     const title = (title)=>{
         if(title){
@@ -22,6 +22,9 @@ const Movie = ({ elem, dim }) => {
                 </div>
 
             </Link>
+
+            <div><AddToCart movie={elem} /></div>
+
         </div>
     )
 }

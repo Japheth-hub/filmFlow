@@ -41,7 +41,7 @@ const FiltersView = ({genres}) => {
                     if(index >= elemIndex.bottom && index <= elemIndex.top){
                         return (<Link 
                             className={style.circle}
-                            href={`/filters/${elem.name}`}
+                            href={`/filters/genero=${elem.name}`}
                             key={elem.id}>     
                                   <>
                                     <Genre genre={elem}/>

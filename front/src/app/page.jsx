@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Carousel from "../components/carousel/Carousel";
+import { Provider } from "react-redux";
 import { useState, useEffect } from "react";
 import { useUser } from '@auth0/nextjs-auth0/client';
 
@@ -49,6 +50,7 @@ const Landing = () => {
 
   return (
     <div className="container">
+      
       <div>
         <h1>Landing</h1>
           <Carousel movie={movie} dim={['600px', '400px']} autoplay={null}/>

@@ -22,7 +22,7 @@ module.exports = async (id)=>{
                 }
             ]
         })
-        console.log(movie)
+
         if(movie){
             return data.content = movie
         }
