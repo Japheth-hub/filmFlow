@@ -9,7 +9,6 @@ module.exports = async (req) => {
         });
         if(usuario && usuario.movies.length > 0){
             const peliculas = []
-            console.log('este es el user', usuario.movies)
             for(let movie of usuario.movies){
                 const pelicula = await Movie.findByPk(movie.id, {
                     attributes: ['id', 'name', 'poster']

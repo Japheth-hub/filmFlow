@@ -5,22 +5,38 @@ import Link from "next/link";
 import style from './account.module.scss'
 import Button from "@/components/button/Button";
 import logo from '../../img/logo-white-expanded.png'
+import { useState } from "react";
+import axios from 'axios'
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 
 export default function Account() {
   const { error, isLoading, user } = useUser();
-
+  const [movies, setMovies] = useState([])
+  async function fetchData(){
+    try {
+      const { data } = await axios(`${NEXT_PUBLIC_URL}purchases/${user.sid}`);
+      if(typeof data === "object"){
+        setMovies(data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  if(!isLoading && movies.length === 0){
+    fetchData()
+  }
+  
   if (error) {
     return <div>Error en su session</div>;
   }
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  console.log(logo);
   return (
-    <div className={style["container"]}>
+    <div className={style["contenedor"]}>
       <div className={style["nav"]}>
         <Link href="/home">
-          <Button callback emoji='🔙' label='Home'></Button>
+        <Button callback emoji="🔙" label="Home"></Button>
         </Link>
         <div className={style["filmFlow"]}>
           <img src={logo.src} alt="logo-filmFlow" />
@@ -30,8 +46,8 @@ export default function Account() {
       <div>
         <div className={style["info"]}>
           <div className={style["datos"]}>
-              <img src={user.picture} alt={user.name} />
-              <p>{user.email}</p>
+            <img src={user.picture} alt={user.name} />
+            <p>{user.email}</p>
           </div>
           <ul>
             <li>
@@ -47,13 +63,17 @@ export default function Account() {
         </div>
         <div className={style["movies"]}>
           <h3>Tus Peliculas</h3>
-          <hr />
-          <div className={style["movie"]}>
-            <img
-              src="https://www.mubis.es/media/users/12828/321885/nuevo-poster-de-the-marvels-original.jpg"
-              alt="Poster"
-            />
-            <p>Marvels</p>
+          <div className={style["lista"]}>
+            {movies.length > 0 ? movies.map((movie) => (
+              <Link key={movie.id} href={`/detail/${movie.id}`}>
+                <div className={style["movie"]}>
+                  <img src={movie.poster} alt={movie.name} />
+                  <p>{movie.name}</p>
+                </div>
+              </Link>
+            )) : <h3 className={style['sinCompras']}>Aun no tienes Peliculas para ver</h3>
+            
+          }
           </div>
         </div>
       </div>
