@@ -23,7 +23,7 @@ const Movie = ({ elem, dim }) => {
 
             </Link>
 
-            <div><AddToCart movie={elem} /></div>
+            <div className={style.addCartButton}><AddToCart movie={elem} /></div>
 
         </div>
     )

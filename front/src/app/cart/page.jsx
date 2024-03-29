@@ -6,6 +6,7 @@ import Buy from '../../components/btnBuy/buy'
 import style from './cart.module.scss'
 import Link from 'next/link';
 import AddToCart from '../../components/addToCart/AddToCart'
+import Button  from '@/components/button/Button';
 
 const Cart = () => {
     const URL = process.env.NEXT_PUBLIC_URL;
@@ -14,16 +15,24 @@ const Cart = () => {
     const [localStorageData, setLocalStorageData] = useState(null);
     const totalPrice = cartData.reduce((total, movie) => total + movie.price, 0);
 
-    
-    // const userId = "1111"
 
     const fetchData = async () => {
+        console.log("fetching data");
         try {
             const localCart = JSON.parse(window.localStorage.getItem('cart'));
-            console.log(localCart);
-            if(localCart){
+            if(user){
+                console.log("Hay usuario");
+                const syncData = await axios.post(`${URL}cart`,{
+                    movies:localCart,
+                    auth: user.sid
+                });
+                setCartData(syncData.data.movies);
+            }else{
                 setCartData(localCart)
             }
+        
+
+            
 
         } catch (error) {
             console.error('Error fetching movie data:', error);
@@ -47,22 +56,20 @@ const Cart = () => {
     useEffect(() => {
         fetchData();
         const handleStorageChange = (event) => {
-            console.log("hola");
-          if (event.storageArea === localStorage) {
-            // Actualizar el estado con los nuevos datos del almacenamiento local
-            setLocalStorageData(event.newValue);
             fetchData();
-          }
         };
     
-        // Agregar el evento de escucha para cambios en el almacenamiento local
-        window.addEventListener('storage', handleStorageChange);
-    
-        // Eliminar el evento de escucha al desmontar el componente
+        window.addEventListener('localChanged', handleStorageChange);
+        
         return () => {
-          window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('localChanged', handleStorageChange);
         };
-      }, []); // Se ejecuta solo una vez al montar el componente
+      }, []);
+
+      useEffect(() => {
+        fetchData();
+        
+      }, [user]);
     
     if (error) {
         return (
@@ -75,17 +82,12 @@ const Cart = () => {
         )
     }
 
-
- 
-
-  
-
     return (
         <div className={style.pageContainer}>
             <div className={style.cartContainer}> 
-        <Link href="/home">
-            <button>Ir a home</button>
-        </Link>
+                <Link href="/home">
+                    <Button label="ir a home" emoji="🏠" />
+                </Link>
             <div className={style.cartList}> 
             {cartData.map((movie) => (
                 <div key={movie.id} className={style.cartItem}> 
@@ -97,7 +99,6 @@ const Cart = () => {
                     <div className={style.price}>
                     <p>{movie.price}$</p>
                     </div>
-                    {/* <button className={style.buttonDelete} onClick={() => handleDelete(movie.id)}>X</button> */}
                     <AddToCart movie={movie}/>
                 </div>
                 </div>
@@ -107,7 +108,8 @@ const Cart = () => {
             </div>
             </div>
             <div className={style.buy}> 
-            <Buy sid = {user.sid}></Buy>
+            {user ? <Buy sid = {user.sid}/>: <Link href="/api/auth/login"><Button label="loggeate"/></Link>}
+            
             </div>
         </div>
     </div>

@@ -31,9 +31,11 @@ module.exports = async (req) => {
 
         if(movies) {
             for (const movie of movies) {
-                const cart = await Cart.create({
-                    movieId: movie.id,
-                    userId,
+                const [cart, createdCart] = await Cart.findOrCreate({
+                    where: {
+                        movieId: movie.id,
+                        userId: userId,
+                    }
                 });
                 status = true;
                 if (!cart) {
