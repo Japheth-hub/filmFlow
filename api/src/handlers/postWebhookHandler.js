@@ -1,11 +1,11 @@
 require("dotenv").config();
-const { KEY_SECRET } = process.env;
+const { KEY_SECRET,ENDPOINT } = process.env;
 const stripe = require("stripe")(KEY_SECRET);
 const axios = require('axios')
 
 module.exports = async (request, response) => {
   const sig = request.headers["stripe-signature"];
-  const endpointSecret = "whsec_LFkdVslOBtBMRcmqqQ5h6JrPoS7V9jjp";
+  const endpointSecret = ENDPOINT;
   let event;
 
   try {

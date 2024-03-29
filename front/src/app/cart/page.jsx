@@ -23,11 +23,19 @@ const Cart = () => {
             const localCart = JSON.parse(window.localStorage.getItem('cart'));
             if(user){
                 console.log("Hay usuario");
-                const syncData = await axios.post(`${URL}cart`,{
-                    movies:localCart,
-                    auth: user.sid
-                });
-                setCartData(syncData.data.movies);
+                try {
+                    const syncData = await axios.post(`${URL}cart`,{
+                        movies:localCart,
+                        auth: user.sid
+                    });
+                    window.localStorage.setItem(
+                        'cart', JSON.stringify(syncData.data.movies)
+                      )
+                   
+                    setCartData(syncData.data.movies);
+                } catch (error) {
+                    console.log(error);
+                }
             }else{
                 if(localCart){
                     setCartData(localCart)

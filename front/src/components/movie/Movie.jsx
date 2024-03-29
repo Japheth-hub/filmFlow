@@ -23,18 +23,23 @@ const Movie = ({ elem, dim }) => {
     useEffect(()=>{
         if(user){
             async function getPurchase(){
-                const {data} = await axios(`${URL}purchases/${user.sid}`)
-                if(typeof data === "object"){
-                    const idsMovies = []
-                    for(let movie of data){
-                        idsMovies.push(movie.id)
+                try { 
+                    const {data} = await axios(`${URL}purchases/${user.sid}`)
+                    if(typeof data === "object"){
+                        const idsMovies = []
+                        for(let movie of data){
+                            idsMovies.push(movie.id)
+                        }
+                        setPurchase(idsMovies)
                     }
-                    setPurchase(idsMovies)
+                } catch (error) {
+                        console.log(error);
                 }
             }
             getPurchase()
         }
-    }, [user])
+        console.log(user);
+    }, [])
     // console.log(purchase)
     // console.log('este es el elem', elem)
     return(
