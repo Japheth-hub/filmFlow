@@ -8,6 +8,7 @@ module.exports = async (userSid, movieId, comment, points) => {
                     sid: userSid
                 }
         })
+        
         const movie = await Movie.findByPk(movieId)
         if(!user){
             error.message = 'No existe este usuario'
