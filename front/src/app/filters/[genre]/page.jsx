@@ -128,7 +128,7 @@ const Filter = ({ params }) => {
     setDataFilter({ ...dataFilter, search: "" })
     URL2 = URL + `movies?search=`
     setUrlFilter(URL2)
-    router.push("/filters/search")
+    router.push("/filters/search=")
   };
 
   const handleClick = () => {
@@ -199,7 +199,8 @@ const Filter = ({ params }) => {
                 value="Limpiar"
                 onClick={() => cleanFilter()}
               />
-              {/* <Button emoji={""} label={"Clean"} callback={() => cleanFilter()}/> */}
+              {/*
+               <Button emoji={""} label={"Clean"} callback={() => cleanFilter()}/> */}
             </div>
           </fieldset>
         </form>
