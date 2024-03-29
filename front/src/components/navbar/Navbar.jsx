@@ -81,6 +81,7 @@ const Nav = (props)=> {
                         <ul className={styles.movieList}>
                           {quickSearch.map((result, index) => (
                             <li key={index}>
+                              <Link href=`detail/${result.id}>
                               <div className={styles.card}>
                                 <div>{result.name}</div>
                                 <div>
@@ -88,9 +89,10 @@ const Nav = (props)=> {
                                     src={result.poster}
                                     alt={result.name}
                                     className={styles.searchbar__image}
-                                  />
+                                    />
                                 </div>
                               </div>
+                          </Link>
                             </li>
                           ))}
                         </ul>
