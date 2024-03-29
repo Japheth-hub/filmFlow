@@ -52,10 +52,10 @@ const DetailContent = () => {
     fetchData();
   }, [id]);
 
-  
   useEffect(() => {
     if (movieData) {
       setReviewsData(movieData.reviews || []);
+
     }
   }, [movieData]);
 

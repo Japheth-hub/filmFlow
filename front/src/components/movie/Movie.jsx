@@ -22,6 +22,7 @@ const Movie = ({ elem, dim }) => {
                 </div>
 
             </Link>
+
             <div><AddToCart movie={elem} /></div>
 
         </div>

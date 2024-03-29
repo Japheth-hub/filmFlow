@@ -17,7 +17,6 @@ const Cart = () => {
 
     const fetchData = async () => {
         try {
-            // Usuario de auth0
             const response = await axios.get(`${URL}cart/${user.sid}`);
 
             //Hardcodeado
@@ -84,7 +83,7 @@ const Cart = () => {
             </div>
             </div>
             <div className={style.buy}> 
-            <Buy/>
+            <Buy sid = {user.sid}></Buy>
             </div>
         </div>
     </div>

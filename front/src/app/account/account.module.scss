@@ -1,0 +1,99 @@
+@import "../../scss/variables.scss";
+
+.contenedor{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.nav{
+    background-color: $mainColor;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+.filmFlow{
+    width: 250px;
+}
+.filmFlow img{
+    width: 100%;
+}
+.userName{
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+}
+.info{  
+    width: 800px;
+    border: solid $mainColor 1px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px $mainColor;
+    margin: 10px auto;
+    padding: 10px;
+}
+.datos{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 20px;
+    font-size: 2rem;
+}
+.datos img{
+    margin: 0px 10px;
+    width: 60px;
+}
+.info ul{
+    list-style: none;
+    font-size: 1.5rem;
+}
+.info ul li{
+    margin: 10px auto;
+    font-weight: bold;
+}
+.info ul li i{
+    font-weight: 400;
+}
+.movies{
+    width: 800px;
+    border: solid $mainColor 1px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px $mainColor;
+    margin: 20px auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.lista{
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-top: solid 2px $mainColor;
+}
+.movies h3{
+    font-size: 2rem;
+}
+.movie{
+    width: 150px;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 20px;
+}
+.movie img{
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+}

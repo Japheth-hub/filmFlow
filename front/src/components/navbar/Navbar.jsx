@@ -121,7 +121,7 @@ const Nav = (props)=> {
                                     <ul>
 
                                     <li>
-                                        <Link href="#">
+                                        <Link href=""/account"">
                                             My Account
                                         </Link>
                                     </li>

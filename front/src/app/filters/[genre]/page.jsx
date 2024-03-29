@@ -154,8 +154,7 @@ const Filter = ({ params }) => {
             </div>
             <div>
 
-                  <Button emoji={"🔎"} label={"Buscar"}  callback={handleSubmit}/>
-            
+              <Button emoji={"🔎"} label={"Buscar"}  callback={handleSubmit}/>
 
             </div>
           </fieldset>
