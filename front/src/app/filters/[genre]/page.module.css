@@ -4,3 +4,11 @@
 .pagination{
     margin: 10px;
 }
+.rowField{
+    display: inline-flex;
+    margin: 10px;
+    padding: 10px;
+}
+.optionsField{
+    margin: 10px;
+}

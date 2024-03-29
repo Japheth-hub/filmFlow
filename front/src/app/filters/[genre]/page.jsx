@@ -1,48 +1,58 @@
 "use client";
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Movie from "../../../components/movie/Movie";
 import style from "./page.module.css";
 import { useSearchParams } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 const Filter = ({ params }) => {
-
+  const router = useRouter()
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('s') || "";
   const URL = process.env.NEXT_PUBLIC_URL;
   let URL2 = URL;
 
+  //?LEE LO QUE VIENE POR PARAMS.
+  //  -> si es un GENERO O UNA FRASE DEL ONSEARCH
   let condicion = params.genre.split("%3D")
-
   condicion[0] !== "search"
-    ? condicion[1] !== "search" 
-      ?(URL2 = URL2 + `movies?search=&genre=${condicion[1]}`)
-      :(URL2 = URL + `movies?search=${searchQuery}`)
-    : (URL2 = URL + `movies?search=${condicion[1]}`);
-  const [urlFilter, setUrlFilter] = useState([URL2]);
+  ? condicion[1] !== "search" 
+    ?(URL2 += `movies?search=&genre=${condicion[1]}`)
+    :(URL2 += `movies?search=${searchQuery}`)
+  : (URL2 += `movies?search=${condicion[1]}`)
+
+ //?ALMACENAMOS LAS PELICULAS 
   const [movies, setMovies] = useState([
     {
       id: "cargando",
       name: "cargando",
     },
   ]);
+
+  //?ALMACENAMOS LOS GENEROS
   const [genres, setGenres] = useState([
     {
       id: "cargando",
       name: "cargando",
     },
   ]);
+  //?ALMACENAMOS LOS DATOS QUE INGRESA EL USER
   const [dataFilter, setDataFilter] = useState({
-    search: searchQuery,
+    search: "",
     genre: "",
     orderType: "",
     order: "",
   });
+  //?ALMACENAMOS LA URL QUE HACE LA QUERY AL BACK
+  const [urlFilter, setUrlFilter] = useState(URL2);
+  //?ALMACENAMOS LA PAGINACION
   const [pagination, setPagination] = useState({
     page: 1,
     step: 12,
   });
 
+  //?GENERA LOS GENEROS DEL SELECT
   useEffect(() => {
     const getGenres = async () => {
       let { data } = await axios.get(`${URL}genres`);
@@ -50,6 +60,9 @@ const Filter = ({ params }) => {
     };
     getGenres();
   }, []);
+
+  //?MONITOREA Y APLICA EL CAMBIO EN LA QUERY AL BACK 
+  //?SETEA LAS PELICULAS EN EL ESTADO
   useEffect(() => {
     const getMovies = async () => {
       let { data } = await axios.get(urlFilter);
@@ -59,6 +72,54 @@ const Filter = ({ params }) => {
     getMovies();
   }, [urlFilter]);
 
+  //?SETTEAMOS LO QUE VIENE DE SEARCHBAR EN LA QUERY AL BACK 
+  if(condicion[0] === "search" && condicion[1] !== dataFilter.search){
+    let valueQuery = condicion[1];
+    setDataFilter({ ...dataFilter, search: valueQuery })
+  }
+
+  //?APLICAMOS CAMBIOS A LA QUERY DEL BACK CON LOS VALUES DEL USER
+  const handleChange = (event) => {
+    if(event.target.name === "genre"){
+      setDataFilter({ ...dataFilter, genre: event.target.value })
+      URL2 = URL 
+                  + `movies?search=${dataFilter.search}`
+                  + `&genre=${event.target.value}`
+                  + `&orderType=${dataFilter.orderType}`
+                  + `&order=${dataFilter.order}`
+      setUrlFilter(URL2)
+      setPagination({...pagination, page: 1})
+    }
+    if(event.target.name === "orderType"){
+      setDataFilter({ ...dataFilter, orderType: event.target.value })
+      URL2 = URL 
+                  + `movies?search=${dataFilter.search}`
+                  + `&genre=${dataFilter.genre}`
+                  + `&orderType=${event.target.value}`
+                  + `&order=${dataFilter.order}`
+      setUrlFilter(URL2)
+      setPagination({...pagination, page: 1})
+    }
+    if(event.target.name === "order"){
+      setDataFilter({ ...dataFilter, order: event.target.value })
+      URL2 = URL 
+                  + `movies?search=${dataFilter.search}`
+                  + `&genre=${dataFilter.genre}`
+                  + `&orderType=${dataFilter.orderType}`
+                  + `&order=${event.target.value}`
+      setUrlFilter(URL2)
+      setPagination({...pagination, page: 1})
+    }
+  };
+
+  //?APLICAMOS EL FILTER LIMPIANDO LA URL
+  const cleanFilter = () => {
+    URL2 = URL + `movies?search=`
+    setUrlFilter(URL2)
+    router.push(`/filters/genero=search`)
+  };
+
+  //?Fn PARA MOVER EL PAGINADO 
   const changePage = (direct) => {
     if (direct === "prev") {
       if (pagination.page > 1) {
@@ -71,49 +132,17 @@ const Filter = ({ params }) => {
     }
   };
 
-  const handleChange = (event) => {
-    if (event.target.name === "search") {
-      setDataFilter({ ...dataFilter, search: event.target.value });
-    } else if (event.target.name === "genre") {
-      setDataFilter({ ...dataFilter, genre: event.target.value });
-    } else if (event.target.name === "orderType") {
-      setDataFilter({ ...dataFilter, orderType: event.target.value });
-    } else if (event.target.name === "order") {
-      setDataFilter({ ...dataFilter, order: event.target.value });
-    }
-  };
-
-  const applyFilter = () => {
-    URL2 = URL + `movies?search=${dataFilter.search}`;
-    if (dataFilter.genre !== "") URL2 = URL2 + `&genre=${dataFilter.genre}`;
-    if (dataFilter.orderType !== "")
-      URL2 = URL2 + `&orderType=${dataFilter.orderType}`;
-    if (dataFilter.order !== "") URL2 = URL2 + `&order=${dataFilter.order}`;
-    setUrlFilter(URL2);
-  };
-
   const handleSubmit = (event) => {
-    event.preventDefault();
-    applyFilter();
-    dispatch(upState(URL2))
+    cleanFilter()
   };
 
   return (
     <div>
       <div>
         <form onSubmit={handleSubmit}>
-          <fieldset>
-            <div>
-              <label>Frase:</label>
-              <input
-                type="text"
-                name="search"
-                value={dataFilter.search}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label>Genre:</label>
+          <fieldset className={style.rowField}>
+            <div className={style.optionsField}>
+              <label>Genre </label>
               <select
                 name="genre"
                 value={dataFilter.genre}
@@ -127,20 +156,20 @@ const Filter = ({ params }) => {
                 ))}
               </select>
             </div>
-            <div>
-              <label>OrderType:</label>
+            <div className={style.optionsField}>
+              <label>OrderType </label>
               <select
                 name="orderType"
                 value={dataFilter.orderType}
                 onChange={handleChange}
               >
-                <option value={""}>Seleccione...</option>
+                <option value={""} >Seleccione...</option>
                 <option value={"name"}>Name</option>
                 <option value={"duration"}>Duration</option>
               </select>
             </div>
-            <div>
-              <label>Order:</label>
+            <div className={style.optionsField}>
+              <label>Order </label>
               <select
                 name="order"
                 value={dataFilter.order}
@@ -153,14 +182,19 @@ const Filter = ({ params }) => {
             </div>
             <div>
               <input
+                className={style.optionsField}
                 type="Submit"
-                value="Aplicar"
+                value="Limpiar"
+                onChange={handleChange}
                 onSubmit={handleSubmit}
               />
             </div>
           </fieldset>
         </form>
       </div>
+
+      {/* MOSTRAR PELICULAS */}
+      {/* REVISAR LA POSIBILIDAD DE REFACTORIZAR CON SLICE */}
       <div className={`container ${style.order}`}>
         {movies.map((elem, index) => {
           if (
@@ -171,12 +205,15 @@ const Filter = ({ params }) => {
           }
         })}
       </div>
+
+      {/* MOSTRAR BOTONES DE PAGINACION */}
       <div className="container">
         <div className={style.pagination}>
           <input
             className={style.pagination}
             type="button"
             value="Anterior"
+            onChange={handleChange}
             onClick={() => changePage("prev")}
           />
           <label className={style.pagination}>{pagination.page}</label>
@@ -184,6 +221,7 @@ const Filter = ({ params }) => {
             className={style.pagination}
             type="button"
             value="Siguiente"
+            onChange={handleChange}
             onClick={() => changePage("next")}
           />
         </div>
