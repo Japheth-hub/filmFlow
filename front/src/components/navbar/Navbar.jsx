@@ -80,18 +80,20 @@ const Nav = (props)=> {
                       <div className={styles.searchResultsContainer}>
                         <ul className={styles.movieList}>
                           {quickSearch.map((result, index) => (
+                          <Link href = {`/detail/${result.id}`}>
                             <li key={index}>
-                              <div className={styles.card}>
+                              <div className={styles.card} onClick={()=>router.push(`/detail/${result.id}`)}>
                                 <div>{result.name}</div>
                                 <div>
                                   <img
                                     src={result.poster}
                                     alt={result.name}
                                     className={styles.searchbar__image}
-                                  />
+                                    />
                                 </div>
                               </div>
                             </li>
+                          </Link>
                           ))}
                         </ul>
                       </div>
@@ -99,16 +101,10 @@ const Nav = (props)=> {
                         <p>No se encontraron películas con ese nombre.</p>
                       )}
                     </div>
-                    
-
-                    
                     <div className={styles.toRight}> 
-
-                        <Link href="/cart">
-                            <li >
-                                <Image src={cart} alt="Cart" width={30} height={30} />
-                            </li>
-                        </Link>
+                        <li >
+                            <Link href='/cart'><Image src={cart} alt="Cart" width={30} height={30} /></Link>
+                        </li>
 
                         <li >
                             <Image src={userpic} alt="Account" width={30} height={30} onClick={handleAccountClick} />
@@ -116,9 +112,11 @@ const Nav = (props)=> {
                                 <div className={styles.dropdown}>
 
                                     <ul>
-
                                     <li>
-                                        <Link href="#">
+                                      {user ? <h6>{user.nickname}</h6> : null}
+                                    </li>
+                                    <li>
+                                        <Link href="/account">
                                             My Account
                                         </Link>
                                     </li>
@@ -130,7 +128,9 @@ const Nav = (props)=> {
                                     </li>
 
                                     <li>
-                                        {user ? <a href="/api/auth/logout"><button>Log out</button></a> : ""}
+                                        {user 
+                                        ? <a href="/api/auth/logout"><button>Log out</button></a> 
+                                        : <a href="/api/auth/login"><button>Login</button></a>}
                                     </li>
 
                                     </ul>

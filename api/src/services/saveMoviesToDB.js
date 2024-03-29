@@ -17,7 +17,8 @@ module.exports = async () => {
                     poster,
                     trailer,
                     movie,
-                    status: "pending"
+                    status: "pending", 
+                    price: 25,
                 }
             });
 

@@ -1,4 +1,78 @@
-.movie-poster {
-    max-width: 50px;
-    max-height: 150px;
-}
+.pageContainer {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    margin-top: 50px; 
+    margin-bottom: 50px; 
+
+  }
+
+  .cartContainer {
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 30px;
+    margin: 50px;
+    width: calc(100% - 100px);
+  }
+  
+  .cartList {
+    display: flex; 
+    flex-direction: column; 
+  }
+  
+  .cartItem {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    justify-content: space-between;
+  }
+  .cartItem p{
+    font-size: 20px;
+  }
+  
+  .moviePoster {
+    width: 100px; 
+    margin-right: 1rem;
+    padding: 3px;
+    border-radius: 5px;
+  }
+  
+  .itemDetails {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+
+
+  }
+  .price {
+    border-color: black;
+    border-left: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    padding: 0 25px; 
+    height: 100%; 
+  }
+  .priceButtonContainer {
+    display: flex;
+    align-items: center;
+
+  }
+  .buttonDelete {
+    margin-left: auto;
+    margin-right: 20px;
+  }
+  .totalPrice{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 20px;
+    border-bottom: 1px solid #370404;
+  }
+
+  .buy{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 20px;
+    flex-direction: row-reverse;
+  }
