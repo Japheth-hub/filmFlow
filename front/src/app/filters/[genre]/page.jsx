@@ -72,14 +72,24 @@ const Filter = ({ params }) => {
     getMovies();
   }, [urlFilter]);
 
+  useEffect(() => {
+    
+  }, [dataFilter])
+
   //?SETTEAMOS LO QUE VIENE DE SEARCHBAR EN LA QUERY AL BACK 
-  if(condicion[0] === "search" && condicion[1] !== dataFilter.search){
-    let valueQuery = condicion[1];
-    setDataFilter({ ...dataFilter, search: valueQuery })
+  if(condicion[0] === "search"){
+    if(condicion[1]){
+      if(dataFilter.search !== condicion[1]){
+        let valueQuery = condicion[1];
+        setDataFilter({ ...dataFilter, search: valueQuery })
+        console.log('setting search', condicion);
+      }
+    }
   }
 
   //?APLICAMOS CAMBIOS A LA QUERY DEL BACK CON LOS VALUES DEL USER
   const handleChange = (event) => {
+    
     if(event.target.name === "genre"){
       setDataFilter({ ...dataFilter, genre: event.target.value })
       URL2 = URL 
@@ -114,9 +124,10 @@ const Filter = ({ params }) => {
 
   //?APLICAMOS EL FILTER LIMPIANDO LA URL
   const cleanFilter = () => {
+    setDataFilter({ ...dataFilter, search: "" })
     URL2 = URL + `movies?search=`
     setUrlFilter(URL2)
-    router.push(`/filters/genero=search`)
+    router.push("/filters/search")
   };
 
   //?Fn PARA MOVER EL PAGINADO 
@@ -183,10 +194,9 @@ const Filter = ({ params }) => {
             <div>
               <input
                 className={style.optionsField}
-                type="Submit"
+                type="button"
                 value="Limpiar"
-                onChange={handleChange}
-                onSubmit={handleSubmit}
+                onClick={() => cleanFilter()}
               />
             </div>
           </fieldset>
