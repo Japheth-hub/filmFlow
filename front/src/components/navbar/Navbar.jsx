@@ -101,13 +101,6 @@ const Nav = (props)=> {
                         <p>No se encontraron películas con ese nombre.</p>
                       )}
                     </div>
-                    <Link href= '/filter'>
-                    
-                    <button>Search</button>
-                    
-                    </Link>
-
-                    
                     <div className={styles.toRight}> 
                         <li >
                             <Link href='/cart'><Image src={cart} alt="Cart" width={30} height={30} /></Link>
@@ -119,7 +112,9 @@ const Nav = (props)=> {
                                 <div className={styles.dropdown}>
 
                                     <ul>
-
+                                    <li>
+                                      {user ? <h6>{user.nickname}</h6> : null}
+                                    </li>
                                     <li>
                                         <Link href="/account">
                                             My Account
@@ -133,7 +128,9 @@ const Nav = (props)=> {
                                     </li>
 
                                     <li>
-                                        {user ? <a href="/api/auth/logout"><button>Log out</button></a> : ""}
+                                        {user 
+                                        ? <a href="/api/auth/logout"><button>Log out</button></a> 
+                                        : <a href="/api/auth/login"><button>Login</button></a>}
                                     </li>
 
                                     </ul>
