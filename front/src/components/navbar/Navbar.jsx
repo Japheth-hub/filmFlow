@@ -101,17 +101,16 @@ const Nav = (props)=> {
                         <p>No se encontraron películas con ese nombre.</p>
                       )}
                     </div>
-                    <Link href= '/filter'>
                     
-                    <button>Search</button>
-                    
-                    </Link>
 
                     
                     <div className={styles.toRight}> 
-                        <li >
-                            <Image src={cart} alt="Cart" width={30} height={30} />
-                        </li>
+
+                        <Link href="/cart">
+                            <li >
+                                <Image src={cart} alt="Cart" width={30} height={30} />
+                            </li>
+                        </Link>
 
                         <li >
                             <Image src={userpic} alt="Account" width={30} height={30} onClick={handleAccountClick} />

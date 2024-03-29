@@ -3,6 +3,7 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styles from './searchBar.module.css'
+import Link from "next/link"
 
 const searchBar = ({onSearch}) => {
     
@@ -25,6 +26,11 @@ const searchBar = ({onSearch}) => {
                 value={query}
                 onChange={handleChange}
             />
+            <Link href= {`/filters/search=${query}`}>
+                    
+                <button>Search</button>
+                    
+           </Link>
             
             
             </div>
