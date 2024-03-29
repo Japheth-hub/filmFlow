@@ -85,7 +85,7 @@ const Cart = () => {
     return (
         <div className={style.pageContainer}>
             <div className={style.cartContainer}> 
-                <Link href="/home">
+                <Link href="/">
                     <Button label="ir a home" emoji="🏠" />
                 </Link>
             <div className={style.cartList}> 

@@ -118,7 +118,7 @@ const MovieForm = () => {
   return (
     <div className={style["movie-form-container"]}>
       <div className={style["form-wrapper"]}>
-      <Link href="/home">
+      <Link href="/">
         <button className={style["back-button"]}>Ir a home</button>
       </Link>
         {errorMessage && <p className="error-message">{errorMessage}</p>}

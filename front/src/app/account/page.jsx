@@ -35,7 +35,7 @@ export default function Account() {
   return (
     <div className={style["contenedor"]}>
       <div className={style["nav"]}>
-        <Link href="/home">
+        <Link href="/">
         <Button callback emoji="🔙" label="Home"></Button>
         </Link>
         <div className={style["filmFlow"]}>

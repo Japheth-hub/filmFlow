@@ -65,7 +65,7 @@ const Nav = (props)=> {
                     <div>
                         
                         <li>
-                            <Link href ='/home'>
+                            <Link href ='/'>
                                 
                                 <Image className={styles.logo} src={logoimg} alt="Logo" />
                                 
