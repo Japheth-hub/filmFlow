@@ -38,10 +38,8 @@ const Movie = ({ elem, dim }) => {
             }
             getPurchase()
         }
-        console.log(user);
-    }, [])
-    // console.log(purchase)
-    // console.log('este es el elem', elem)
+    }, [user])
+
     return(
         <div key={elem.id} className={style.card} >
             <Link href={`/detail/${elem.id}`} key={elem.id}>
