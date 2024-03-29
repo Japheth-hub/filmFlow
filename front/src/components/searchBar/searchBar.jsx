@@ -29,7 +29,7 @@ const searchBar = ({onSearch}) => {
             />
             <Link href= {`/filters/search=${query}`}>
                     
-            <Button emoji={"🔎"} label={"Buscar"}  callback={handleSubmit}/>
+            <Button emoji={"🔎"}/>
                     
            </Link>
             

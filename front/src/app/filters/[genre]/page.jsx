@@ -131,6 +131,10 @@ const Filter = ({ params }) => {
     router.push("/filters/search")
   };
 
+  const handleClick = () => {
+    cleanFilter()
+  }
+
   //?Fn PARA MOVER EL PAGINADO 
   const changePage = (direct) => {
     if (direct === "prev") {
@@ -144,14 +148,10 @@ const Filter = ({ params }) => {
     }
   };
 
-  const handleSubmit = (event) => {
-    cleanFilter()
-  };
-
   return (
     <div>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form>
           <fieldset className={style.rowField}>
             <div className={style.optionsField}>
               <label>Genre </label>
@@ -199,8 +199,7 @@ const Filter = ({ params }) => {
                 value="Limpiar"
                 onClick={() => cleanFilter()}
               />
-
-              <Button emoji={""} label={"Clean"}  callback={cleanFilter}/>
+              {/* <Button emoji={""} label={"Clean"} callback={() => cleanFilter()}/> */}
             </div>
           </fieldset>
         </form>
