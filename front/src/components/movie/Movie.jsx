@@ -23,7 +23,6 @@ const Movie = ({ elem, dim }) => {
     useEffect(()=>{
         if(user){
             async function getPurchase(){
-                const user = JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
                 const {data} = await axios(`${URL}purchases/${user.sid}`)
                 if(typeof data === "object"){
                     const idsMovies = []
@@ -35,7 +34,7 @@ const Movie = ({ elem, dim }) => {
             }
             getPurchase()
         }
-    }, [])
+    }, [user])
     // console.log(purchase)
     // console.log('este es el elem', elem)
     return(
