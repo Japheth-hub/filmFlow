@@ -13,7 +13,8 @@ const Cart = () => {
     const { error, isLoading, user } = useUser();
     const [cartData, setCartData] = useState([]);
     const [localStorageData, setLocalStorageData] = useState(null);
-    const totalPrice = cartData.reduce((total, movie) => total + movie.price, 0);
+    const [totalPrice,setTotalPrice] = useState(null);
+
 
 
     const fetchData = async () => {
@@ -28,7 +29,9 @@ const Cart = () => {
                 });
                 setCartData(syncData.data.movies);
             }else{
-                setCartData(localCart)
+                if(localCart){
+                    setCartData(localCart)
+                }
             }
         
 
@@ -58,6 +61,8 @@ const Cart = () => {
         const handleStorageChange = (event) => {
             fetchData();
         };
+
+        console.log(cartData);
     
         window.addEventListener('localChanged', handleStorageChange);
         
@@ -70,6 +75,12 @@ const Cart = () => {
         fetchData();
         
       }, [user]);
+
+      useEffect(() => {
+        setTotalPrice(cartData.reduce((total, movie) => total + movie.price, 0));
+      }, [cartData])
+      
+      
     
     if (error) {
         return (
