@@ -5,6 +5,7 @@ import Movie from "../../../components/movie/Movie";
 import style from "./page.module.css";
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from "next/navigation";
+import Button from '../../../components/button/Button'
 
 const Filter = ({ params }) => {
   const router = useRouter()

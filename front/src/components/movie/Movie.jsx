@@ -1,7 +1,6 @@
 import style from "./Movie.module.scss"
-import Buy from '../btnBuy/buy'
 import Link from "next/link";
-
+import AddToCart from '../addToCart/AddToCart';
 const Movie = ({ elem, dim }) => {
     const title = (title)=>{
         if(title){
@@ -23,7 +22,8 @@ const Movie = ({ elem, dim }) => {
                 </div>
 
             </Link>
-            <div><Buy /*Aqui se le pasa el id del usuario */></Buy></div>
+
+            <div><AddToCart movie={elem} /></div>
 
         </div>
     )
