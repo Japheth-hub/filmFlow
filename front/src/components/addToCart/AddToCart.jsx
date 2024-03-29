@@ -142,7 +142,7 @@ export default function AddToCart({movie}) {
         
         
       }, [])
-      
+
   return (
     <Button color={color} emoji={<Image alt="" src={cartIcon}/>}  label={label} callback={handleAddCart}/>
   )

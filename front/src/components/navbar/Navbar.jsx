@@ -7,9 +7,10 @@ import logoimg from '../../img/logo-white-expanded.png';
 import userpic from '../../img/userpic.png'
 import cart from '../../img/shopping-cart.png'
 import SearchBar from '../searchBar/searchBar';
-import { UseUser, useUser } from '@auth0/nextjs-auth0/client'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import Button from '../../components/button/Button'
 import { useRouter } from 'next/navigation';
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 const Nav = (props)=> {
 
@@ -37,7 +38,7 @@ const Nav = (props)=> {
   
       try {
         const response = await axios(
-         ` http://localhost:3001/movies?search=${query}`,
+        `${NEXT_PUBLIC_URL}movies?search=${query}`,
         );
         
         const data = response.data;
@@ -103,27 +104,29 @@ const Nav = (props)=> {
                     </div>
                     <div className={styles.toRight}> 
                         <li >
-                            <Link href='/cart'><Image src={cart} alt="Cart" width={30} height={30} /></Link>
+                            <Link href='/cart'><Image src={cart} alt="Cart" width={40} height={40} /></Link>
                         </li>
 
                         <li >
-                            <Image src={userpic} alt="Account" width={30} height={30} onClick={handleAccountClick} />
+                            <div className={styles['userpic']}>
+                              <Image src={user ? user.picture : userpic} alt="Account" width={40} height={40} onClick={handleAccountClick} />
+                            </div>
                                 {showDropdown && (
                                 <div className={styles.dropdown}>
 
-                                    <ul>
+                                  <ul>
                                     <li>
-                                      {user ? <h6>{user.nickname}</h6> : null}
+                                      {user ? <h5>{user.nickname}</h5> : null}
                                     </li>
                                     <li>
                                         <Link href="/account">
-                                            My Account
+                                            <p>My Account</p>
                                         </Link>
                                     </li>
 
                                     <li> 
                                         <Link href="/form">
-                                            Form
+                                            <p>Add Movie</p>
                                         </Link>
                                     </li>
 
@@ -133,7 +136,7 @@ const Nav = (props)=> {
                                         : <a href="/api/auth/login"><button>Login</button></a>}
                                     </li>
 
-                                    </ul>
+                                  </ul>
                                 </div>
                             )}
                         </li>   

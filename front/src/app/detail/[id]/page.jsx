@@ -5,9 +5,11 @@ import style from '../detail.module.scss';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Pill from '@/components/pill/Pill';
+import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
 
 const DetailContent = () => {
+  const [purchase, setPurchase] = useState([]);
   const { id } = useParams();
   const [movieData, setMovieData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,6 +60,21 @@ const DetailContent = () => {
 
     }
   }, [movieData]);
+
+  useEffect(()=>{
+        async function getPurchase(){
+            const user = JSON.parse(localStorage.getItem('FilmFlowUsr'))
+            const {data} = await axios(`${URL}purchases/${user.sid}`)
+            if(typeof data === "object"){
+                const idsMovies = []
+                for(let movie of data){
+                    idsMovies.push(movie.id)
+                }
+                setPurchase(idsMovies)
+            }
+        }
+        getPurchase()
+    }, [])
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
@@ -120,6 +137,8 @@ const renderStarSelector = () => {
       console.error('Error submitting review:', error);
     }
   };
+
+  console.log(purchase)
   return (
     <div className={style['detail-content']}>
      
@@ -135,7 +154,10 @@ const renderStarSelector = () => {
             <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>
-            {movieData && <AddToCart movie={movieData} />}
+            {/* {movieData && <AddToCart movie={movieData} />} */}
+            {purchase.includes(movieData.id) 
+            ? <Button emoji={'✅'} label='Ya tienes esta pelicula'/> 
+            : movieData && <AddToCart movie={movieData} />}
             
           </div>
         </div>
