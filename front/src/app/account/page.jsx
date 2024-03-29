@@ -34,15 +34,6 @@ export default function Account() {
   }
   return (
     <div className={style["contenedor"]}>
-      <div className={style["nav"]}>
-        <Link href="/">
-        <Button callback emoji="🔙" label="Home"></Button>
-        </Link>
-        <div className={style["filmFlow"]}>
-          <img src={logo.src} alt="logo-filmFlow" />
-        </div>
-        <p className={style["userName"]}>{user.name}</p>
-      </div>
       <div>
         <div className={style["info"]}>
           <div className={style["datos"]}>
