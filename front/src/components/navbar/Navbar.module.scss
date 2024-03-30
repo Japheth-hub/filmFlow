@@ -59,6 +59,16 @@
   margin-right: 10px; /* Espacio entre la imagen y el texto */
 }
 
+.userpic{
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px white;
+}
+
 .toRight {
   display: flex;
   align-items: center;
@@ -74,18 +84,60 @@
     padding: 10px;
     z-index: 1000;
     margin: 0;
-
+    min-width: 200px;
+    border-radius: 10px;
+    color: $mainColor;
+    
     ul {
       padding-left: 10px;
+      list-style: none;
     }
+
     li {
-      list-style-type: none;
       font-size: 14px;
+
+      h5{
+        margin: 0px auto;
+        text-align: center;
+        font-size: 1.5rem;
+        border-bottom: 1px solid $mainColor;
+      }
+    
+      p{
+        text-align: start;
+        font-size: 1.4rem;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 10px;
+        transition: all .3s;
+      }
+      p:hover{
+        background-color: $mainColor;
+        color: white;
+      }
 
       a {
         text-decoration: none;
         text-align: center;
         font-size: 14px;
+
+        button{
+          font-size: 1.1rem;
+          font-weight: bold;
+          border-radius: 10px;
+          border: 1px solid $mainColor;
+          background-color: white;
+          margin: 0px auto;
+          padding: 3px 15px;
+          box-shadow: 2px 2px 2px $mainColor;
+          transition: all .3s;
+        }
+        button:hover{
+          background-color: $mainColor;
+          color: white;
+          box-shadow: none;
+        }
+
       }
     }
   }
