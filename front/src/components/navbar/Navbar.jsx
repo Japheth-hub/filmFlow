@@ -59,6 +59,9 @@ const Nav = (props)=> {
       }
     };
 
+    //Estoy sacando el usuario del localeStorage porque ahi es donde estoy guardando la condicional de si es admin o no
+    const userLocalStorage = JSON.parse(window.localStorage.getItem('FilmFlowUsr'));
+
     return(
         <nav className={styles.nav}>
             <div className="wrapper">
@@ -117,6 +120,14 @@ const Nav = (props)=> {
                                   <ul>
                                     <li>
                                       {user ? <h5>{user.nickname}</h5> : null}
+                                    </li>
+                                    <li>
+                                      {userLocalStorage.admin 
+                                        ? <Link href="/admin">
+                                            Admin dashboard
+                                          </Link>
+                                        : null
+                                      }
                                     </li>
                                     <li>
                                         <Link href="/account">
