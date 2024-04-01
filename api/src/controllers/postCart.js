@@ -31,8 +31,9 @@ module.exports = async (req) => {
 
         if(movies) {
             for (const movie of movies) {
-                const purchase = Purchase.findOne({where:{movieId: movie.id,
+                const purchase = await Purchase.findOne({where:{movieId: movie.id,
                     userId: userId}});
+                    console.log("purchase!",purchase);
                 if(!purchase){
                     const [cart, createdCart] = await Cart.findOrCreate({
                         where: {
