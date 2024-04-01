@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
         const data = await postCart(req)
 
         if(data.message){
+            console.log("data",data.message);
             return res.status(404).json(data.message)
         } 
 

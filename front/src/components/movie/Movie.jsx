@@ -5,10 +5,13 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import React,{useState} from 'react'
 import Button from "../button/Button";
+import { useUser } from '@auth0/nextjs-auth0/client';
+
 
 const URL = process.env.NEXT_PUBLIC_URL;
 
 const Movie = ({ elem, dim }) => {
+    const { error, isLoading, user } = useUser();
     const [purchase, setPurchase] = useState([]);
 
     const title = (title)=>{
@@ -18,21 +21,25 @@ const Movie = ({ elem, dim }) => {
     }
 
     useEffect(()=>{
-        async function getPurchase(){
-            const user = JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-            const {data} = await axios(`${URL}purchases/${user.sid}`)
-            if(typeof data === "object"){
-                const idsMovies = []
-                for(let movie of data){
-                    idsMovies.push(movie.id)
+        if(user){
+            async function getPurchase(){
+                try { 
+                    const {data} = await axios(`${URL}purchases/${user.sid}`)
+                    if(typeof data === "object"){
+                        const idsMovies = []
+                        for(let movie of data){
+                            idsMovies.push(movie.id)
+                        }
+                        setPurchase(idsMovies)
+                    }
+                } catch (error) {
+                        console.log(error);
                 }
-                setPurchase(idsMovies)
             }
+            getPurchase()
         }
-        getPurchase()
-    }, [])
-    // console.log(purchase)
-    // console.log('este es el elem', elem)
+    }, [user])
+
     return(
         <div key={elem.id} className={style.card} >
             <Link href={`/detail/${elem.id}`} key={elem.id}>

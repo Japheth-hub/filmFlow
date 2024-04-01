@@ -1,4 +1,7 @@
 import style from "./CarouselItem.module.scss"
+import Button  from '@/components/button/Button';
+import Link from 'next/link'
+
 
 const CarouselItem = ({ elem }) => {
     return(
@@ -11,6 +14,9 @@ const CarouselItem = ({ elem }) => {
             <div className={style.info}>
                 <h3>{elem.name}</h3>
                 <p>{elem.description}</p>
+                <Link href={`/detail/${elem.id}`}>
+                    <Button emoji="👀" label="Ver más" />
+                </Link>
             </div>
            
         </div>

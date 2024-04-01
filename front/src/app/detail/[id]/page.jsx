@@ -23,7 +23,7 @@ const DetailContent = () => {
   const user = checkUserLogin();
 
   const goToCategory = (genre) => {
-    router.push(`/filters/${genre}`); // Utiliza router.push para navegar a la página especificada por la ruta (path)
+    router.push(`/filters/genero=${genre}`);
   };
 
   function checkUserLogin (){

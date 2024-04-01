@@ -5,15 +5,20 @@ import cartIcon from '../../img/cart-icon-white.svg'
 import axios from 'axios';
 import { useEffect } from 'react';
 const URL = process.env.NEXT_PUBLIC_URL;
+import { useUser } from '@auth0/nextjs-auth0/client';
+
 
 export default function AddToCart({movie}) {
+    
     const [cart, setCart] = useState([]);
     const [label, setLabel] = useState("Agregar a carrito");
-    const [user,setUser] = useState(null);
+    const [color, setColor] = useState("green");
+    const { error, isLoading, user } = useUser();
+    const event = new Event('localChanged');
     
     const handleAddCart = ()=>{
         if(!checkMovieCart()){
-            addToCart();
+            addToCartButton();
         }else{
             removeFromCart()
         }
@@ -28,6 +33,8 @@ export default function AddToCart({movie}) {
         }
     }
 
+    
+
     const checkMovieCart = ()=>{
         const search = cart.find((item)=>{
             return item.id === movie.id;
@@ -37,18 +44,17 @@ export default function AddToCart({movie}) {
         }else{
             return false
         }   
-      
     }
 
     const saveCart = (newCart)=>{
-        setCart(newCart);
         localStorage.setItem("cart", JSON.stringify(newCart));
+        window.dispatchEvent(event);
     }
     
-    const addToCart = async () => {
+    const addToCartButton = async () => {
         if (!user){
-            const newCart = [...cart,{...movie}];
-            saveCart(newCart)
+            const newCart = [...cart,movie];
+            saveCart(newCart);
         }else{
           try {
             const remoteCart = await axios.post(`${URL}cart`, {
@@ -63,6 +69,7 @@ export default function AddToCart({movie}) {
             alert('An error occurred while adding the movie to the cart.');
           }
         }
+
       };
 
       const removeFromCart = async ()=>{
@@ -85,24 +92,12 @@ export default function AddToCart({movie}) {
         
       }
 
-      useEffect(() => {
-        if(checkMovieCart()){
-            setLabel("Quitar del carrito")
-        }else{
-            setLabel("Agregar al carrito")
-        }
-      }, [cart]);
-
-
-      useEffect(() => {
-        const auth = checkUserLogin(); 
-        setUser(auth)
+      const fetchData = ()=>{
         const localCart = JSON.parse(window.localStorage.getItem('cart'));
-
         if(localCart){
             setCart(localCart)
         }else{
-            if(auth){
+            if(user){
                 (async()=>{
                
                    try {
@@ -116,12 +111,39 @@ export default function AddToCart({movie}) {
                 })();
             }
         }
+      }
+
+      useEffect(() => {
+        if(checkMovieCart()){
+            setLabel("-")
+            setColor("red");
+        }else{
+            setLabel("+")
+            setColor("green")
+        }
+      }, [cart]);
+
+
+      useEffect(() => {
+        fetchData();
+
+        const handleStorageChange = (event) => {
+            fetchData();
+        };
+    
+        // Agregar el evento de escucha para cambios en el almacenamiento local
+        window.addEventListener('localChanged', handleStorageChange);
+
+        // Eliminar el evento de escucha al desmontar el componente
+        return () => {
+            window.removeEventListener('localChanged', handleStorageChange);
+        };
 
         
         
       }, [])
 
   return (
-    <Button emoji={<Image alt="" src={cartIcon}/>}  label={label} callback={handleAddCart}/>
+    <Button color={color} emoji={<Image alt="" src={cartIcon}/>}  label={label} callback={handleAddCart}/>
   )
 }
