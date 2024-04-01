@@ -4,7 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
-
+import { validateMovieForm } from './validateMovieForm '
 
 const MovieForm = () => {
 
@@ -22,7 +22,7 @@ const MovieForm = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); 
-
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     axios.get(`${URL}genres`)
@@ -38,7 +38,22 @@ const MovieForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); 
-  
+    const validation = validateMovieForm({
+      movieName,
+      director,
+      selectedGenres,
+      description,
+      country,
+      poster,
+      trailer,
+      movie
+    });
+    
+    if (Object.keys(validation.errors).length > 0) {
+      setErrors(validation.errors);
+      setIsLoading(false);
+      return;
+    }
     try {
       //Promesas relacionadas a Cloudinary:
       const posterData = new Promise((resolve, reject) => {
@@ -118,9 +133,9 @@ const MovieForm = () => {
   return (
     <div className={style["movie-form-container"]}>
       <div className={style["form-wrapper"]}>
-      <Link href="/home">
-        <button className={style["back-button"]}>Ir a home</button>
-      </Link>
+        <Link href="/home">
+          <button className={style["back-button"]}>Ir a home</button>
+        </Link>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
         <form onSubmit={handleSubmit} className="form">
@@ -132,8 +147,9 @@ const MovieForm = () => {
               value={movieName}
               onChange={(e) => setMovieName(e.target.value)}
               className={style["form-input"]}
-              required
+              // required
             />
+            {errors.movieName && <p className={style["error-message"]}>{errors.movieName}</p>}
           </div>
           <div className={style["form-group"]}>
             <label htmlFor="director" className={style["form-label"]}>Director:</label>
@@ -143,8 +159,9 @@ const MovieForm = () => {
               value={director}
               onChange={(e) => setDirector(e.target.value)}
               className={style["form-input"]}
-              required
+              // required
             />
+            {errors.director && <p className={style["error-message"]}>{errors.director}</p>}
           </div>
           <div className={style["form-group"]}>
             <label htmlFor="genre" className={style["form-label"]}>Género:</label>
@@ -159,6 +176,7 @@ const MovieForm = () => {
                 <option key={genre} value={genre}>{genre}</option>
               ))}
             </select>
+            {errors.genre && <p className={style["error-message"]}>{errors.genre}</p>}
             <ul className={style["genre-list"]}>
               {selectedGenres.map(selectedGenre => (
                 <li key={selectedGenre}>
@@ -177,8 +195,9 @@ const MovieForm = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={style["form-input"]}
-              required
+              // required
             ></textarea>
+            {errors.description && <p className={style["error-message"]}>{errors.description}</p>}
           </div>
           <div className={style["form-group"]}>
             <label htmlFor="country" className={style["form-label"]}>País:</label>
@@ -188,8 +207,9 @@ const MovieForm = () => {
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               className={style["form-input"]}
-              required
+              // required
             />
+            {errors.country && <p className={style["error-message"]}>{errors.country}</p>}
           </div>
           <div className={style["file-group"]}>
             <div className={style["form-group"]}>
@@ -201,7 +221,7 @@ const MovieForm = () => {
                 onChange={handlePosterChange}
                 className={style["form-input"]}
                 accept="image/*"
-                required
+                // required
               />
               </div>
               {poster && (
@@ -209,6 +229,7 @@ const MovieForm = () => {
                   <img src={window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
+              {errors.posterFile && <p className={style["error-message"]}>{errors.posterFile}</p>}
             </div>
             <div className={style["form-group"]}>
               <label htmlFor="trailerFile" className={style["form-label"]}>Seleccionar Trailer:</label>
@@ -218,13 +239,14 @@ const MovieForm = () => {
                 onChange={handleTrailerChange}
                 className={style["form-input"]}
                 accept="video/*"
-                required
+                // required
               />
               {trailer && (
                 <div className={style["image-preview-container"]}>
                   <video src={window.URL.createObjectURL(trailer)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
+              {errors.trailerFile && <p className={style["error-message"]}>{errors.trailerFile}</p>}
             </div>
             <div className={style["form-group"]}>
               <label htmlFor="movieFile" className={style["form-label"]}>Seleccionar Película:</label>
@@ -234,13 +256,14 @@ const MovieForm = () => {
                 onChange={handleMovieChange}
                 className={style["form-input"]}
                 accept="video/*"
-                required
+                // required
               />
               {movie && (
                 <div className={style["image-preview-container"]}>
                   <video src={window.URL.createObjectURL(movie)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
+              {errors.movieFile && <p className={style["error-message"]}>{errors.movieFile}</p>}
             </div>
           </div>
           <div className={style["submit-button-container"]}>
@@ -253,8 +276,4 @@ const MovieForm = () => {
     </div>
   );
 };
-
-
-export default withPageAuthRequired(MovieForm)
-
-
+export default withPageAuthRequired(MovieForm);
