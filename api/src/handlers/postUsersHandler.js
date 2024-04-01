@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
         const data = await postUser(body)
 
         if (data.status) {
-            return res.status(201).json({sid:data.sid});
+            return res.status(201).json({sid:data.sid,isAdmin:data.isAdmin});
         }else{
             return res.status(501).json({errors:data.errors});
         }

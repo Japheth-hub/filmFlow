@@ -67,15 +67,15 @@
     justify-content: space-between;
   }
   
-  /* Agrega estos estilos para hacer que los elementos se muestren uno al lado del otro */
+ 
   .file-group .form-group {
-    width: 48%; /* Ajusta el ancho según tu preferencia */
+    width: 48%; 
   }
 
   .image-preview-container {
     width: 150px;
     height: 150px;
-    overflow: hidden; /* Para recortar la imagen si es más grande que el contenedor */
+    overflow: hidden; 
   }
   
   .poster-preview {
@@ -118,4 +118,8 @@
   .submit-button-container {
     display: flex;
     justify-content: center;
+  }
+
+  .error-message{
+    color: red;
   }
