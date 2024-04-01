@@ -35,6 +35,27 @@ const MovieForm = () => {
       });
   }, []);
   
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'movieName') setMovieName(value);
+    else if (name === 'director') setDirector(value);
+    else if (name === 'description') setDescription(value);
+    else if (name === 'country') setCountry(value);
+  };
+  useEffect(() => {
+    const validation = validateMovieForm({
+      movieName,
+      director,
+      selectedGenres,
+      description,
+      country,
+      poster,
+      trailer,
+      movie
+    });
+    setErrors(validation.errors);
+  }, [movieName, director, selectedGenres, description, country, poster, trailer, movie]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); 

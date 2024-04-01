@@ -1,3 +1,5 @@
+// Validaciones.js
+
 export function validateMovieForm(data) {
   const errors = {};
   const validFields = {};
@@ -5,8 +7,8 @@ export function validateMovieForm(data) {
   // name
   if (!data.movieName || data.movieName.trim() === '') {
     errors.movieName = 'El nombre de la película es obligatorio.';
-  } else if (!data.movieName.charAt(0).toUpperCase() === data.movieName.charAt(0)) {
-    errors.movieName = 'El nombre de la película debe comenzar con mayúscula.';
+  } else if (!/^[A-Z0-9&#!¡¿?:,][A-Za-z0-9&#!¡¿?:,\s]*$/.test(data.movieName)) {
+    errors.movieName = 'El nombre de la película debe comenzar con mayúscula y solo puede contener letras, números y los siguientes símbolos: (&, ;, :, #, !, ¡, ¿, ?)';
   } else {
     validFields.movieName = data.movieName;
   }
@@ -14,8 +16,8 @@ export function validateMovieForm(data) {
   // Director
   if (!data.director || data.director.trim() === '') {
     errors.director = 'El nombre del director es obligatorio.';
-  } else if (!data.director.charAt(0).toUpperCase() === data.director.charAt(0)) {
-    errors.director = 'El nombre del director debe comenzar con mayúscula.';
+  } else if (!/^(?:[A-Z][a-z]*\s?)+$/.test(data.director)) {
+    errors.director = 'El nombre del director debe tener las iniciales de cada palabra en mayúscula.';
   } else {
     validFields.director = data.director;
   }
@@ -27,9 +29,13 @@ export function validateMovieForm(data) {
     validFields.selectedGenres = data.selectedGenres;
   }
 
-  // Description
-  if (!data.description || data.description.trim() === '') {
-    errors.description = 'La descripción es obligatoria.';
+ // Description
+ if (!data.description || data.description.trim() === '') {
+  errors.description = 'La descripción es obligatoria.';
+} else {
+  const descriptionSymbolsRegex = /^[a-zA-Z0-9\s;,:.¡!¿?()]*$/;
+  if (!descriptionSymbolsRegex.test(data.description)) {
+    errors.description = 'La descripción solo puede contener letras, números y los siguientes símbolos: ";", ",", ":", ".", "¡", "!", "¿", "?", "(", ")"';
   } else {
     const letterCount = data.description.replace(/[^a-zA-Z]/g, '').length;
     if (letterCount < 10) {
@@ -40,10 +46,11 @@ export function validateMovieForm(data) {
       validFields.description = data.description;
     }
   }
+}
 // Country
   if (!data.country || data.country.trim() === '') {
     errors.country = 'El país es obligatorio.';
-  } else if (!data.country.charAt(0).toUpperCase() === data.country.charAt(0)) {
+  } else if (!/^[A-Z][a-zA-Z]*$/.test(data.country)) {
     errors.country = 'El nombre del país debe comenzar con mayúscula.';
   } else {
     validFields.country = data.country;
