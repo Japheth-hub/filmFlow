@@ -222,21 +222,9 @@ const Filter = ({ params }) => {
       {/* MOSTRAR BOTONES DE PAGINACION */}
       <div className="container">
         <div className={style.pagination}>
-          <input
-            className={style.pagination}
-            type="button"
-            value="Anterior"
-            onChange={handleChange}
-            onClick={() => changePage("prev")}
-          />
+          <Button label='Anterior' callback={() => changePage("prev")}/>
           <label className={style.pagination}>{pagination.page}</label>
-          <input
-            className={style.pagination}
-            type="button"
-            value="Siguiente"
-            onChange={handleChange}
-            onClick={() => changePage("next")}
-          />
+          <Button label='Siguiente' callback={() => changePage("next")}/>
         </div>
       </div>
     </div>
