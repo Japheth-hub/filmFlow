@@ -3,7 +3,7 @@ const getCart = require('./getCart');
 
 module.exports = async (req) => {
     try {
-        const user = req.user
+        const {user,amount} = req;
         const userId = user.id
 
         const cart = await Cart.findAll({
@@ -19,7 +19,8 @@ module.exports = async (req) => {
                 const [purchase, created] = await Purchase.findOrCreate({
                     where: {
                         movieId: movieId,
-                        userId: userId
+                        userId: userId,
+                        amount
                     }
                 });
                 if (!created) {

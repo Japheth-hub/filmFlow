@@ -44,8 +44,7 @@ Movie.belongsTo(User)
 
 User.hasMany(Review)
 User.hasMany(Movie)
-User.hasOne(Role)
-Role.belongsTo(User)
+User.belongsTo(Role)
 Review.belongsTo(User)
 
 User.belongsToMany(Movie, { through: Cart });

@@ -26,12 +26,9 @@ module.exports = (sequelize) => {
     picture: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
-    roleId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
+    }
   },
   {paranoid : true});
+
 };
 

@@ -1,11 +1,11 @@
 const movies = require('../utils/movies');
-const { Movie, Genre } = require('../db');
+const { Movie, Genre,User } = require('../db');
 
 module.exports = async () => {
     let count = 0
     try {
         for (const actualMovie of movies) {
-            const { name, director, genres, description, duration, country, poster, trailer, movie } = actualMovie;
+            const { name, director, genres, description, duration, country, poster, trailer, movie,userId } = actualMovie;
 
             const [movieDB, created] = await Movie.findOrCreate({
                 where: { name },
@@ -18,10 +18,12 @@ module.exports = async () => {
                     trailer,
                     movie,
                     status: "pending", 
+                    userId:userId || null,
                     price: 25,
                 }
             });
 
+  
             if (!created) continue;
 
             const genresArray = genres.split(',').map(genre => genre.trim());

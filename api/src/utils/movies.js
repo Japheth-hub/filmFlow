@@ -8,7 +8,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4",
+        userId:1
     },
     {
         name: "The Matrix",
@@ -19,7 +20,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481608/movies/yeavhvtaaixdgrbmjzji.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481686/movies/fwdnfrum84epvy27licn.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481686/movies/fwdnfrum84epvy27licn.mp4",
+        userId:1
     },
     {
         name: "Forrest Gump",
@@ -30,7 +32,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/6/67/Forrest_Gump_poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482111/movies/t5qwv1lxuv34n608rcbg.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481958/movies/mbwjnhvu2iueltsi9lcq.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481958/movies/mbwjnhvu2iueltsi9lcq.mp4",
+        userId:1
     },
     {
         name: "The Lord of the Rings: The Fellowship of the Ring",
@@ -41,7 +44,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481957/trailers/wmmjmiks0cqfzayr6kbj.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482110/trailers/zwqqv8zb9v7nwgxn5jp9.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482110/trailers/zwqqv8zb9v7nwgxn5jp9.mp4",
+        userId:1
     },
     {
         name: "Inglourious Basterds",
@@ -52,7 +56,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/c/c3/Inglourious_Basterds_poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        userId:1
     },
     {
         name: "The Green Mile",

@@ -29,6 +29,7 @@ module.exports = async (request, response) => {
       console.log(checkoutSessionCompleted.metadata);
       await axios.post(`http://localhost:3001/cart/buy`, {
         auth: checkoutSessionCompleted.metadata.sid,
+        amount:checkoutSessionCompleted.amount_total
       });
       break;
     // ... handle other event types

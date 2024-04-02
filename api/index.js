@@ -21,8 +21,8 @@ conn.sync({ force: TEST === "TRUE" ?true : false }).then(() => {
       await saveRoles();
       if (TEST === "TRUE"){
         await saveGenres();
-        await saveMovies();
         await saveUsers();
+        await saveMovies();
         await saveReviews();
         await saveCart();
       }

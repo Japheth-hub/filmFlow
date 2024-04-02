@@ -4,7 +4,8 @@ const orderFunction = require('../helpers/order')
 
 
 module.exports = async function getMovies(query){
-    let {search, genre, orderType, order} = query;
+
+    let {search, genre, orderType, order,limit,user} = query;
     type = orderType || ""; 
     order = order || "asc"; 
     try {
@@ -37,6 +38,19 @@ module.exports = async function getMovies(query){
             }
         }
 
+        if(user){
+            if(!options.where){
+                options.where = {};
+            }
+            options.where.userId = user;
+        }
+
+        if(limit){
+            options = {
+                ...options,
+                limit
+            }
+        }
 
         if(orderType){    
             options = {
@@ -53,7 +67,7 @@ module.exports = async function getMovies(query){
             return data.message = 'No hay Peliculas'
         }
 
-        return data.content = await orderFunction(type, order, movies)
+        return movies
     } catch (error) {
         console.log(error)
         return error
