@@ -124,7 +124,7 @@ const Nav = (props)=> {
                                     <li>
                                       {userLocalStorage.admin 
                                         ? <Link href="/admin">
-                                            Admin dashboard
+                                            <p>Admin dashboard</p>
                                           </Link>
                                         : null
                                       }

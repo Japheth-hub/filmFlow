@@ -16,7 +16,7 @@ module.exports = async (id)=>{
                     include: [
                         {
                         model: User,
-                        attributes: ['name', 'picture'] 
+                        attributes: ['name', 'picture', 'email'] 
                         }
                     ]
                 }
