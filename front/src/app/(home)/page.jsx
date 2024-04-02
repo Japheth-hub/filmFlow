@@ -49,10 +49,12 @@ const Home = () => {
   useEffect( () => {
     if(user){
       const upUser = async() => {
-        const { data } = await axios.post(`${URL}users`, user)     
-        window.localStorage.setItem(
-          'FilmFlowUsr', JSON.stringify({...user, admin:data.isAdmin})
-        )
+        const { data } = await axios.post(`${URL}users`, user)    
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(
+            'FilmFlowUsr', JSON.stringify({...user, admin:data.isAdmin})
+          )
+        } 
         if(data.isAdmin) {
           console.log("Si soy admin")
         } else {
