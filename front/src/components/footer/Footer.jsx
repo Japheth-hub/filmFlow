@@ -1,7 +1,12 @@
 
 import style from './Footer.module.scss'
 import Image from 'next/image';
+import Link from 'next/link'
 import logo from '../../img/logo-color-light-expanded.png';
+import twt from '../../img/twitter.png'
+import fb from '../../img/facebook.png'
+import ig from '../../img/instagram.png'
+import gh from '../../img/github.png'
 const Footer = () => {
     return (
         <div className={style.footer}>
@@ -13,42 +18,50 @@ const Footer = () => {
                 <div>
                     <h4>Site Map</h4>
                     <ul className={style.noDecoration}>
-                        <li>Home</li>
-                        <li>Movies</li>
-                        <li>Users</li>
-                        <li>Chart</li>
-                        <li>About</li>
+                        <li>
+                            <Link href='/'>
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href='/filters/search='>
+                                Movies
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href='#'>
+                                Users
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href='/cart'>
+                                Shopping cart
+                            </Link>
+                            
+                        </li>
+                        <li>
+                            <Link href='/about'>
+                                About
+                            </Link>
+                        </li>
                     </ul>
                     <h6>&#169; Todos los derechos reservados</h6>
                 </div>
                 <div>
-                    <h4>Institutional</h4>
-                    <p className={style.institutional}>
-                        Nuestra plataforma de películas ofrece una experiencia 
-                        única, combinando lo mejor del cine con la última 
-                        tecnología. 
-                    </p>
-                    <p className={style.institutional}>
-                        Utilizamos tecnologías de vanguardia como Next.js 
-                        y React para brindarte una interfaz intuitiva y
-                        fluida.
-                    </p>
-                    <p className={style.institutional}>
-                        Descubre nuevas películas y series de manera sencilla en 
-                        nuestra plataforma.
-                    </p>
-                </div>
-                <div>
-                    <h4>Developers</h4>
-                    <ul className={style.noDecoration}>
-                        <li>Sergio García</li>
-                        <li>Gerant Seminario</li>
-                        <li>Japhet Ramírez</li>
-                        <li>Marcos Pacheco</li>
-                        <li>Candela Gómez</li>
-                        <li>Nicolás Del Pozo</li>
-                        <li>Julián Vega</li>
-                    </ul>
+                    <h4>Socials</h4>
+                    <Link href="#">
+                        <Image src={fb} alt="facebook"/>
+                    </Link>
+                    <Link href="#">
+                        <Image src={ig} alt="instagram"/>
+                    </Link>
+                    <Link href="#">
+                        <Image src={twt} alt="twitter"/>
+                    </Link>
+                    <Link href="https://github.com/lukeskip/filmFlow">
+                        <Image src={gh} alt="github"/>   
+                    </Link>
+
                 </div>
             </div>
         </div>
