@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
         const data = await postMovies(req)
 
         if (!data.status) {
-            return res.status(500).json(data)
+            return res.status(204).json(data)
         }
 
         return res.status(200).json(data)

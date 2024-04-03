@@ -34,20 +34,24 @@ module.exports = (sequelize) => {
         },
         country: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         status: {
             type: DataTypes.ENUM('approved', 'pending', 'declined'),
-            allowNull: true,
+            allowNull: false,
+        },
+        price:{
+            type: DataTypes.FLOAT,
+            allowNull: false,
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        price:{
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        }
+        year: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
     },
     {paranoid : true})
 }

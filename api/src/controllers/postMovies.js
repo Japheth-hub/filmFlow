@@ -1,4 +1,5 @@
 const { Movie,Genre } = require('../db')
+const { Op } = require('sequelize');
 const cloudinary = require('cloudinary').v2;
 require("dotenv").config();
 const validateMovieData = require('../services/validateMovieData');
@@ -70,13 +71,34 @@ module.exports = async (req) => {
         const trailer = cloudinaryMovieResponse.secure_url;
         const movie = cloudinaryTrailerResponse.secure_url;
         const duration = cloudinaryTrailerResponse.duration;
-        const price = 25
         //
+
+        //Provisional mientras no existen estos inputs en el formulario
+        const price = 25
+        const year = 2020
         
         const userId = isAdmin(user) ? undefined : user.id;
         const [movieDB, created] = await Movie.findOrCreate({
-            where: { name },
-            defaults: { poster, movie, trailer, director, description, duration, country, status, userId, price },
+            where: {
+                name: name,
+                director: director,
+                country: country,
+                year: year
+            },
+            defaults: { 
+                name,
+                director,
+                country,
+                year,
+                poster,
+                movie,
+                trailer,
+                description,
+                duration,
+                status,
+                price,
+                userId 
+            },
         });
 
         
@@ -94,7 +116,7 @@ module.exports = async (req) => {
         }
 
         if (!created) {
-            return { status:false, message:"Ya hay una película con ese nombre"};
+            return { status:false, message:"Ya existe esa pelicula"};
         }
 
         return {status:true,movie:movieDB}
