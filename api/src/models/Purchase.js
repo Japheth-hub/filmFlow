@@ -1,13 +1,13 @@
 const { DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   sequelize.define("purchase", {
-    userId: {
-        type: DataTypes.STRING,
-        allowNull: false
+    stripeId: {
+      type: DataTypes.STRING, 
+      allowNull: true
     },
-    movieId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+    method: {
+      type: DataTypes.STRING, 
+      allowNull: true
     },
     amount: {
       type: DataTypes.DECIMAL(10, 2), 

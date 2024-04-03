@@ -47,10 +47,14 @@ User.hasMany(Movie)
 User.belongsTo(Role)
 Review.belongsTo(User)
 
+Purchase.belongsTo(User)
+Purchase.hasMany(Movie)
+Movie.belongsToMany(Purchase, { through: "movie_purchase" })
+User.hasMany(Purchase);
+
 User.belongsToMany(Movie, { through: Cart });
 Movie.belongsToMany(User, { through: Cart });
-User.belongsToMany(Movie, { through: Purchase });
-Movie.belongsToMany(User, { through: Purchase });
+
 
 module.exports = {
   ...sequelize.models,

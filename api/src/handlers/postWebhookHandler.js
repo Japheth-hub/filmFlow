@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { KEY_SECRET,ENDPOINT } = process.env;
 const stripe = require("stripe")(KEY_SECRET);
-const axios = require('axios')
+const postPurchase = '../controllers/postPurchase.js'
 
 module.exports = async (request, response) => {
   const sig = request.headers["stripe-signature"];
@@ -20,17 +20,12 @@ module.exports = async (request, response) => {
   switch (event.type) {
     case "checkout.session.completed":
       const checkoutSessionCompleted = event.data.object;
-      // podemos guarddar en base de datos
-      // podemos enviar un email
-      // podemos enviar un sms
-      // console.log(checkoutSessionCompleted);
-      console.log(checkoutSessionCompleted.customer_details);
-      console.log(checkoutSessionCompleted.amount_total);
-      console.log(checkoutSessionCompleted.metadata);
-      await axios.post(`http://localhost:3001/cart/buy`, {
-        auth: checkoutSessionCompleted.metadata.sid,
-        amount:checkoutSessionCompleted.amount_total
-      });
+      
+      const purchaseInfo = {
+        sid:checkoutSessionCompleted.metadata.sid,
+        amount:checkoutSessionCompleted.amount_total,
+      }
+      postPurchase(purchaseInfo)
       break;
     // ... handle other event types
     default:
