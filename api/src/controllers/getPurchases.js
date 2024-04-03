@@ -1,6 +1,4 @@
-const { Purchase,User } = require('../db');
-
-
+const { Purchase,Movie } = require('../db');
 
 module.exports = async function getPurchases(query){
     let options = {};
@@ -13,10 +11,14 @@ module.exports = async function getPurchases(query){
     }
 
     if(user){
-        if(!options.where){
-            options.where = {};
-        }
-        options.where.userId = user;
+        include: [
+            {
+              model: Movie,
+              where: { userId: user.id }
+            }
+          ]
     }
-    const purchases = await Purchase.findAll({...options})
+    const purchases = await Purchase.findAll({...options});
+
+    return purchases;
 }

@@ -6,6 +6,7 @@ const saveGenres = require('./src/services/saveGenresToDB.js');
 const saveMovies = require("./src/services/saveMoviesToDB.js");
 const saveUsers = require("./src/services/saveUsersToDb.js")
 const saveReviews = require("./src/services/saveReviewsToDB.js")
+const savePurchases = require("./src/services/savePurchasesToDB.js")
 const saveCart = require("./src/services/saveMoviesToCart.js")
 const { TEST } = process.env;
 const router = require('./src/routes/index.js');
@@ -23,6 +24,7 @@ conn.sync({ force: TEST === "TRUE" ?true : false }).then(() => {
         await saveGenres();
         await saveUsers();
         await saveMovies();
+        await savePurchases();
         await saveReviews();
         await saveCart();
       }

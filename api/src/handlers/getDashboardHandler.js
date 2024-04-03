@@ -1,19 +1,13 @@
 
-const getMovies = require('../controllers/getMovies');
-const getUsers = require('../controllers/getUsers')
+const getDashboard = require('../controllers/getDashboard');
 
 module.exports = async (req,res)=>{
-    user = req.user;
-    const data = {};
-
-    if(user.role.role === 'admin'){
-
-        data.movies = await getMovies({limit:10,user:1,search:"mat"});
-        data.users  = await getUsers({limit:10});
-        data.purchases  = await getPurchases({limit:10});
+    try {
+        const data = await getDashboard(req);
+        return res.json(data);
+    } catch (error) {
+        return res.status(500,{message:error.message})
     }
-    
-    return res.json(data);
 
 
 }
