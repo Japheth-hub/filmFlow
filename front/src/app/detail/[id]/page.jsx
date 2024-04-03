@@ -56,7 +56,7 @@ const DetailContent = () => {
   
   useEffect(()=>{
     
-    setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
+    // setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
   }, [reviewsData]);
 
   useEffect(() => {
