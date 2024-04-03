@@ -44,11 +44,11 @@ module.exports = (sequelize) => {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
-        userId: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
         year: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        userId: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },

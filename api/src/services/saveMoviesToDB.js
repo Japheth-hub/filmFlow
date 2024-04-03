@@ -19,6 +19,7 @@ module.exports = async () => {
                     movie,
                     status: "pending", 
                     price: 25,
+                    year: 2020
                 }
             });
 
