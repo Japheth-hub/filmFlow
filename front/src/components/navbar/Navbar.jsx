@@ -17,6 +17,7 @@ const Nav = (props)=> {
     const {data} = props;
     const {user} = useUser();
     const router = useRouter();
+    const [userLocalStorage,setUserLocalStorage] = useState({});
 
     const [showDropdown, setShowDropdown] = useState(false);
     const [quickSearch, setQuickSearch] = useState([])
@@ -59,7 +60,11 @@ const Nav = (props)=> {
       }
     };
 
-    const userLocalStorage = typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('FilmFlowUsr')):null;
+    useEffect(() => {  
+      setUserLocalStorage(typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('FilmFlowUsr')):null);
+    }, [])
+    
+    
 
     return(
         <nav className={styles.nav}>
