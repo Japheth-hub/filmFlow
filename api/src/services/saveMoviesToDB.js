@@ -1,19 +1,18 @@
 const movies = require('../utils/movies');
-const { Movie, Genre } = require('../db');
+const { Movie, Genre, Country } = require('../db');
 
 module.exports = async () => {
     let count = 0
     try {
         for (const actualMovie of movies) {
             const { name, director, genres, description, duration, country, poster, trailer, movie } = actualMovie;
-
+            const countryLowerCase = country.toLowerCase()
             const [movieDB, created] = await Movie.findOrCreate({
                 where: { name },
                 defaults: {
                     director,
                     description,
                     duration,
-                    country,
                     poster,
                     trailer,
                     movie,
@@ -25,6 +24,14 @@ module.exports = async () => {
 
             if (!created) continue;
 
+            const currentCountry = await Country.findOne({ 
+                where: { 
+                    name: countryLowerCase,
+                } 
+            });
+
+            await movieDB.addCountry(currentCountry);
+            
             const genresArray = genres.split(',').map(genre => genre.trim());
 
             for (const genreName of genresArray) {

@@ -47,7 +47,7 @@ module.exports = async function getMovies(query){
             }
         }
         
-        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","country","status", "price"]})
+        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price"]})
 
         if(movies.length === 0){
             return data.message = 'No hay Peliculas'

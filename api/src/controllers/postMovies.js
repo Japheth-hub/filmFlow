@@ -1,4 +1,4 @@
-const { Movie,Genre } = require('../db')
+const { Movie, Genre, Country } = require('../db')
 const { Op } = require('sequelize');
 const cloudinary = require('cloudinary').v2;
 require("dotenv").config();
@@ -25,6 +25,7 @@ module.exports = async (req) => {
         }
 
         let { name, director, genres, description, country, posterFile, trailerFile, movieFile} = body;
+        let countryCode = country
        
         const status = "pending" 
 
@@ -79,16 +80,22 @@ module.exports = async (req) => {
         
         const userId = isAdmin(user) ? undefined : user.id;
         const [movieDB, created] = await Movie.findOrCreate({
-            where: {
+            include: [{
+                model: Country,
+                required: true,
+                attributes: [],
+                where: {
+                    id: countryCode 
+                }
+            }],
+            where: { 
                 name: name,
                 director: director,
-                country: country,
-                year: year
+                year: year,
             },
             defaults: { 
                 name,
                 director,
-                country,
                 year,
                 poster,
                 movie,
@@ -112,6 +119,11 @@ module.exports = async (req) => {
                 if(genreDB){
                     movieDB.addGenre(genreDB);
                 }
+            }
+            const countryDB = await Country.findByPk(countryCode)
+
+            if(countryDB){
+                movieDB.addCountry(countryDB)
             }
         }
 

@@ -100,10 +100,12 @@ const DetailContent = () => {
     director,
     description,
     duration,
-    country,
+    countries,
     genres,
   } = movieData;
-  
+
+  const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+
   const handleRatingChange = (rating) => {
     setNewReview({ ...newReview, points: rating });
   };

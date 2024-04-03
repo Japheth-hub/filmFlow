@@ -32,10 +32,6 @@ module.exports = (sequelize) => {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
-        country: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         status: {
             type: DataTypes.ENUM('approved', 'pending', 'declined'),
             allowNull: false,
