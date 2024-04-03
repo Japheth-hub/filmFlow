@@ -59,8 +59,7 @@ const Nav = (props)=> {
       }
     };
 
-    //Estoy sacando el usuario del localeStorage porque ahi es donde estoy guardando la condicional de si es admin o no
-    const userLocalStorage = JSON.parse(window.localStorage.getItem('FilmFlowUsr'));
+    const userLocalStorage = typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('FilmFlowUsr')):null;
 
     return(
         <nav className={styles.nav}>

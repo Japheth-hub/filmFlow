@@ -247,7 +247,7 @@ const MovieForm = () => {
               </div>
               {poster && (
                 <div className={style["image-preview-container"]}>
-                  <img src={window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
+                  <img src={typeof window !== "undefined" && window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
               {errors.posterFile && <p className={style["error-message"]}>{errors.posterFile}</p>}
@@ -264,7 +264,7 @@ const MovieForm = () => {
               />
               {trailer && (
                 <div className={style["image-preview-container"]}>
-                  <video src={window.URL.createObjectURL(trailer)} controls alt="Preview" className={style["poster-preview"]} />
+                  <video src={typeof window !== "undefined" && window.URL.createObjectURL(trailer)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
               {errors.trailerFile && <p className={style["error-message"]}>{errors.trailerFile}</p>}
@@ -281,7 +281,7 @@ const MovieForm = () => {
               />
               {movie && (
                 <div className={style["image-preview-container"]}>
-                  <video src={window.URL.createObjectURL(movie)} controls alt="Preview" className={style["poster-preview"]} />
+                  <video src={typeof window !== "undefined" && window.URL.createObjectURL(movie)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
               {errors.movieFile && <p className={style["error-message"]}>{errors.movieFile}</p>}
