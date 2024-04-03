@@ -8,7 +8,7 @@ import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
 import { useUser } from '@auth0/nextjs-auth0/client'; 
-import loginHandlerFactory from '@auth0/nextjs-auth0/dist/auth0-session/handlers/login';
+
 
 const DetailContent = () => {
   const [purchase, setPurchase] = useState([]);
@@ -61,7 +61,6 @@ const DetailContent = () => {
     }
   }, [reviewsData]);
 
-  console.log(reviewsData);
   useEffect(() => {
     async function getPurchase(){
       const {data} = await axios(`${URL}purchases/${user.sid}`)
