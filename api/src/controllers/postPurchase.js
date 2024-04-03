@@ -3,14 +3,18 @@ const { Op } = require('sequelize');
 
 module.exports = async (purchaseInfo) => {
     try {
-        let {sid,amount,movies} = purchaseInfo;
+        let {sid,amount,movies,method,currency,stripeId,status} = purchaseInfo;
         const user = await User.findOne({where:{sid}});
 
         movies = movies.split(",");
 
         const purchase = await Purchase.create({
             userId: user.id,
-            amount
+            amount,
+            method,
+            currency,
+            stripeId,
+            status
          });
            
 

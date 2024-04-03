@@ -26,7 +26,9 @@ module.exports = async (request, response) => {
         amount:checkoutSessionCompleted.amount_total,
         currency:checkoutSessionCompleted.currency,
         stripeId:checkoutSessionCompleted.id,
-        movies:checkoutSessionCompleted.metadata.movies
+        movies:checkoutSessionCompleted.metadata.movies,
+        method:checkoutSessionCompleted.payment_method_types[0],
+        status:checkoutSessionCompleted.payment_status
       }
       await postPurchase(purchaseInfo)
       break;
