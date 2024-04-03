@@ -1,5 +1,24 @@
+@import '../../scss/variables.scss';
+
+.about{
+  font: $mainFont;
+  font-size: 14px;
+  padding: 50px;
+  margin: auto;
+  width: 50%;
+}
 .institutional{
-    text-align: justify;
-    max-width: 200px;
-    font-size: .75em;
+  text-align: justify;
+  max-width: 500px;
+}
+.noDecoration{
+  list-style-type: none;
+  
+  a{
+    text-decoration: none;
+    color:black;
+    &:hover{
+      color: #693a9e;
+    }
   }
+}

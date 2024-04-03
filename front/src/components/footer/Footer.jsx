@@ -2,12 +2,16 @@
 import style from './Footer.module.scss'
 import Image from 'next/image';
 import Link from 'next/link'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import logo from '../../img/logo-color-light-expanded.png';
 import twt from '../../img/twitter.png'
 import fb from '../../img/facebook.png'
 import ig from '../../img/instagram.png'
 import gh from '../../img/github.png'
 const Footer = () => {
+
+    const {user} = useUser();
+
     return (
         <div className={style.footer}>
             <div className="wrapper">
@@ -29,9 +33,13 @@ const Footer = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href='#'>
-                                Users
-                            </Link>
+                            {user ? (
+                                <Link href="/account">
+                                    Profile
+                                </Link>
+                            ) : (
+                                <a href="#">User</a>
+                            )}
                         </li>
                         <li>
                             <Link href='/cart'>
