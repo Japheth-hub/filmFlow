@@ -8,6 +8,7 @@ const saveUsers = require("./src/services/saveUsersToDb.js")
 const saveReviews = require("./src/services/saveReviewsToDB.js")
 const savePurchases = require("./src/services/savePurchasesToDB.js")
 const saveCart = require("./src/services/saveMoviesToCart.js")
+const saveCountries = require("./src/services/saveCountriesToDB.js")
 const { TEST } = process.env;
 const router = require('./src/routes/index.js');
 const expressListRoutes = require('express-list-routes');
@@ -21,6 +22,7 @@ conn.sync({ force: TEST === "TRUE" ?true : false }).then(() => {
       expressListRoutes(router);
       await saveRoles();
       if (TEST === "TRUE"){
+        await saveCountries();
         await saveGenres();
         await saveUsers();
         await saveMovies();

@@ -12,7 +12,7 @@ export default function layout({children}) {
         <GoBack />
           {children}
       </div>
-        <Footer />
+      <Footer />
     </>
   )
 }

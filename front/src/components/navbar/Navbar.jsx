@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import styles from './Navbar.module.scss'
 import logoimg from '../../img/logo-white-expanded.png';
@@ -17,6 +17,7 @@ const Nav = (props)=> {
     const {data} = props;
     const {user} = useUser();
     const router = useRouter();
+    const [userLocalStorage,setUserLocalStorage] = useState({});
 
     const [showDropdown, setShowDropdown] = useState(false);
     const [quickSearch, setQuickSearch] = useState([])
@@ -59,8 +60,11 @@ const Nav = (props)=> {
       }
     };
 
-    //Estoy sacando el usuario del localeStorage porque ahi es donde estoy guardando la condicional de si es admin o no
-    const userLocalStorage = JSON.parse(window.localStorage.getItem('FilmFlowUsr'));
+    useEffect(() => {  
+      setUserLocalStorage(typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('FilmFlowUsr')):null);
+    }, [])
+    
+    
 
     return(
         <nav className={styles.nav}>
@@ -122,9 +126,9 @@ const Nav = (props)=> {
                                       {user ? <h5>{user.nickname}</h5> : null}
                                     </li>
                                     <li>
-                                      {userLocalStorage.admin 
+                                      {userLocalStorage && userLocalStorage.admin 
                                         ? <Link href="/admin">
-                                            Admin dashboard
+                                            <p>Admin dashboard</p>
                                           </Link>
                                         : null
                                       }

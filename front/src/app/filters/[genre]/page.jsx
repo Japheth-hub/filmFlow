@@ -2,10 +2,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Movie from "../../../components/movie/Movie";
-import style from "./page.module.css";
+import style from "./page.module.scss";
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from "next/navigation";
 import Button from '../../../components/button/Button'
+import notSearchIMG from '../../../img/notSearch.png'
+import Image from "next/image";
 
 const Filter = ({ params }) => {
   const router = useRouter()
@@ -67,15 +69,10 @@ const Filter = ({ params }) => {
   useEffect(() => {
     const getMovies = async () => {
       let { data } = await axios.get(urlFilter);
-      if (data !== "No hay Peliculas") return setMovies(data);
-      setMovies([{ id: 0, name: "Not Found" }]);
+      setMovies(data)
     };
     getMovies();
   }, [urlFilter]);
-
-  useEffect(() => {
-    
-  }, [dataFilter])
 
   //?SETTEAMOS LO QUE VIENE DE SEARCHBAR EN LA QUERY AL BACK 
   if(condicion[0] === "search"){
@@ -83,7 +80,6 @@ const Filter = ({ params }) => {
       if(dataFilter.search !== condicion[1]){
         let valueQuery = condicion[1];
         setDataFilter({ ...dataFilter, search: valueQuery })
-        console.log('setting search', condicion);
       }
     }
   }
@@ -127,13 +123,9 @@ const Filter = ({ params }) => {
   const cleanFilter = () => {
     setDataFilter({ ...dataFilter, search: "" })
     URL2 = URL + `movies?search=`
-    setUrlFilter(URL2)
     router.push("/filters/search=")
+    setUrlFilter(URL2)
   };
-
-  const handleClick = () => {
-    cleanFilter()
-  }
 
   //?Fn PARA MOVER EL PAGINADO 
   const changePage = (direct) => {
@@ -145,8 +137,7 @@ const Filter = ({ params }) => {
       if (pagination.page < Math.ceil(movies.length / pagination.step)) {
         setPagination({ ...pagination, page: pagination.page + 1 });
       }
-    }
-  };
+    }};
 
   return (
     <div>
@@ -154,7 +145,7 @@ const Filter = ({ params }) => {
         <form>
           <fieldset className={style.rowField}>
             <div className={style.optionsField}>
-              <label>Genre </label>
+              <label>Género </label>
               <select
                 name="genre"
                 value={dataFilter.genre}
@@ -169,7 +160,7 @@ const Filter = ({ params }) => {
               </select>
             </div>
             <div className={style.optionsField}>
-              <label>OrderType </label>
+              <label>Ordernar por </label>
               <select
                 name="orderType"
                 value={dataFilter.orderType}
@@ -181,7 +172,7 @@ const Filter = ({ params }) => {
               </select>
             </div>
             <div className={style.optionsField}>
-              <label>Order </label>
+              <label>Orden </label>
               <select
                 name="order"
                 value={dataFilter.order}
@@ -192,41 +183,57 @@ const Filter = ({ params }) => {
                 <option value={"desc"}>Descendente</option>
               </select>
             </div>
-            <div>
+            <div >
               <input
-                className={style.optionsField}
+                className={style.button}
                 type="button"
                 value="Limpiar"
                 onClick={() => cleanFilter()}
               />
-              {/*
-               <Button emoji={""} label={"Clean"} callback={() => cleanFilter()}/> */}
             </div>
           </fieldset>
         </form>
       </div>
 
-      {/* MOSTRAR PELICULAS */}
       {/* REVISAR LA POSIBILIDAD DE REFACTORIZAR CON SLICE */}
       <div className={`container ${style.order}`}>
-        {movies.map((elem, index) => {
-          if (
-            index >= (pagination.page - 1) * pagination.step &&
-            index <= pagination.page * pagination.step - 1
-          ) {
-            return <Movie key={elem.id} elem={elem} />;
-          }
-        })}
+        {
+          (typeof(movies) === 'string')
+          ? (
+            <div>
+              <br />
+              <Image
+                src={notSearchIMG}
+                width='200px'
+                height='300px'
+                alt='notFound'
+              />                  
+              <h4>No se encontraron coincidencias</h4>
+            </div>
+            )
+          : (
+            movies.map((elem, index) => {
+              if (
+                index >= (pagination.page - 1) * pagination.step &&
+                index <= pagination.page * pagination.step - 1
+              ) {
+                return <Movie key={elem.id} elem={elem} />;
+              }
+            }))}
       </div>
-
-      {/* MOSTRAR BOTONES DE PAGINACION */}
-      <div className="container">
-        <div className={style.pagination}>
-          <Button label='Anterior' callback={() => changePage("prev")}/>
-          <label className={style.pagination}>{pagination.page}</label>
-          <Button label='Siguiente' callback={() => changePage("next")}/>
-        </div>
-      </div>
+      {/* MOSTRAR BOTONES DE PAGINACION */
+        (typeof(movies) === 'object')
+        ?(
+          <div className="container">
+            <div className={style.pagination}>
+              <Button label='Anterior' callback={() => changePage("prev")}/>
+              <label className={style.pagination}>{pagination.page} de {Math.ceil(movies.length / pagination.step)}</label>
+              <Button label='Siguiente' callback={() => changePage("next")}/>
+            </div>
+          </div>
+        )
+        : <div></div>
+      }
     </div>
   );
 };
