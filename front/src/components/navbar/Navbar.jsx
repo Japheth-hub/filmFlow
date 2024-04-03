@@ -126,7 +126,7 @@ const Nav = (props)=> {
                                       {user ? <h5>{user.nickname}</h5> : null}
                                     </li>
                                     <li>
-                                      {userLocalStorage.admin 
+                                      {userLocalStorage && userLocalStorage.admin 
                                         ? <Link href="/admin">
                                             <p>Admin dashboard</p>
                                           </Link>
