@@ -5,6 +5,7 @@ const deleteUserHandler = require('../handlers/deleteUserHandler');
 const putUserHandler = require("../handlers/putUserHandler");
 
 const checkAdmin = require('../middlewares/checkAdmin');
+const getCheckAdmin = require('../middlewares/getCheckAdmin')
 const checkOwner = require('../middlewares/checkOwner');
 
 
@@ -12,7 +13,7 @@ const usersRouter = Router();
 usersRouter.post('/', postUsersHandler);
 
 
-usersRouter.get('/', checkAdmin, getUsersHandler);
+usersRouter.get('/:auth', getCheckAdmin, getUsersHandler);
 usersRouter.delete('/:id',checkAdmin, deleteUserHandler);
 usersRouter.put('/:id',checkOwner, putUserHandler);
 
