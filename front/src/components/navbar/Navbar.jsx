@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import styles from './Navbar.module.scss'
 import logoimg from '../../img/logo-white-expanded.png';
