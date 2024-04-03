@@ -20,7 +20,6 @@ module.exports = async (request, response) => {
   switch (event.type) {
     case "checkout.session.completed":
       const checkoutSessionCompleted = event.data.object;
-      console.log("Aqui",event.data);
       const purchaseInfo = {
         sid:checkoutSessionCompleted.metadata.sid,
         amount:checkoutSessionCompleted.amount_total,
