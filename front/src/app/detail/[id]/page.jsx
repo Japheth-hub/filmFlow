@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
+import { useUser } from '@auth0/nextjs-auth0/client'; 
 
 const DetailContent = () => {
   const [purchase, setPurchase] = useState([]);
@@ -20,21 +21,13 @@ const DetailContent = () => {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState('');
   const [reviewsData, setReviewsData] = useState([]);
-  const user = checkUserLogin();
+  const {user} = useUser();
   const [review, setReview] = useState({})
 
   const goToCategory = (genre) => {
     router.push(`/filters/genero=${genre}`);
   };
 
-  function checkUserLogin (){
-    const user = window.localStorage.getItem('FilmFlowUsr');
-    if(user){
-        return JSON.parse(user);
-    }else{
-        return false
-    }
-}
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,8 +55,12 @@ const DetailContent = () => {
   }, [movieData]);
   
   useEffect(()=>{
+    
+    setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
+  }, [reviewsData]);
+
+  useEffect(() => {
     async function getPurchase(){
-      const user = JSON.parse(localStorage.getItem('FilmFlowUsr'))
       const {data} = await axios(`${URL}purchases/${user.sid}`)
       if(typeof data === "object"){
         const idsMovies = []
@@ -73,9 +70,13 @@ const DetailContent = () => {
         setPurchase(idsMovies)
       }
     }
-    getPurchase()
-    setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
-    }, [reviewsData])
+
+    if(user){
+      getPurchase()
+    }
+  }, [])
+  
+
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
