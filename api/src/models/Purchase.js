@@ -9,6 +9,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING, 
       allowNull: true
     },
+    currency: {
+      type: DataTypes.STRING, 
+      allowNull: true
+    },
     amount: {
       type: DataTypes.DECIMAL(10, 2), 
       allowNull: false

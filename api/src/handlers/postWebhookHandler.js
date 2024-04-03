@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { KEY_SECRET,ENDPOINT } = process.env;
 const stripe = require("stripe")(KEY_SECRET);
-const postPurchase = '../controllers/postPurchase.js'
+const postPurchase = require('../controllers/postPurchase.js');
 
 module.exports = async (request, response) => {
   const sig = request.headers["stripe-signature"];
@@ -10,7 +10,7 @@ module.exports = async (request, response) => {
 
   try {
     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-    // console.log("eset es el event", event);
+
   } catch (err) {
     console.log("estes es el error", err.message);
     response.status(400).send(`Webhook Error: ${err.message}`);
@@ -20,12 +20,15 @@ module.exports = async (request, response) => {
   switch (event.type) {
     case "checkout.session.completed":
       const checkoutSessionCompleted = event.data.object;
-      
+      console.log("Aqui",event.data);
       const purchaseInfo = {
         sid:checkoutSessionCompleted.metadata.sid,
         amount:checkoutSessionCompleted.amount_total,
+        currency:checkoutSessionCompleted.currency,
+        stripeId:checkoutSessionCompleted.id,
+        movies:checkoutSessionCompleted.metadata.movies
       }
-      postPurchase(purchaseInfo)
+      await postPurchase(purchaseInfo)
       break;
     // ... handle other event types
     default:

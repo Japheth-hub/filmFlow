@@ -1,48 +1,44 @@
-const { Purchase, Cart, User } = require('../db');
+const { Purchase, Cart, User,Movie } = require('../db');
 const { Op } = require('sequelize');
 
 module.exports = async (purchaseInfo) => {
     try {
-        const {sid,amount} = purchaseInfo;
-        const user = User.findOne({where:{sid}});
+        let {sid,amount,movies} = purchaseInfo;
+        const user = await User.findOne({where:{sid}});
 
-        const cart = await Cart.findAll({
+        movies = movies.split(",");
+
+        const purchase = await Purchase.create({
+            userId: user.id,
+            amount
+         });
+           
+
+        const moviesDB = await Movie.findAll({
+            where: {
+                id: {
+                [Op.in]: movies,
+                },
+            },
+        });
+
+        purchase.setMovies(moviesDB);
+
+        const rows = await Cart.destroy({
             where: {
                 userId: user.id
             }
         })
 
-        if (cart && cart.length > 0) {
-            const purchase = await Purchase.create({
-                userId: user.id,
-                amount
-             });
-            const movieIds = cart.map(item => item.movieId);
-
-            const movies = await Movie.findAll({
-                where: {
-                  id: {
-                    [Op.in]: movieIds,
-                  },
-                },
-            });
-
-            purchase.setMovies(movies);
-
-            const rows = await Cart.destroy({
-                where: {
-                    userId: userId
-                }
-            })
-
-            if (!rows) {
-                console.log("error eliminando las peliculas del carrito")
-            }
+        if (!rows) {
+            console.log("error eliminando las peliculas del carrito")
         }
+        
         
         console.log("peliculas compradas con exito")
    
     } catch (error) {
+        console.log(error);
         return error
     }
 }
