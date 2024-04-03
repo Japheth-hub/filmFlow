@@ -8,6 +8,7 @@ import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
 import { useUser } from '@auth0/nextjs-auth0/client'; 
+import loginHandlerFactory from '@auth0/nextjs-auth0/dist/auth0-session/handlers/login';
 
 const DetailContent = () => {
   const [purchase, setPurchase] = useState([]);
@@ -55,10 +56,12 @@ const DetailContent = () => {
   }, [movieData]);
   
   useEffect(()=>{
-    
-    // setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
+    if(reviewsData.length > 0  && user){
+      setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
+    }
   }, [reviewsData]);
 
+  console.log(reviewsData);
   useEffect(() => {
     async function getPurchase(){
       const {data} = await axios(`${URL}purchases/${user.sid}`)
