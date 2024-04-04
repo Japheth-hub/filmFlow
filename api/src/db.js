@@ -33,7 +33,7 @@ let capsEntries = entries.map((entry) => [
 ]);
 
 sequelize.models = Object.fromEntries(capsEntries);
-const { User, Movie, Genre, Review, Role, Cart, Purchase } = sequelize.models;
+const { User, Movie, Genre, Review, Role, Cart, Purchase, Country } = sequelize.models;
 
 Movie.belongsToMany(Genre, { through: "movie_genre" });
 Genre.belongsToMany(Movie, { through: "movie_genre" });
@@ -44,14 +44,20 @@ Movie.belongsTo(User)
 
 User.hasMany(Review)
 User.hasMany(Movie)
-User.hasOne(Role)
-Role.belongsTo(User)
+User.belongsTo(Role)
 Review.belongsTo(User)
+
+Purchase.belongsTo(User)
+Purchase.belongsToMany(Movie, { through: "movie_purchase" });
+Movie.belongsToMany(Purchase, { through: "movie_purchase" })
+User.hasMany(Purchase);
 
 User.belongsToMany(Movie, { through: Cart });
 Movie.belongsToMany(User, { through: Cart });
-User.belongsToMany(Movie, { through: Purchase });
-Movie.belongsToMany(User, { through: Purchase });
+
+
+Movie.belongsToMany(Country, { through: "movie_country" })
+Country.belongsToMany(Movie, { through: "movie_country" })
 
 module.exports = {
   ...sequelize.models,

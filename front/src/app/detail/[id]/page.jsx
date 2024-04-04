@@ -7,6 +7,8 @@ import { useParams } from 'next/navigation';
 import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
+import { useUser } from '@auth0/nextjs-auth0/client'; 
+
 
 const DetailContent = () => {
   const [purchase, setPurchase] = useState([]);
@@ -20,20 +22,13 @@ const DetailContent = () => {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState('');
   const [reviewsData, setReviewsData] = useState([]);
-  const user = checkUserLogin();
+  const {user} = useUser();
+  const [review, setReview] = useState({})
 
   const goToCategory = (genre) => {
     router.push(`/filters/genero=${genre}`);
   };
 
-  function checkUserLogin (){
-    const user = window.localStorage.getItem('FilmFlowUsr');
-    if(user){
-        return JSON.parse(user);
-    }else{
-        return false
-    }
-}
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,24 +52,34 @@ const DetailContent = () => {
   useEffect(() => {
     if (movieData) {
       setReviewsData(movieData.reviews || []);
-
     }
   }, [movieData]);
-
+  
   useEffect(()=>{
-        async function getPurchase(){
-            const user = JSON.parse(localStorage.getItem('FilmFlowUsr'))
-            const {data} = await axios(`${URL}purchases/${user.sid}`)
-            if(typeof data === "object"){
-                const idsMovies = []
-                for(let movie of data){
-                    idsMovies.push(movie.id)
-                }
-                setPurchase(idsMovies)
-            }
+    if(reviewsData.length > 0  && user){
+      setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
+    }
+  }, [reviewsData]);
+  
+
+  useEffect(() => {
+    async function getPurchase(){
+      const {data} = await axios(`${URL}purchases/${user.sid}`)
+      if(typeof data === "object"){
+        const idsMovies = []
+        for(let movie of data){
+          idsMovies.push(movie.id)
         }
-        getPurchase()
-    }, [])
+        setPurchase(idsMovies)
+      }
+    }
+
+    if(user){
+      getPurchase()
+    }
+  }, [])
+  
+
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
@@ -100,10 +105,13 @@ const DetailContent = () => {
     director,
     description,
     duration,
-    country,
+    countries,
     genres,
   } = movieData;
-  
+
+  // const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+
+  const country = ""; 
   const handleRatingChange = (rating) => {
     setNewReview({ ...newReview, points: rating });
   };
@@ -129,7 +137,6 @@ const renderStarSelector = () => {
       await axios.post(`${URL}reviews`, { userSid, movieId, comment, points });
 
       const newReviewData = { id: reviewsData.length + 1, user: { name: user.name, picture: user.picture }, points, comment };
-      console.log(user)
       setReviewsData([...reviewsData, newReviewData]);
       setSuccessMessage('Review submitted successfully.');
       setNewReview({ points: 0, comment: '' });
@@ -138,7 +145,6 @@ const renderStarSelector = () => {
     }
   };
 
-  console.log(purchase)
   return (
     <div className={style['detail-content']}>
      
@@ -171,20 +177,23 @@ const renderStarSelector = () => {
         ) : (
           <iframe src={movie} width="800" height="500" title="Movie" allowFullScreen />
         )}
-      </div>
-          <div className={style['review-form-container']}>
-          <h4>Leave a Review</h4>
-          {successMessage && <div className={style['success-message']}>{successMessage}</div>}
-          <div className={style['review-form']}>
-            <label>Rating:</label>
-            <div className={style['star-selector']}>
-              {renderStarSelector()}
+      </div>  
+      {purchase.includes(movieData.id) && !review 
+        ? <div className={style['review-form-container']}>
+            <h4>Leave a Review</h4>
+            {successMessage && <div className={style['success-message']}>{successMessage}</div>}
+            <div className={style['review-form']}>
+              <label>Rating:</label>
+              <div className={style['star-selector']}>
+                {renderStarSelector()}
+              </div>
+              <label>Comment:</label>
+              <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
+              <button onClick={handleReviewSubmit}>Submit Review</button>
             </div>
-            <label>Comment:</label>
-            <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-            <button onClick={handleReviewSubmit}>Submit Review</button>
           </div>
-        </div>
+        : ""
+      }
           <h4>Reviews</h4>
         {reviewsData.map((review) => (
           <div key={review.id} className={style['review-container']}>

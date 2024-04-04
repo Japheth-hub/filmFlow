@@ -20,7 +20,8 @@ const Cart = () => {
     const fetchData = async () => {
         console.log("fetching data");
         try {
-            const localCart = JSON.parse(window.localStorage.getItem('cart'));
+            const localCart =  typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')): null;
+            console.log(localCart);
             if(user){
                 console.log("Hay usuario");
                 try {
@@ -28,9 +29,11 @@ const Cart = () => {
                         movies:localCart,
                         auth: user.sid
                     });
-                    window.localStorage.setItem(
-                        'cart', JSON.stringify(syncData.data.movies)
-                      )
+                    if(typeof window !== "undefined"){
+                        window.localStorage.setItem(
+                            'cart', JSON.stringify(syncData.data.movies)
+                          )
+                    }
                    
                     setCartData(syncData.data.movies);
                 } catch (error) {
@@ -71,12 +74,14 @@ const Cart = () => {
         };
 
         console.log(cartData);
-    
-        window.addEventListener('localChanged', handleStorageChange);
+        if(typeof window !== "undefined"){
+
+            window.addEventListener('localChanged', handleStorageChange);
+            return () => {
+                window.removeEventListener('localChanged', handleStorageChange);
+            };
+        }
         
-        return () => {
-            window.removeEventListener('localChanged', handleStorageChange);
-        };
       }, []);
 
       useEffect(() => {

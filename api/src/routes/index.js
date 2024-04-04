@@ -7,6 +7,8 @@ const usersRouter = require('./usersRouter')
 const cartRouter = require('./cartRouter')
 const checkoutRouter = require('./checkoutRouter')
 const purchaseRouter = require('./purchaseRouter')
+const countriesRouter = require('./countriesRouter')
+const dashboardRouter = require('./dashboardRouter')
 
 const router = Router()
 
@@ -20,9 +22,12 @@ router.use('/users',usersRouter);
 router.use('/movies',moviesRouter);
 router.use('/genres',genresRouter);
 router.use('/reviews',reviewsRouter);
-router.use('/cart', cartRouter)
-router.use('/checkout', checkoutRouter)
-router.use('/purchases', purchaseRouter)
+router.use('/cart', cartRouter);
+router.use('/checkout', checkoutRouter);
+router.use('/purchases', purchaseRouter);
+router.use('/dashboard', dashboardRouter);
+
+router.use('/countries', countriesRouter)
 
 
 module.exports = router
