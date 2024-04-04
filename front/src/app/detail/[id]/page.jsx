@@ -178,7 +178,7 @@ const renderStarSelector = () => {
           <iframe src={movie} width="800" height="500" title="Movie" allowFullScreen />
         )}
       </div>  
-      {purchase.includes(movieData.id) && !review 
+      {purchase.includes(movieData.id) && !review || purchase.includes(movieData.id) && reviewsData.length === 0
         ? <div className={style['review-form-container']}>
             <h4>Leave a Review</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
