@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
 import style from '../../app/admin/admin.module.scss'
+import Link from 'next/link'
 
 
 export default function Dashboard({movies, users, purchases}) {
 
     const [column, setColumn] = useState([])
-    const [body, setBody] = useState([])//Continuamos con el llenado del body de la tabla
+    const [body, setBody] = useState([])
+    const [link, setLink] = useState("/detail")//Mejroar la parte de la redirrecion, por ahora solo nos lleva al detail de la movie
 
     function handleTable(datos){
         if(datos && datos.length > 0){
@@ -16,6 +18,7 @@ export default function Dashboard({movies, users, purchases}) {
             setColumn([])
         }
         setBody(datos)
+
     }
 
     // console.log('users', users)
@@ -33,22 +36,24 @@ export default function Dashboard({movies, users, purchases}) {
 
         <div className={style.divTabla}>
             {column.length > 0 
-            ? <table border='1'>
-                    <thead>
+            ? <table className={style.table}>
+                    <thead className={style.thead}>
                         <tr>
                             {column && column.length > 0 &&
                                 column.map((item, index) => {
-                                    return <th key={index}>{item}</th>
+                                    return <th className={style.th} key={index}>{item.toUpperCase()}</th>
                                 })
                             }
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className={style.tbody}>
                             {body && body.length > 0 && column && column.length > 0 &&
                                 body.map((item, index) => (
                                     <tr key={index}>
                                     {column.map((prop, i) => ( 
-                                            <td key={i}>{item[prop]}</td>
+                                            i === 0 
+                                            ? <td className={style.td} key={i}><Link href={`${link}/${item[prop]}`}>{item[prop]}</Link></td>
+                                            : <td className={style.td} key={i}>{item[prop]}</td>
                                             ))}
                                     </tr>       
                                 ))

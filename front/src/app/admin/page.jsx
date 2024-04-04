@@ -3,6 +3,7 @@ import React,  {useEffect, useState} from 'react'
 import Dashboard from '@/components/dashboard/dashboard'
 import axios from 'axios'
 import { useUser } from '@auth0/nextjs-auth0/client'
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 function Admin() {
 
@@ -14,7 +15,6 @@ function Admin() {
 
   
   async function getMovies(data){
-    // const {data} = await axios('http://localhost:3001/movies')
     const clearData = data.map((movie)=>{
       return {
         id: movie.id,
@@ -46,7 +46,6 @@ function Admin() {
   }
   
   async function getUsers (data){
-    // const {data} = await axios(`http://localhost:3001/users/${user.sid}`)
     const clearData = data.users.map((user) => {
       return {
         name: user.name,
@@ -61,7 +60,7 @@ function Admin() {
   }
   
   async function getData(){
-    const {data} = await axios(`http://localhost:3001/dashboard/${user.sid}`)
+    const {data} = await axios(`${NEXT_PUBLIC_URL}dashboard/${user.sid}`)
     const {movies, users, purchases} = data
     await getMovies(movies)
     await getUsers(users)

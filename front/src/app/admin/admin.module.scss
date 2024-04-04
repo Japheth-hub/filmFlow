@@ -21,3 +21,24 @@
     text-shadow: 2px 0px 2px $mainColor, 0px 2px 2px $mainColor, -2px 0px 2px $mainColor, 0px -2px 2px $mainColor;
     color: rgba(235, 187, 241, 0.932);
 }
+
+.table{
+    width: 100%;
+    padding: 10px;
+}
+.thead{
+    background-color: $mainColor;
+    color: white;
+}
+.tbody{
+    background-color: rgba(235, 187, 241, 0.932);;
+}
+.th{
+    font-size: 1.3rem;
+    padding: 5px 10px;
+}
+.td{
+    text-align: center;
+    padding: 10px 0px;
+    font-weight: 700;
+}
