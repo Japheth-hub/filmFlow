@@ -10,7 +10,7 @@ module.exports = ({movies, sid}) => {
           name: movie.name,
           images: [movie.poster],
         },
-        unit_amount: 2500,
+        unit_amount: movie.price * 100,
       },
       quantity: 1,
     };
