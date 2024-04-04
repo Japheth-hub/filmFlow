@@ -1,4 +1,4 @@
-const { Movie, Genre } = require('../db');
+const { Movie, Genre,User,Role } = require('../db');
 const { Op } = require("sequelize");
 const orderFunction = require('../helpers/order')
 
@@ -6,8 +6,7 @@ const orderFunction = require('../helpers/order')
 module.exports = async function getMovies(query){
 
     let {search, genre, orderType, order,limit,user} = query;
-    type = orderType || ""; 
-    order = order || "asc"; 
+   
     try {
         let data = {}
         let options = {
@@ -37,12 +36,14 @@ module.exports = async function getMovies(query){
                 },
             }
         }
-
-        if(user){
+        
+        
+        console.log(user);
+        if(user && user.role.role !== 'admin'){
             if(!options.where){
                 options.where = {};
             }
-            options.where.userId = user;
+            options.where.userId = user.id;
         }
 
         if(limit){
