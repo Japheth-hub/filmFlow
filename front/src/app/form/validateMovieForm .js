@@ -1,5 +1,3 @@
-// Validaciones.js
-
 export function validateMovieForm(data) {
   const errors = {};
   const validFields = {};
