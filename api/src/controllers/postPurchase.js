@@ -1,5 +1,6 @@
 const { Purchase, Cart, User,Movie } = require('../db');
 const { Op } = require('sequelize');
+const sendEmail = require('./sendEmail');
 
 module.exports = async (purchaseInfo) => {
     try {
@@ -38,7 +39,20 @@ module.exports = async (purchaseInfo) => {
             console.log("error eliminando las peliculas del carrito")
         }
         
-        
+        //Prueba para el envio de mails
+        const mailInfo = {
+            destination: user.email,
+            topic: "Compra realizada",
+            content: `Se ha confirmado su compra con el monto de ${amount}${currency}`,
+        }
+
+        try {
+            const emailResponse = await sendEmail(mailInfo);
+            console.log(emailResponse.message)
+        } catch (error) {
+            console.log('Error sending email:', error);
+        }
+        //
         console.log("peliculas compradas con exito")
    
     } catch (error) {

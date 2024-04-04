@@ -5,6 +5,7 @@ require("dotenv").config();
 const validateMovieData = require('../services/validateMovieData');
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
 const isAdmin = require('../services/isAdmin');
+const sendEmail = require('./sendEmail');
 
 cloudinary.config({ 
   cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -130,6 +131,21 @@ module.exports = async (req) => {
         if (!created) {
             return { status:false, message:"Ya existe esa pelicula"};
         }
+
+        //Prueba para el envio de mails
+        const mailInfo = {
+            destination: `gerant9seminario@gmail.com`,
+            topic: "Pelicula creada con exito",
+            content: `Se ha creado su pelicula: ${name} exitosamente`,
+        };
+        
+        try {
+            const emailResponse = await sendEmail(mailInfo);
+            console.log(emailResponse.message)
+        } catch (error) {
+            console.log('Error sending email:', error);
+        }
+        //
 
         return {status:true,movie:movieDB}
     } catch (error) {
