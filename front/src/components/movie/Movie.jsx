@@ -27,7 +27,7 @@ const Movie = ({ elem, dim }) => {
                     const {data} = await axios(`${URL}purchases/${user.sid}`)
                     if(typeof data === "object"){
                         const idsMovies = []
-                        for(let movie of data.movies){
+                        for(let movie of data){
                             idsMovies.push(movie.id)
                         }
                         setPurchase(idsMovies)
