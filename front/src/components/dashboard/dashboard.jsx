@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-export default function Dashboard({movies, users}) {
+export default function Dashboard({movies, users, purchases}) {
 
     const [column, setColumn] = useState([])
     const [body, setBody] = useState([])//Continuamos con el llenado del body de la tabla
@@ -16,8 +16,9 @@ export default function Dashboard({movies, users}) {
         setBody(datos)
     }
 
-    // console.log(users)
-    // console.log(movies)
+    // console.log('users', users)
+    // console.log('movies', movies)
+    // console.log('compras', purchases)
     // console.log(column)
     // console.log(body)
     
@@ -26,7 +27,7 @@ export default function Dashboard({movies, users}) {
 
         <button onClick={()=>{handleTable(movies)}}>Movies</button>
         <button onClick={()=>{handleTable(users)}}>Users</button>
-        <button onClick={()=>{handleTable(users)}}>Providers</button>
+        <button onClick={()=>{handleTable(purchases)}}>Purchases</button>
 
         <table border='1'>
             <thead>

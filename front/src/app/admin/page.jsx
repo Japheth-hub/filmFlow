@@ -10,16 +10,16 @@ function Admin() {
   const [stop, setStop] = useState(true)
   const [movies, setMovies] = useState([])
   const [users, setUsers] = useState([])
-  const [rol, setRol] = useState([])
+  const [purchases, setPurchases] = useState([])
 
-  async function getMovies(){
-    const {data} = await axios('http://localhost:3001/movies')
+  
+  async function getMovies(data){
+    // const {data} = await axios('http://localhost:3001/movies')
     const clearData = data.map((movie)=>{
       return {
         id: movie.id,
         name: movie.name,
         duration: movie.duration,
-        country: movie.country,
         status: movie.status,
         userId: movie.userId,
         price: movie.price,
@@ -28,9 +28,25 @@ function Admin() {
     })
     setMovies(clearData)
   }
-
-  async function getUsers(){
-    const {data} = await axios(`http://localhost:3001/users/${user.sid}`)
+  
+  async function getPurchases (data){
+    const clearData = data.map((purch) => {
+      return {
+        id: purch.id,
+        stripeId: purch.stripeId,
+        status: purch.status,
+        method: purch.method,
+        currency: purch.currency,
+        amount: purch.amount,
+        userId: purch.userId,
+        createdAt: purch.createdAt.slice(0, 10)
+      }
+    })
+    setPurchases(clearData)
+  }
+  
+  async function getUsers (data){
+    // const {data} = await axios(`http://localhost:3001/users/${user.sid}`)
     const clearData = data.users.map((user) => {
       return {
         name: user.name,
@@ -43,19 +59,18 @@ function Admin() {
     })
     setUsers(clearData)
   }
-
-  // async function getRol(){
-  //   obtener los roles
-  // }
-
-  async function getFetch(){
-    await getMovies()
-    await getUsers()
+  
+  async function getData(){
+    const {data} = await axios(`http://localhost:3001/dashboard/${user.sid}`)
+    const {movies, users, purchases} = data
+    await getMovies(movies)
+    await getUsers(users)
+    await getPurchases(purchases)
     setStop(false)
   }
   
   if(stop && user){
-    getFetch()
+    getData()
   }
 
 
@@ -64,15 +79,17 @@ function Admin() {
       <div>Error con auth0</div>
     )
   }
+
   if(isLoading){
     return (
       <div>Loading....</div>
     )
   }
+
   if(user){
       return (
         <div>
-        <Dashboard movies = {movies} users = {users}/>
+        <Dashboard movies = {movies} users = {users} purchases={purchases}/>
       </div>
     )
   }
