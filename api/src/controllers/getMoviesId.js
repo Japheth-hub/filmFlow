@@ -1,4 +1,4 @@
-const { Movie, Genre, User, Review } = require('../db');
+const { Movie, Genre, User, Review, Country } = require('../db');
 
 module.exports = async (id)=>{
     try {
@@ -8,6 +8,11 @@ module.exports = async (id)=>{
                 {
                     model:Genre,
                     attributes:["id","name","label","emoji"],
+                    through: { attributes: [] }
+                },
+                {
+                    model:Country,
+                    attributes:["id","name"],
                     through: { attributes: [] }
                 },
                 {

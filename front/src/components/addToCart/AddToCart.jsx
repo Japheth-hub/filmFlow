@@ -48,7 +48,9 @@ export default function AddToCart({movie}) {
 
     const saveCart = (newCart)=>{
         localStorage.setItem("cart", JSON.stringify(newCart));
-        window.dispatchEvent(event);
+        if(typeof window !== "undefined"){
+            window.dispatchEvent(event);
+        }
     }
     
     const addToCartButton = async () => {
@@ -93,7 +95,7 @@ export default function AddToCart({movie}) {
       }
 
       const fetchData = ()=>{
-        const localCart = JSON.parse(window.localStorage.getItem('cart'));
+        const localCart = typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')):null;
         if(localCart){
             setCart(localCart)
         }else{
@@ -131,12 +133,15 @@ export default function AddToCart({movie}) {
             fetchData();
         };
     
-        // Agregar el evento de escucha para cambios en el almacenamiento local
-        window.addEventListener('localChanged', handleStorageChange);
+        if(typeof window !== "undefined"){
+            window.addEventListener('localChanged', handleStorageChange);
+        }
 
-        // Eliminar el evento de escucha al desmontar el componente
+        
         return () => {
-            window.removeEventListener('localChanged', handleStorageChange);
+            if(typeof window !== "undefined"){
+                window.removeEventListener('localChanged', handleStorageChange);
+            }
         };
 
         
