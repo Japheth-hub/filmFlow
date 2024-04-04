@@ -14,7 +14,7 @@ const sampleMovies = [
     {
         name: "The Matrix",
         director: "Lana Wachowski, Lilly Wachowski",
-        genres: "Action, Sci-Fi",
+        genres: "Action, Science Fiction",
         description: "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
         duration: 136, // duración en minutos
         country: "United States",
@@ -150,7 +150,7 @@ const sampleMovies = [
     {
         name: "Interstellar",
         director: "Christopher Nolan",
-        genres: "Adventure, Drama, Sci-Fi",
+        genres: "Adventure, Drama, Science Fiction",
         description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
         duration: 169,
         country: "United States",
@@ -227,7 +227,7 @@ const sampleMovies = [
     {
         name: "The Prestige",
         director: "Christopher Nolan",
-        genres: "Drama, Mystery, Sci-Fi",
+        genres: "Drama, Mystery, Science Fiction",
         description: "Two stage magicians engage in competitive one-upmanship in an attempt to create the ultimate stage illusion.",
         duration: 130,
         country: "United States",
@@ -238,7 +238,7 @@ const sampleMovies = [
     {
         name: "Eternal Sunshine of the Spotless Mind",
         director: "Michel Gondry",
-        genres: "Drama, Romance, Sci-Fi",
+        genres: "Drama, Romance, Science Fiction",
         description: "When their relationship turns sour, a couple undergoes a medical procedure to have each other erased from their memories.",
         duration: 108,
         country: "United States",
@@ -282,7 +282,7 @@ const sampleMovies = [
     {
         name: "Inception",
         director: "Christopher Nolan",
-        genres: "Action, Adventure, Sci-Fi",
+        genres: "Action, Adventure, Science Fiction",
         description: "A thief who enters the dreams of others to steal their secrets gets a shot at redemption when he is offered a task to implant an idea into the mind of a CEO.",
         duration: 148,
         country: "United States",
@@ -304,7 +304,7 @@ const sampleMovies = [
     {
         name: "The Truman Show",
         director: "Peter Weir",
-        genres: "Comedy, Drama, Sci-Fi",
+        genres: "Comedy, Drama, Science Fiction",
         description: "An insurance salesman discovers his whole life is actually a reality TV show.",
         duration: 103,
         country: "United States",
