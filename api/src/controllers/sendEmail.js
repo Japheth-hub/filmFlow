@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { RESEND_API_KEY } = process.env;
 const { Resend } = require('resend');
+const emailTemplate = require('../utils/emailTemplate')
 
 module.exports = async (mailInfo) => {
     //Ejemplo de mailInfo:
@@ -10,17 +11,23 @@ module.exports = async (mailInfo) => {
     //    content: "Mensaje del mail",
     //}
 
-    const { destination, topic, content } = mailInfo;
     const resend = new Resend(RESEND_API_KEY);
+    
+    const { destination, topic, content } = mailInfo;
+
+    const username = destination.split('@')[0];
+
+    const htmlContent = emailTemplate(username, content);
 
     try {
-        await resend.emails.send({
-            from: 'filmflow@resend.dev',
+        const emailResponse = await resend.emails.send({
+            from: 'FilmFlow <noreply@resend.dev>',
             to: destination,
             subject: topic,
-            html: `<p>${content}</p>`
+            html: htmlContent
         });
-        return { status: true, message: `Email sent successfully to ${destination}` };
+        console.log(emailResponse)
+        return { status: true, message: `Email sent successfully to ${destination}`, emailResponse };
     } catch (error) {
         return { status: false, message: "Error occurred sending the email", error };
     }
