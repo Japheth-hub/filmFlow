@@ -46,7 +46,7 @@ function Admin() {
   }
   
   async function getUsers (data){
-    const clearData = data.users.map((user) => {
+    const clearData = data.map((user) => {
       return {
         name: user.name,
         email: user.email,
@@ -60,12 +60,17 @@ function Admin() {
   }
   
   async function getData(){
-    const {data} = await axios(`${NEXT_PUBLIC_URL}dashboard/${user.sid}`)
-    const {movies, users, purchases} = data
-    await getMovies(movies)
-    await getUsers(users)
-    await getPurchases(purchases)
-    setStop(false)
+    try {
+      const {data} = await axios(`${NEXT_PUBLIC_URL}dashboard/${user.sid}`)
+      const {movies, users, purchases} = data
+      await getMovies(movies)
+      await getUsers(users)
+      await getPurchases(purchases)
+      setStop(false)
+    } catch (error) {
+      console.log(error)
+      setStop(false)
+    }
   }
   
   if(stop && user){
