@@ -89,8 +89,8 @@ function Admin() {
   if(user){
       return (
         <div>
-        <Dashboard movies = {movies} users = {users} purchases={purchases}/>
-      </div>
+          <Dashboard movies = {movies} users = {users} purchases={purchases}/>
+        </div>
     )
   }
 }
