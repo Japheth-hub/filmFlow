@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { KEY_SECRET,ENDPOINT } = process.env;
 const stripe = require("stripe")(KEY_SECRET);
-const axios = require('axios')
+const postPurchase = require('../controllers/postPurchase.js');
 
 module.exports = async (request, response) => {
   const sig = request.headers["stripe-signature"];
@@ -10,7 +10,7 @@ module.exports = async (request, response) => {
 
   try {
     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-    // console.log("eset es el event", event);
+
   } catch (err) {
     console.log("estes es el error", err.message);
     response.status(400).send(`Webhook Error: ${err.message}`);
@@ -20,16 +20,16 @@ module.exports = async (request, response) => {
   switch (event.type) {
     case "checkout.session.completed":
       const checkoutSessionCompleted = event.data.object;
-      // podemos guarddar en base de datos
-      // podemos enviar un email
-      // podemos enviar un sms
-      // console.log(checkoutSessionCompleted);
-      console.log(checkoutSessionCompleted.customer_details);
-      console.log(checkoutSessionCompleted.amount_total);
-      console.log(checkoutSessionCompleted.metadata);
-      await axios.post(`http://localhost:3001/cart/buy`, {
-        auth: checkoutSessionCompleted.metadata.sid,
-      });
+      const purchaseInfo = {
+        sid:checkoutSessionCompleted.metadata.sid,
+        amount:checkoutSessionCompleted.amount_total,
+        currency:checkoutSessionCompleted.currency,
+        stripeId:checkoutSessionCompleted.id,
+        movies:checkoutSessionCompleted.metadata.movies,
+        method:checkoutSessionCompleted.payment_method_types[0],
+        status:checkoutSessionCompleted.payment_status
+      }
+      await postPurchase(purchaseInfo)
       break;
     // ... handle other event types
     default:

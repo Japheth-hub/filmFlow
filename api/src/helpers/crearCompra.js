@@ -1,6 +1,7 @@
 module.exports = ({movies, sid}) => {
   const products = [];
   const metaData = {};
+  const movieIds = [];
   for (let movie of movies) {
     const product = {
       price_data: {
@@ -14,11 +15,10 @@ module.exports = ({movies, sid}) => {
       quantity: 1,
     };
 
-    metaData[movie.id] = movie.name;
-    // metaData[movie.id] = movie.id;
-    
+    movieIds.push(movie.id);
     products.push(product);
   }
+  metaData.movies = movieIds.join(",");
   metaData.sid = sid
   return { products, metaData }
 };
