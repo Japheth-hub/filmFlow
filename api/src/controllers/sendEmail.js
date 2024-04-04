@@ -20,7 +20,7 @@ module.exports = async (mailInfo) => {
             subject: topic,
             html: `<p>${content}</p>`
         });
-        return { status: true, message: "Email sent successfully" };
+        return { status: true, message: `Email sent successfully to ${destination}` };
     } catch (error) {
         return { status: false, message: "Error occurred sending the email", error };
     }
