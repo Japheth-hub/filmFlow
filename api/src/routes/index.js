@@ -9,6 +9,7 @@ const checkoutRouter = require('./checkoutRouter')
 const purchaseRouter = require('./purchaseRouter')
 const countriesRouter = require('./countriesRouter')
 const dashboardRouter = require('./dashboardRouter')
+const emailHandler = require('../handlers/emailHandler')
 
 const router = Router()
 
@@ -18,6 +19,7 @@ router.get('/fake', async (req, res)=>{
 router.get('/', async (req, res)=>{
     res.status(200).json({"message":"welcome"})
 })
+router.post('/email', emailHandler)
 router.use('/users',usersRouter);
 router.use('/movies',moviesRouter);
 router.use('/genres',genresRouter);
