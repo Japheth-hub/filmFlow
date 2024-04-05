@@ -1,10 +1,9 @@
 @import "../../scss/variables.scss";
 .footer {
   color: $neutralLight;
-  height: 300px;
+  height: 250px;
   padding: 20px;
   background-color: $mainColor;
-  padding-top: 50px;
   .logo {
     width: 200px;
     height: auto;
@@ -27,4 +26,11 @@
 .noDecoration{
   list-style-type: none;
   font-size: 1em;
+  a{
+    text-decoration: none;
+    color: $neutralLight;
+    &:hover{
+      color: #ba90eb;
+    }
+  }
 }

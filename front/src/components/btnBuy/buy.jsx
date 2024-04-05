@@ -1,15 +1,16 @@
 import React from "react";
 import axios from "axios";
 import Button from '../button/Button'
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 
-export default function Buy(/*recibir el id del usuario*/) {
-
-  async function buy(/*id del usuario*/) {
+export default function Buy({sid}) {
+  async function buy(sid) {
     try {
-      //En este caso esta hardcodeado al usuario "1111"
-      const { data } = await axios.get("http://localhost:3001/cart/1111");
-      const movies = await axios.post("http://localhost:3001/checkout", data);
-      window.location = movies.data.url;
+      const { data } = await axios.get(`${NEXT_PUBLIC_URL}cart/${sid}`);
+      const movies = await axios.post(`${NEXT_PUBLIC_URL}checkout`, data);
+      if(typeof window !== "undefined"){
+        window.location = movies.data.url;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -18,7 +19,7 @@ export default function Buy(/*recibir el id del usuario*/) {
   return (
     <div>
       <Button
-        callback={() => buy(/*id del usuario*/)}
+        callback={() => buy(sid)}
         label="Buy"
         emoji="🤑"
       />

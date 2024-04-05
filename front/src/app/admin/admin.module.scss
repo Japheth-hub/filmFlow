@@ -1,0 +1,61 @@
+@import "../../scss/variables.scss";
+
+.tablas{
+    width: 95%;
+    margin: 30px auto;
+    min-height: 300px;
+    padding: 10px;
+    border: 1px solid $mainColor;
+    border-radius: 10px;
+}
+
+.divTabla{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome{
+    font-size: 4rem;
+    margin: 8% auto;
+    text-shadow: 2px 0px 2px $mainColor, 0px 2px 2px $mainColor, -2px 0px 2px $mainColor, 0px -2px 2px $mainColor;
+    color: rgba(235, 187, 241, 0.932);
+}
+
+.table{
+    width: 100%;
+    padding: 10px;
+}
+.thead{
+    background-color: $mainColor;
+    color: white;
+}
+.tbody{
+    background-color: rgba(235, 187, 241, 0.932);;
+}
+.th{
+    font-size: 1.3rem;
+    padding: 5px 10px;
+}
+.td{
+    text-align: center;
+    padding: 10px 0px;
+    font-weight: 700;
+}
+
+.orderFilters{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.genreSelect{
+    background-color: $mainColor;
+    padding: 5px 10px;
+    color: $neutralLight;
+    border: 0;
+    font-family: $mainFont;
+    font-size: 1.3em;
+    border-radius: 5px;
+    margin-top: 10px;
+}

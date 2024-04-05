@@ -1,4 +1,4 @@
-const { Movie, Cart } = require('../db');
+const { Movie, Cart,Purchase } = require('../db');
 const createCart = require('../services/createCart');
 
 module.exports = async (req) => {
@@ -31,15 +31,27 @@ module.exports = async (req) => {
 
         if(movies) {
             for (const movie of movies) {
-                const cart = await Cart.create({
-                    movieId: movie.id,
-                    userId,
-                });
-                status = true;
-                if (!cart) {
-                    return data.message = 'Error al añadir la pelicula al carrito'
+                const purchase = await Purchase.findOne({
+                    include: [{
+                      model: Movie,
+                      where: {
+                        id: movie.id
+                      }
+                    }]
+                  });
+                if(!purchase){
+                    const [cart, createdCart] = await Cart.findOrCreate({
+                        where: {
+                            movieId: movie.id,
+                            userId: userId,
+                        }
+                    });
+                    if (!cart) {
+                        return data.message = 'Error al añadir la pelicula al carrito'
+                    }
                 }
-            }
+                }
+                
         }
 
         const cartFinal = await createCart(user);

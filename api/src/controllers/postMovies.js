@@ -1,9 +1,11 @@
-const { Movie,Genre } = require('../db')
+const { Movie, Genre, Country } = require('../db')
+const { Op } = require('sequelize');
 const cloudinary = require('cloudinary').v2;
 require("dotenv").config();
 const validateMovieData = require('../services/validateMovieData');
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
 const isAdmin = require('../services/isAdmin');
+const sendEmail = require('./sendEmail');
 
 cloudinary.config({ 
   cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -23,7 +25,8 @@ module.exports = async (req) => {
            return {status:false,errors:validation.errors}
         }
 
-        let { name, director, genres, description, duration, country, posterFile, trailerFile, movieFile} = body;
+        let { name, director, genres, description, country, posterFile, trailerFile, movieFile} = body;
+        let countryCode = country
        
         const status = "pending" 
 
@@ -69,12 +72,41 @@ module.exports = async (req) => {
         const poster = cloudinaryPosterResponse.secure_url;
         const trailer = cloudinaryMovieResponse.secure_url;
         const movie = cloudinaryTrailerResponse.secure_url;
+        const duration = cloudinaryTrailerResponse.duration;
         //
+
+        //Provisional mientras no existen estos inputs en el formulario
+        const price = 25
+        const year = 2020
         
         const userId = isAdmin(user) ? undefined : user.id;
         const [movieDB, created] = await Movie.findOrCreate({
-            where: { name },
-            defaults: { poster, movie, trailer, director, description, duration, country, status, userId },
+            include: [{
+                model: Country,
+                required: true,
+                attributes: [],
+                where: {
+                    id: countryCode 
+                }
+            }],
+            where: { 
+                name: name,
+                director: director,
+                year: year,
+            },
+            defaults: { 
+                name,
+                director,
+                year,
+                poster,
+                movie,
+                trailer,
+                description,
+                duration,
+                status,
+                price,
+                userId 
+            },
         });
 
         
@@ -89,11 +121,31 @@ module.exports = async (req) => {
                     movieDB.addGenre(genreDB);
                 }
             }
+            const countryDB = await Country.findByPk(countryCode)
+
+            if(countryDB){
+                movieDB.addCountry(countryDB)
+            }
         }
 
         if (!created) {
-            return { status:false, message:"Ya hay una película con ese nombre"};
+            return { status:false, message:"Ya existe esa pelicula"};
         }
+
+        //Prueba para el envio de mails
+        const mailInfo = {
+            destination: `gerant9seminario@gmail.com`,
+            topic: "Pelicula creada con exito",
+            content: `Se ha creado su pelicula: ${name} exitosamente`,
+        };
+        
+        try {
+            const emailResponse = await sendEmail(mailInfo);
+            console.log(emailResponse.message)
+        } catch (error) {
+            console.log('Error sending email:', error);
+        }
+        //
 
         return {status:true,movie:movieDB}
     } catch (error) {

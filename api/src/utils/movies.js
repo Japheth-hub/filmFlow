@@ -8,18 +8,20 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4",
+        userId:3
     },
     {
         name: "The Matrix",
         director: "Lana Wachowski, Lilly Wachowski",
-        genres: "Action, Sci-Fi",
+        genres: "Action, Science Fiction",
         description: "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
         duration: 136, // duración en minutos
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481608/movies/yeavhvtaaixdgrbmjzji.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481686/movies/fwdnfrum84epvy27licn.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481686/movies/fwdnfrum84epvy27licn.mp4",
+        userId:3
     },
     {
         name: "Forrest Gump",
@@ -30,7 +32,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/6/67/Forrest_Gump_poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482111/movies/t5qwv1lxuv34n608rcbg.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481958/movies/mbwjnhvu2iueltsi9lcq.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481958/movies/mbwjnhvu2iueltsi9lcq.mp4",
+        userId:3
     },
     {
         name: "The Lord of the Rings: The Fellowship of the Ring",
@@ -41,7 +44,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481957/trailers/wmmjmiks0cqfzayr6kbj.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482110/trailers/zwqqv8zb9v7nwgxn5jp9.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711482110/trailers/zwqqv8zb9v7nwgxn5jp9.mp4",
+        userId:3
     },
     {
         name: "Inglourious Basterds",
@@ -52,7 +56,8 @@ const sampleMovies = [
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/c/c3/Inglourious_Basterds_poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
+        userId:3
     },
     {
         name: "The Green Mile",
@@ -107,7 +112,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Toy Story",
@@ -140,12 +145,12 @@ const sampleMovies = [
         country: "United States",
         poster: "https://image.tmdb.org/t/p/original/6EiRUJpuoeQPghrs3YNktfnqOVh.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Interstellar",
         director: "Christopher Nolan",
-        genres: "Adventure, Drama, Sci-Fi",
+        genres: "Adventure, Drama, Science Fiction",
         description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
         duration: 169,
         country: "United States",
@@ -195,7 +200,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "The Silence of the Lambs",
@@ -217,12 +222,12 @@ const sampleMovies = [
         country: "Japan",
         poster: "https://m.media-amazon.com/images/M/MV5BNGYyNmI3M2YtNzYzZS00OTViLTkxYjAtZDIyZmE1Y2U1ZmQ2XkEyXkFqcGdeQXVyMTA4NjE0NjEy._V1_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "The Prestige",
         director: "Christopher Nolan",
-        genres: "Drama, Mystery, Sci-Fi",
+        genres: "Drama, Mystery, Science Fiction",
         description: "Two stage magicians engage in competitive one-upmanship in an attempt to create the ultimate stage illusion.",
         duration: 130,
         country: "United States",
@@ -233,7 +238,7 @@ const sampleMovies = [
     {
         name: "Eternal Sunshine of the Spotless Mind",
         director: "Michel Gondry",
-        genres: "Drama, Romance, Sci-Fi",
+        genres: "Drama, Romance, Science Fiction",
         description: "When their relationship turns sour, a couple undergoes a medical procedure to have each other erased from their memories.",
         duration: 108,
         country: "United States",
@@ -250,7 +255,7 @@ const sampleMovies = [
         country: "Brazil",
         poster: "https://i.ebayimg.com/images/g/OSkAAOSwO0Ra8NKH/s-l1600.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "The Grand Budapest Hotel",
@@ -277,13 +282,13 @@ const sampleMovies = [
     {
         name: "Inception",
         director: "Christopher Nolan",
-        genres: "Action, Adventure, Sci-Fi",
+        genres: "Action, Adventure, Science Fiction",
         description: "A thief who enters the dreams of others to steal their secrets gets a shot at redemption when he is offered a task to implant an idea into the mind of a CEO.",
         duration: 148,
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/71DwIcSgFcS.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Good Will Hunting",
@@ -299,13 +304,13 @@ const sampleMovies = [
     {
         name: "The Truman Show",
         director: "Peter Weir",
-        genres: "Comedy, Drama, Sci-Fi",
+        genres: "Comedy, Drama, Science Fiction",
         description: "An insurance salesman discovers his whole life is actually a reality TV show.",
         duration: 103,
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/51k3X4-sm6L._AC_UF894,1000_QL80_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Spirit",
@@ -338,7 +343,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/816O+CBx0ML.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Coco",
@@ -349,7 +354,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://m.media-amazon.com/images/I/817aStLW2rL._AC_UF894,1000_QL80_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Kimetsu no Yaiba: The Infinity Train",
@@ -371,7 +376,7 @@ const sampleMovies = [
         country: "United States",
         poster: "https://filmartgallery.com/cdn/shop/products/Mission-Impossible-Vintage-Movie-Poster-Original-1-Sheet-27x41_ae1e1e64-23cb-45fd-a8dc-bb6625e01daf.jpg?v=1663224951",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
-        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
+        movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711659864/movies/fowpqfklyfq08faycse9.mp4"
     },
     {
         name: "Train to Busan",

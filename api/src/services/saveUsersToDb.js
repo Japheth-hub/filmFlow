@@ -6,9 +6,11 @@ module.exports = async () => {
     try {
         let count = 0;
         for(let user of users){
-            const {name, email, sid, picture} = user
-            const role = await Role.findOne({where:{role:user.role}})
-            await User.create({name, email, roleId:role.id, sid, picture})
+            const {name, email, sid, picture,role} = user
+            const roleDB = await Role.findOne({where:{role}});
+            console.log(roleDB);
+            const userDB = await User.create({name, email,  sid, picture});
+            await userDB.setRole(roleDB);
             count++
         }
         console.log(`Successfully created ${count} Users`)

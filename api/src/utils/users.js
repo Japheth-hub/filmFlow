@@ -27,4 +27,11 @@ module.exports = [
         role: "viewer",
         picture: "https://res.cloudinary.com/dtn2ewtqg/image/upload/v1711565875/posters/kksszsdl3zl74br1yw77.png"
     },
+    {
+        name: 'Admin',
+        email: 'admin123@mail.com',
+        sid:"5555",
+        role: "admin",
+        picture: "https://cdn2.iconfinder.com/data/icons/web-solid/32/user-512.png"
+    },
 ]

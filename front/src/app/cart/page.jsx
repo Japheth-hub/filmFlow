@@ -1,48 +1,99 @@
 'use client'
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Buy from '../../components/btnBuy/buy'
 import style from './cart.module.scss'
+import Link from 'next/link';
+import AddToCart from '../../components/addToCart/AddToCart'
+import Button  from '@/components/button/Button';
 
 const Cart = () => {
     const URL = process.env.NEXT_PUBLIC_URL;
     const { error, isLoading, user } = useUser();
     const [cartData, setCartData] = useState([]);
-    
-    const userId = "1111"
+    const [localStorageData, setLocalStorageData] = useState(null);
+    const [totalPrice,setTotalPrice] = useState(null);
+
+
 
     const fetchData = async () => {
+        console.log("fetching data");
         try {
-            //Usuario de auth0
-            // const response = await axios.get(`${URL}cart/${user.sid}`);
+            const localCart =  typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')): null;
+            console.log(localCart);
+            if(user){
+                console.log("Hay usuario");
+                try {
+                    const syncData = await axios.post(`${URL}cart`,{
+                        movies:localCart,
+                        auth: user.sid
+                    });
+                    if(typeof window !== "undefined"){
+                        window.localStorage.setItem(
+                            'cart', JSON.stringify(syncData.data.movies)
+                          )
+                    }
+                   
+                    setCartData(syncData.data.movies);
+                } catch (error) {
+                    console.log(error);
+                }
+            }else{
+                if(localCart){
+                    setCartData(localCart)
+                }
+            }
+        
 
-            //Hardcodeado
-            const response = await axios.get(`${URL}cart/${userId}`);
+            
 
-            setCartData(response.data.movies);
         } catch (error) {
             console.error('Error fetching movie data:', error);
         }
     };
-    
-    if (!isLoading && cartData.length === 0) {
-        fetchData()
-    }
-    
+  
     const handleDelete = async (id) => {
         try {
             //Usuario de auth0
-            // const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
+            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
 
             //Hardcodeado
-            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: userId}});
+            // const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: userId}});
 
             setCartData(cartData.filter(movie => movie.id !== id));
         } catch (error) {
             console.error('Error deleting movie from cart:', error);
         }
     }
+
+    useEffect(() => {
+        fetchData();
+        const handleStorageChange = (event) => {
+            fetchData();
+        };
+
+        console.log(cartData);
+        if(typeof window !== "undefined"){
+
+            window.addEventListener('localChanged', handleStorageChange);
+            return () => {
+                window.removeEventListener('localChanged', handleStorageChange);
+            };
+        }
+        
+      }, []);
+
+      useEffect(() => {
+        fetchData();
+        
+      }, [user]);
+
+      useEffect(() => {
+        setTotalPrice(cartData.reduce((total, movie) => total + movie.price, 0));
+      }, [cartData])
+      
+      
     
     if (error) {
         return (
@@ -56,25 +107,37 @@ const Cart = () => {
     }
 
     return (
-        <div>
-            
-            <div>
-                <div>
-                {cartData.map((movie) => (
-                    <div key={movie.id}>
-                        <img src={movie.poster} alt={movie.name} className={style['movie-poster']} />
-                            <div>
-                                <p>{movie.name}</p>
-                                <button onClick={() => handleDelete(movie.id)}>X</button> 
-                            </div>
-                    </div>
-                ))}
+        <div className={style.pageContainer}>
+            <div className={style.cartContainer}> 
+                <Link href="/">
+                    <Button label="ir a home" emoji="🏠" />
+                </Link>
+            <div className={style.cartList}> 
+            {cartData.map((movie) => (
+                <div key={movie.id} className={style.cartItem}> 
+            <img src={movie.poster} alt={movie.name} className={style.moviePoster} />
+                <div className={style.itemDetails}> 
+                    <p>{movie.name}</p>
                 </div>
-                <Buy></Buy>
+                <div className={style.priceButtonContainer}> 
+                    <div className={style.price}>
+                    <p>{movie.price}$</p>
+                    </div>
+                    <AddToCart movie={movie}/>
+                </div>
+                </div>
+            ))}
+            <div className={style.totalPrice}>
+            <p>Total: {totalPrice}$</p>
+            </div>
+            </div>
+            <div className={style.buy}> 
+            {user ? <Buy sid = {user.sid}/>: <Link href="/api/auth/login"><Button label="loggeate"/></Link>}
+            
             </div>
         </div>
+    </div>
     );
 };
-
 
 export default Cart;

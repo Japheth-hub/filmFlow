@@ -5,10 +5,11 @@ const getMoviesIdHandler = require('../handlers/getMoviesIdHandler')
 const putMoviesHandler = require('../handlers/putMoviesHandler');
 const deleteMoviesHandler = require("../handlers/deleteMoviesHandler");
 const checkAuth = require('../middlewares/checkAuth')
+const getAuth = require('../middlewares/getAuth')
 
 const moviesRouter = Router();
 
-moviesRouter.get('/', getMoviesHandler);
+moviesRouter.get('/',getAuth, getMoviesHandler);
 moviesRouter.get('/:id', getMoviesIdHandler);
 moviesRouter.post('/',checkAuth, postMoviesHandler);
 moviesRouter.put('/:id', putMoviesHandler);

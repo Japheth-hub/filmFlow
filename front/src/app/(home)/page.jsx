@@ -49,33 +49,24 @@ const Home = () => {
   useEffect( () => {
     if(user){
       const upUser = async() => {
-        const { data } = await axios.post(`${URL}users`, user)
-        //Creación de usuario en el localStorage
-        if(!window.localStorage.getItem('FilmFlowUsr')){          
+        const { data } = await axios.post(`${URL}users`, user)    
+        if (typeof window !== 'undefined') {
           window.localStorage.setItem(
-            'FilmFlowUsr', JSON.stringify(user)
-            //Agregar ROL de usuario
-            )
+            'FilmFlowUsr', JSON.stringify({...user, admin:data.isAdmin})
+          )
+        } 
+        if(data.isAdmin) {
+          console.log("Si soy admin")
+        } else {
+          console.log("No soy admin")
         }
-        else{
-          console.log('Ya existe el LS');
-        }
-
       }
       upUser()
     }
-
   }, [user])
-
-
 
   return (
   <div>
-    <div className="container">
-      <div>
-        {!user ? <a href="/api/auth/login"><button>Login</button></a> : <h2>{user.nickname}</h2>}
-      </div>
-    </div>
     <Carousel movie={movie} dim={['900px', '400px']} autoplay={5}/>
     <div>
       <Filters genres={genres}/>
@@ -83,7 +74,7 @@ const Home = () => {
     <div>
       <h3>Novedades</h3>
       <Movies movie={movie} />
-      <Link href={`/filters/Search`}><h6>Ver más..</h6></Link>
+      <Link href={`/filters/search=`}><h6>Ver más..</h6></Link>
     </div>
   </div>
   );

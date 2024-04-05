@@ -5,27 +5,35 @@ import cartIcon from '../../img/cart-icon-white.svg'
 import axios from 'axios';
 import { useEffect } from 'react';
 const URL = process.env.NEXT_PUBLIC_URL;
+import { useUser } from '@auth0/nextjs-auth0/client';
+
 
 export default function AddToCart({movie}) {
+    
     const [cart, setCart] = useState([]);
     const [label, setLabel] = useState("Agregar a carrito");
-    const user = checkUserLogin();
+    const [color, setColor] = useState("green");
+    const { error, isLoading, user } = useUser();
+    const event = new Event('localChanged');
+    
     const handleAddCart = ()=>{
         if(!checkMovieCart()){
-            addToCart();
+            addToCartButton();
         }else{
             removeFromCart()
         }
     }
 
     function checkUserLogin (){
-        const user = window.localStorage.getItem('FilmFlowUsr');
-        if(user){
-            return JSON.parse(user);
+        const auth = localStorage.getItem('FilmFlowUsr');
+        if(auth){
+            return JSON.parse(auth);
         }else{
             return false
         }
     }
+
+    
 
     const checkMovieCart = ()=>{
         const search = cart.find((item)=>{
@@ -36,33 +44,34 @@ export default function AddToCart({movie}) {
         }else{
             return false
         }   
-      
     }
 
     const saveCart = (newCart)=>{
-        setCart(newCart);
         localStorage.setItem("cart", JSON.stringify(newCart));
+        if(typeof window !== "undefined"){
+            window.dispatchEvent(event);
+        }
     }
     
-    const addToCart = async () => {
+    const addToCartButton = async () => {
         if (!user){
-            const newCart = [...cart,{...movie}];
-            saveCart(newCart)
+            const newCart = [...cart,movie];
+            saveCart(newCart);
         }else{
-          
           try {
             const remoteCart = await axios.post(`${URL}cart`, {
                 movieId:movie.id,
                 auth: user.sid
             });
 
-            setCart(remoteCart.data.movies);
+            saveCart(remoteCart.data.movies);
             
           } catch (error) {
             console.error('Error adding movie to cart:', error);
             alert('An error occurred while adding the movie to the cart.');
           }
         }
+
       };
 
       const removeFromCart = async ()=>{
@@ -79,46 +88,67 @@ export default function AddToCart({movie}) {
                 headers:{}
               });
 
-            setCart(remoteCart.data.movies);
+            saveCart(remoteCart.data.movies);
            
         }
         
       }
 
+      const fetchData = ()=>{
+        const localCart = typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')):null;
+        if(localCart){
+            setCart(localCart)
+        }else{
+            if(user){
+                (async()=>{
+               
+                   try {
+                    const remoteCart =  await axios.get(`${URL}cart/${user.sid}`);
+                    setCart(remoteCart.data.movies);
+        
+                   } catch (error) {
+                    console.log(error);
+                   }
+               
+                })();
+            }
+        }
+      }
+
       useEffect(() => {
         if(checkMovieCart()){
-            setLabel("Quitar del carrito")
+            setLabel("-")
+            setColor("red");
         }else{
-            setLabel("Agregar al carrito")
+            setLabel("+")
+            setColor("green")
         }
       }, [cart]);
 
 
       useEffect(() => {
-        if(!user){
+        fetchData();
 
-            const localCart = JSON.parse(window.localStorage.getItem('cart'))
-            if(localCart){
-                setCart(localCart)
-            }
-        }else{
-            (async()=>{
-           
-               try {
-                const remoteCart =  await axios.get(`${URL}cart/${user.sid}`);
-                setCart(remoteCart.data.movies);
+        const handleStorageChange = (event) => {
+            fetchData();
+        };
     
-               } catch (error) {
-                console.log(error);
-               }
-           
-            })();
+        if(typeof window !== "undefined"){
+            window.addEventListener('localChanged', handleStorageChange);
         }
+
+        
+        return () => {
+            if(typeof window !== "undefined"){
+                window.removeEventListener('localChanged', handleStorageChange);
+            }
+        };
+
         
         
       }, [])
-      
+
   return (
-    <Button emoji={<Image alt="" src={cartIcon}/>}  label={label} callback={handleAddCart}/>
+    <Button color={color} emoji={<Image alt="" src={cartIcon}/>}  label={label} callback={handleAddCart}/>
   )
 }

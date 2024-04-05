@@ -1,12 +1,12 @@
-const { Movie, Genre } = require('../db');
+const { Movie, Genre,User,Role } = require('../db');
 const { Op } = require("sequelize");
 const orderFunction = require('../helpers/order')
 
 
 module.exports = async function getMovies(query){
-    let {search, genre, orderType, order} = query;
-    type = orderType || ""; 
-    order = order || "asc"; 
+
+    let {search, genre, orderType, order,limit,user} = query;
+   
     try {
         let data = {}
         let options = {
@@ -36,7 +36,22 @@ module.exports = async function getMovies(query){
                 },
             }
         }
+        
+        
+        console.log(user);
+        if(user && user.role.role !== 'admin'){
+            if(!options.where){
+                options.where = {};
+            }
+            options.where.userId = user.id;
+        }
 
+        if(limit){
+            options = {
+                ...options,
+                limit
+            }
+        }
 
         if(orderType){    
             options = {
@@ -47,13 +62,13 @@ module.exports = async function getMovies(query){
             }
         }
         
-        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","country","status"]})
+        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price"]})
 
         if(movies.length === 0){
             return data.message = 'No hay Peliculas'
         }
 
-        return data.content = await orderFunction(type, order, movies)
+        return movies
     } catch (error) {
         console.log(error)
         return error
