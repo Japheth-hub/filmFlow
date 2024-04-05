@@ -130,7 +130,6 @@ module.exports = async (req) => {
         }
 
         //Prueba para el envio de mails
-        console.log(user)
         const mailInfo = {
             destination: `${user.email}`,
             topic: "Pelicula creada con exito",
