@@ -5,14 +5,14 @@ module.exports = async () => {
         const countries = await Country.findAll({
             attributes: ['id', 'name']
         });
-        
+
         if (!countries) {
             return { status: false, message: "Error fetching countries"}
         }
 
-        return { status: true, countries}
+        return countries
     } catch (error) {
         console.log(error)
-        return { status: false, message: error}
-    }    
+        return error
+    }
 }
