@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
 import { validateMovieForm, validateSelectForm } from './validateMovieForm '
+import Swal from 'sweetalert2'
 
 const MovieForm = () => {
 
@@ -127,7 +128,10 @@ const MovieForm = () => {
       };
       console.log(data)
       const movieResponse = await axios.post(`${URL}movies`, data);
-      console.log(movieResponse.data);
+      console.log(movieResponse);
+      // console.log(movieResponse.data);
+      // console.log(movieResponse.status);
+      // console.log(movieResponse.data.message);
       setSuccessMessage('Formulario enviado correctamente');
       setErrorMessage('');
       console.log('Server response:', movieResponse);
@@ -140,10 +144,21 @@ const MovieForm = () => {
       setMovie(null);
       setSelectedCountries([]);
       setYear('');
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'El formulario se envió correctamente.',
+      });
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Ocurrió un error al enviar el formulario.',
+      });
+      console.error('Error sending data:', error);
       setSuccessMessage('');
       setErrorMessage('Error al enviar datos: ' + error.message);
-      console.error('Error sending data:', error);
     }
     setIsLoading(false); 
   };
@@ -179,7 +194,6 @@ const MovieForm = () => {
         <button className={style["back-button"]}>Ir a home</button>
       </Link>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
-        {successMessage && <p className="success-message">{successMessage}</p>}
         <form onSubmit={handleSubmit} className="form">
           <div className={style["form-group"]}>
             <label htmlFor="movieName" className={style["form-label"]}>Nombre de la Película:</label>
