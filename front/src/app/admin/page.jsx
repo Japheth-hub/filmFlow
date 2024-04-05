@@ -15,8 +15,8 @@ function Admin() {
   const [component, setComponent] = useState(0)
 
   const showMovies = async() => {
-    const { data } = await axios.get(`${URL}dashboard/${user.sid}`)
-    const clearData = data.movies.map((movie)=>{
+    const { data } = await axios.get(`${URL}movies`)
+    const clearData = data.map((movie)=>{
       return {
         id: movie.id,
         name: movie.name,
@@ -32,8 +32,8 @@ function Admin() {
   }
   
   const showUsers = async() => {
-    const { data } = await axios.get(`${URL}dashboard/${user.sid}`)
-    const clearData = data.users.map((user) => {
+    const { data } = await axios.get(`${URL}users/${user.sid}`)
+    const clearData = data.map((user) => {
       return {
         name: user.name,
         email: user.email,
@@ -48,8 +48,8 @@ function Admin() {
   }
 
   const showPurchases = async() => {
-    const { data } = await axios.get(`${URL}dashboard/${user.sid}`)
-    const clearData = data.purchases.map((purch) => {
+    const { data } = await axios.get(`${URL}purchases/${user.sid}`)
+    const clearData = data.map((purch) => {
       return {
         id: purch.id,
         stripeId: purch.stripeId,
@@ -108,7 +108,7 @@ function Admin() {
           </div>
         </div>
         <div className={style.content}>
-
+            <br />
             {
               renderSwitch()
             }

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import DashArea from "./dashArea/DashArea";
 import DashBar from "./dashBar/DashBar"
 import { Chart as chartJS} from 'chart.js/auto'
-import { movieGenre, userWeek } from './data.js';
+import { movieGenre, userDay } from './data.js';
 
 const DashGrap = ({sid}) => {
     const [movieXgenre, setMovieXgenre] = useState({
@@ -16,11 +16,11 @@ const DashGrap = ({sid}) => {
             backgroundColor: 'rgba(53, 162, 235, 0.5)'
         }]
     })
-    const [userXweek, setUserXweek] = useState({
+    const [userXday, setUserXday] = useState({
         labels: 'Cargando..',
         datasets: [{
             fill: true,
-            label: "Peliculas por género",
+            label: "Nuevo usuario",
             data: 'Cargando..',
             borderColor: 'rgb(53, 162, 235)',
             backgroundColor: 'rgba(53, 162, 235, 0.5)'
@@ -35,12 +35,21 @@ const DashGrap = ({sid}) => {
                     ...movieXgenre.datasets[0],
                     data: response.map(elem => elem.cant)}]})
         })
-        userWeek(sid)
+        userDay(sid).then(response =>{
+            console.log(response);
+            setUserXday({
+                ...userXday, labels: Object.keys(response),
+                datasets:[{
+                    ...userXday.datasets[0],
+                    data: response.map(elem => {elem.map(cant => cant.length)})
+                }]
+            })
+        })
     },[])
 
     return(
         <div>
-            <DashArea chartData={movieXgenre}/>
+            <DashBar chartData={userXday}/>
             <DashBar chartData={movieXgenre} title={'Películas por género'}/>
         </div>
     )
