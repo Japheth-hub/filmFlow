@@ -128,10 +128,12 @@ const MovieForm = () => {
       };
       console.log(data)
       const movieResponse = await axios.post(`${URL}movies`, data);
-      console.log(movieResponse);
-      // console.log(movieResponse.data);
-      // console.log(movieResponse.status);
-      // console.log(movieResponse.data.message);
+      if (movieResponse.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'El formulario se envió correctamente.',
+        });
       setSuccessMessage('Formulario enviado correctamente');
       setErrorMessage('');
       console.log('Server response:', movieResponse);
@@ -144,12 +146,16 @@ const MovieForm = () => {
       setMovie(null);
       setSelectedCountries([]);
       setYear('');
-
+    } else {
       Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'El formulario se envió correctamente.',
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Ocurrió un error al enviar el formulario.',
       });
+      console.error('Error sending data:', movieResponse);
+      setSuccessMessage('');
+      setErrorMessage('Error al enviar datos: ' + movieResponse.statusText);
+    }
     } catch (error) {
       Swal.fire({
         icon: 'error',
