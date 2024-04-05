@@ -61,7 +61,7 @@ const Nav = (props)=> {
     };
 
     function logout(){
-      window.localStorage.destroy('FilmFlowUsr')
+      window.localStorage.removeItem("FilmFlowUsr");
     }
 
     useEffect(() => {  

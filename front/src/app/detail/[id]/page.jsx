@@ -77,7 +77,7 @@ const DetailContent = () => {
     if(user){
       getPurchase()
     }
-  }, [])
+  }, [user])
   
 
 
