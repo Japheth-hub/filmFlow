@@ -2,32 +2,28 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
-import { validateMovieForm, validateSelectForm } from './validateMovieForm '
+import { validateMovieForm } from './validateMovieForm '
 
 const MovieForm = () => {
 
   const URL = process.env.NEXT_PUBLIC_URL
-  const {user} = useUser();
 
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
   const [genreOptions, setGenreOptions] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
-  const [countryOptions, setCountryOptions] = useState([]); 
-  const [selectedCountries, setSelectedCountries] = useState([]);
   const [description, setDescription] = useState('');
   const [poster, setPoster] = useState(null);
   const [trailer, setTrailer] = useState(null);
   const [movie, setMovie] = useState(null);
+  const [country, setCountry] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); 
   const [errors, setErrors] = useState({});
-  const [year, setYear] = useState('');
-  
-  // console.log(user)
+
   useEffect(() => {
     axios.get(`${URL}genres`)
       .then(response => {
@@ -37,54 +33,46 @@ const MovieForm = () => {
       .catch(error => {
         console.error('Error fetching genre options:', error);
       });
-      axios.get(`${URL}countries`) 
-      .then(response => {
-        setCountryOptions(response.data); 
-        console.log(response.data)
-      })
-      .catch(error => {
-        console.error('Error fetching country options:', error);
-      });
   }, []);
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'movieName') setMovieName(value);
+    else if (name === 'director') setDirector(value);
+    else if (name === 'description') setDescription(value);
+    else if (name === 'country') setCountry(value);
+  };
   useEffect(() => {
     const validation = validateMovieForm({
       movieName,
       director,
+      selectedGenres,
       description,
+      country,
       poster,
       trailer,
-      movie,
+      movie, 
       year
     });
     setErrors(validation.errors);
-  }, [movieName, director,  description, poster, trailer, movie, year]);
+  }, [movieName, director, selectedGenres, description, country, poster, trailer, movie, year]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); 
-    const validationSelect = validateSelectForm({
-      selectedGenres,
-      selectedCountries,
-    });
     const validation = validateMovieForm({
       movieName,
       director,
+      selectedGenres,
       description,
+      country,
       poster,
       trailer,
-      movie,
-      year
+      movie
     });
     
-    // Fusionamos los errores de ambas validaciones
-    const mergedErrors = {
-      ...validationSelect.errors,
-      ...validation.errors
-    };
-  
-    // Verificamos si hay errores en la fusión de ambas validaciones
-    if (Object.keys(mergedErrors).length > 0) {
-      setErrors(mergedErrors);
+    if (Object.keys(validation.errors).length > 0) {
+      setErrors(validation.errors);
       setIsLoading(false);
       return;
     }
@@ -112,20 +100,20 @@ const MovieForm = () => {
       });
   
       const [posterDataURL, movieDataURL, trailerDataURL] = await Promise.all([posterData, trailerData, movieData]);
-      const userSid = user.sid;
+
+  
       const data = {
         name: movieName,
         director: director,
         genres: selectedGenres.join(','),
         description: description,
-        countries: selectedCountries.join(','),
+        country: country,
         posterFile: posterDataURL,
         trailerFile: trailerDataURL,
         movieFile: movieDataURL,
-        year: year,
-        auth: userSid
+        auth:"3333"
       };
-      console.log(data)
+      
       const movieResponse = await axios.post(`${URL}movies`, data);
       console.log(movieResponse.data);
       setSuccessMessage('Formulario enviado correctamente');
@@ -138,8 +126,7 @@ const MovieForm = () => {
       setPoster(null);
       setTrailer(null);
       setMovie(null);
-      setSelectedCountries([]);
-      setYear('');
+      setCountry('');
     } catch (error) {
       setSuccessMessage('');
       setErrorMessage('Error al enviar datos: ' + error.message);
@@ -163,13 +150,6 @@ const MovieForm = () => {
       setSelectedGenres(selectedGenres.filter(selectedGenre => selectedGenre !== genre));
     } else {
       setSelectedGenres([...selectedGenres, genre]);
-    }
-  };
-  const toggleCountry = (country) => {
-    if (selectedCountries.includes(country)) {
-      setSelectedCountries(selectedCountries.filter(selectedCountry => selectedCountry !== country));
-    } else {
-      setSelectedCountries([...selectedCountries, country]);
     }
   };
   return (
@@ -199,9 +179,8 @@ const MovieForm = () => {
               type="text"
               id="director"
               value={director}
-              onChange={(e) => setDirector(e.target.value.replace(/\d/g, ''))}
+              onChange={(e) => setDirector(e.target.value)}
               className={style["form-input"]}
-              
               // required
             />
             {errors.director && <p className={style["error-message"]}>{errors.director}</p>}
@@ -243,43 +222,16 @@ const MovieForm = () => {
             {errors.description && <p className={style["error-message"]}>{errors.description}</p>}
           </div>
           <div className={style["form-group"]}>
-          <label htmlFor="country" className={style["form-label"]}>Países:</label>
-            <select
-              id="country"
-              value={selectedCountries}
-              onChange={(e) => toggleCountry(e.target.value)}
-              className={style["form-input"]}
-              
-            >
-              {/* Renderizar opciones de países */}
-              <option value="">Selecciona país</option>
-              {countryOptions.map(country => (
-                <option key={country.name} value={country.id}>{country.name}</option>
-              ))}
-            </select>
-            {errors.countries && <p className={style["error-message"]}>{errors.countries}</p>}
-            <ul className={style["genre-list"]}>
-              {selectedCountries.map(selectedCountry => (
-                <li key={selectedCountry}>
-                  {selectedCountry}{' '}
-                  <button type="button" onClick={() => toggleCountry(selectedCountry)}>
-                    x
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className={style["form-group"]}>
-            <label htmlFor="year" className={style["form-label"]}>Año:</label>
+            <label htmlFor="country" className={style["form-label"]}>País:</label>
             <input
-              type="number"
-              id="year"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
+              type="text"
+              id="country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
               className={style["form-input"]}
-              
+              // required
             />
-            {errors.year && <p className={style["error-message"]}>{errors.year}</p>}
+            {errors.country && <p className={style["error-message"]}>{errors.country}</p>}
           </div>
           <div className={style["file-group"]}>
             <div className={style["form-group"]}>
@@ -296,7 +248,7 @@ const MovieForm = () => {
               </div>
               {poster && (
                 <div className={style["image-preview-container"]}>
-                  <img src={window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
+                  <img src={typeof window !== "undefined" && window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
               {errors.posterFile && <p className={style["error-message"]}>{errors.posterFile}</p>}
@@ -313,7 +265,7 @@ const MovieForm = () => {
               />
               {trailer && (
                 <div className={style["image-preview-container"]}>
-                  <video src={window.URL.createObjectURL(trailer)} controls alt="Preview" className={style["poster-preview"]} />
+                  <video src={typeof window !== "undefined" && window.URL.createObjectURL(trailer)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
               {errors.trailerFile && <p className={style["error-message"]}>{errors.trailerFile}</p>}
@@ -330,7 +282,7 @@ const MovieForm = () => {
               />
               {movie && (
                 <div className={style["image-preview-container"]}>
-                  <video src={window.URL.createObjectURL(movie)} controls alt="Preview" className={style["poster-preview"]} />
+                  <video src={typeof window !== "undefined" && window.URL.createObjectURL(movie)} controls alt="Preview" className={style["poster-preview"]} />
                 </div>
               )}
               {errors.movieFile && <p className={style["error-message"]}>{errors.movieFile}</p>}
