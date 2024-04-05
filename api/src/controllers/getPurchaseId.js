@@ -17,7 +17,6 @@ module.exports = async (req) => {
 
         if (userDB && userDB.purchases) {
             userDB.purchases.map(purchase => purchasedMovies = [...purchasedMovies,...purchase.movies]);
-            console.log(purchasedMovies);
             return purchasedMovies;
         } else {
             console.log('El usuario no tiene películas compradas.');
