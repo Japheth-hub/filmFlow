@@ -43,7 +43,7 @@ module.exports = async (purchaseInfo) => {
         const mailInfo = {
             destination: user.email,
             topic: "Compra realizada",
-            content: `Se ha confirmado su compra con el monto de ${amount}${currency}`,
+            content: `Se ha confirmado su compra`,
         }
 
         try {
