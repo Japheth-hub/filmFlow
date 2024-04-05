@@ -1,8 +1,8 @@
 module.exports= (data)=>{
     let status = false;
     const errors = {};
-    const {name, director, genres, description, country, posterFile, movieFile, trailerFile} = data;
-    ["name", "director", "genres", "description", "country", "posterFile", "movieFile", "trailerFile"].map((item)=>{
+    const {name, director, genres, description, countries, posterFile, movieFile, trailerFile} = data;
+    ["name", "director", "genres", "description", "countries", "posterFile", "movieFile", "trailerFile"].map((item)=>{
          if(!data[item]) errors[item] = `Este un campo requerido`;
     })
     

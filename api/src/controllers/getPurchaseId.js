@@ -1,26 +1,32 @@
-const { User, Movie } = require("../db");
+const { User, Movie, Purchase } = require("../db");
 
 module.exports = async (req) => {
     try {
         const user = req.user
-        const userId = user.id
-        const usuario = await User.findByPk(userId,{
-            include: [{ model: Movie }],
-        });
-        if(usuario && usuario.movies.length > 0){
-            const peliculas = []
-            for(let movie of usuario.movies){
-                const pelicula = await Movie.findByPk(movie.id, {
-                    attributes: ['id', 'name', 'poster']
-                })
-                peliculas.push(pelicula)
-            }
-            return peliculas
+        let purchasedMovies = [];
+
+        const userDB = await User.findByPk(user.id, {
+            include: {
+              model: Purchase,
+              include: {
+                model: Movie,
+              },
+            },
+          });
+
+
+        if (userDB && userDB.purchases) {
+            userDB.purchases.map(purchase => purchasedMovies = [...purchasedMovies,...purchase.movies]);
+            console.log(purchasedMovies);
+            return purchasedMovies;
         } else {
-            return 'Este usuario aun no tiene compras'
+            console.log('El usuario no tiene películas compradas.');
         }
+
+        return purchasedMovies;
         
     } catch (error) {
+        console.log(error);
         return error
     }
 }

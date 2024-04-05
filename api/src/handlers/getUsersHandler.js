@@ -5,11 +5,8 @@ module.exports = async (req, res) => {
 
         const data = await getUsers(req.query)
 
-        if (data.status) {
-            return res.status(200).json({users:data.users});
-        }else{
-            return res.status(501).json({message:data.message});
-        }
+        return res.status(200).json({users});
+        
 
     } catch (error) {
         console.log(error);

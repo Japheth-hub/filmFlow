@@ -27,6 +27,7 @@
     "express-list-routes": "^1.2.1",
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
+    "resend": "^3.2.0",
     "sequelize": "^6.37.0",
     "stripe": "^14.22.0"
   }

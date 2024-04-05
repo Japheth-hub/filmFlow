@@ -49,8 +49,8 @@ Review.belongsTo(User)
 
 Purchase.belongsTo(User)
 Purchase.belongsToMany(Movie, { through: "movie_purchase" });
-Movie.belongsToMany(Purchase, { through: "movie_purchase" })
 User.hasMany(Purchase);
+Movie.belongsToMany(Purchase, { through: "movie_purchase" })
 
 User.belongsToMany(Movie, { through: Cart });
 Movie.belongsToMany(User, { through: Cart });
