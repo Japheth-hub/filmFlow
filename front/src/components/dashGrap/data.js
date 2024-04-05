@@ -53,15 +53,7 @@ export const movieGenre = async() => {
     return listGenres
 }
 
-export const userWeek = async() => {
-    const URL = process.env.NEXT_PUBLIC_URL
-    let listUsers
-    try {
-        const users = await axios.get(`${URL}users`);
-        listUsers = users.data
-        console.log(users.data);        
-    } catch (error) {
-        console.error("FALLA DE DATOS:", error);
-    }
-    return listUsers
+export const userWeek = (users) => {
+    return users.map(elem => elem.name)
+
 }
