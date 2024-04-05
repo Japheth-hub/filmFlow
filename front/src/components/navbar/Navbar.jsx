@@ -60,6 +60,10 @@ const Nav = (props)=> {
       }
     };
 
+    function logout(){
+      window.localStorage.destroy('FilmFlowUsr')
+    }
+
     useEffect(() => {  
       setUserLocalStorage(typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('FilmFlowUsr')):null);
     }, [])
@@ -146,8 +150,8 @@ const Nav = (props)=> {
                                     </li>
 
                                     <li>
-                                        {user 
-                                        ? <a href="/api/auth/logout"><button>Log out</button></a> 
+                                        {user
+                                        ? <a href="/api/auth/logout"><button onClick={()=>{logout()}}>Log out</button></a> 
                                         : <a href="/api/auth/login"><button>Login</button></a>}
                                     </li>
 
