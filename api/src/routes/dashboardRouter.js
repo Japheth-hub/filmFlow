@@ -1,10 +1,10 @@
 const { Router } = require("express");
 const getDashboardHandler = require('../handlers/getDashboardHandler');
 
-const checkAuth = require('../middlewares/checkAuth');
+const getCheckAuth = require("../middlewares/getCheckAuth");
 const dashboardRouter = Router();
 
 
-dashboardRouter.get('/', checkAuth, getDashboardHandler);
+dashboardRouter.get('/:auth', getCheckAuth, getDashboardHandler);
 
 module.exports = dashboardRouter;
