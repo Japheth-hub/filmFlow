@@ -1,38 +1,40 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import style from '../../app/admin/admin.module.scss'
 import Link from 'next/link'
+import Button from '../button/Button'
+import axios from 'axios'
 
 
-export default function Dashboard({movies, users, purchases}) {
+export default function Dashboard({datos, link}) {
 
     const [column, setColumn] = useState([])
     const [body, setBody] = useState([])
-    const [link, setLink] = useState("/detail")//Mejroar la parte de la redirrecion, por ahora solo nos lleva al detail de la movie
 
-    function handleTable(datos){
-        if(datos && datos.length > 0){
-            const objeto = datos[0]
-            const props = Object.keys(objeto);
-            setColumn(props)
-        } else {
-            setColumn([])
+    async function deleteAction(id){
+        try {
+            const {data} = await axios.delete(`${link}${id}`)
+            window.location.reload()
+        } catch (error) {
+            console.log(error)
         }
-        setBody(datos)
-
     }
 
-    // console.log('users', users)
-    // console.log('movies', movies)
-    // console.log('compras', purchases)
-    // console.log(column)
-    // console.log(body)
-    
+    useEffect(()=>{
+        function getData(datos){
+            if(datos && datos.length > 0){
+                const objeto = datos[0]
+                const props = Object.keys(objeto);
+                setColumn(props)
+                setBody(datos)
+            } else {
+                setColumn([])
+            }
+        }
+        getData(datos)
+    }, [datos])
+
   return (
     <div>
-
-        <button onClick={()=>{handleTable(movies)}}>Movies</button>
-        <button onClick={()=>{handleTable(users)}}>Users</button>
-        <button onClick={()=>{handleTable(purchases)}}>Purchases</button>
 
         <div className={style.divTabla}>
             {column.length > 0 
@@ -44,6 +46,7 @@ export default function Dashboard({movies, users, purchases}) {
                                     return <th className={style.th} key={index}>{item.toUpperCase()}</th>
                                 })
                             }
+                            <th className={style.th}>ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody className={style.tbody}>
@@ -55,6 +58,10 @@ export default function Dashboard({movies, users, purchases}) {
                                             ? <td className={style.td} key={i}><Link href={`${link}/${item[prop]}`}>{item[prop]}</Link></td>
                                             : <td className={style.td} key={i}>{item[prop]}</td>
                                             ))}
+                                            <td className={style.td}>
+                                                <Button emoji={'🗑️'} label={'Delete'} color={'red'} callback={()=>{deleteAction(item.id)}}></Button><br />
+                                                <Button emoji={'✏️'} label={'Edit'} color={'blue'}></Button>
+                                            </td>
                                     </tr>       
                                 ))
                             }
