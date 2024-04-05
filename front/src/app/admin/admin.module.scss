@@ -75,3 +75,20 @@
 .content{
     margin-left: 8%;
 }
+
+.orderFilters{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.genreSelect{
+    background-color: $mainColor;
+    padding: 5px 10px;
+    color: $neutralLight;
+    border: 0;
+    font-family: $mainFont;
+    font-size: 1.3em;
+    border-radius: 5px;
+    margin-top: 10px;
+}

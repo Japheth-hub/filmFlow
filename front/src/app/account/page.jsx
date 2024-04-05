@@ -22,6 +22,27 @@ export default function Account() {
       console.log(error)
     }
   }
+  
+  //Funcion temporal para enviar correos
+  const handleMail = async () => {
+    try {
+      const emailInfo = {
+        destination: "gerant9seminario@gmail.com",
+        topic: "Mail de prueba",
+        content: "Mensaje de prueba"
+      }
+      const response = await axios.post('http://localhost:3001/email', emailInfo)
+      if (response.error) {
+        alert('Error enviando el mail')
+      } else {
+        alert('Mail enviado con exito')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  //
+
   if(!isLoading && movies.length === 0){
     fetchData()
   }
@@ -50,6 +71,7 @@ export default function Account() {
             <li>
               Mas detalles : <i>231587556</i>
             </li>
+            <button onClick={handleMail}>Enviar correo</button>
           </ul>
         </div>
         <div className={style["movies"]}>

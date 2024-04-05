@@ -1,0 +1,28 @@
+.container {
+    margin: 0px;
+    padding: 0px;
+}
+
+.logo {
+    display: block;
+    width: 500px;
+}
+
+.text {
+    color: red;
+}
+
+.emailHead {
+    background-color: #bb92eb;
+    height: 100px;
+}
+
+.emailBody {
+    background-color: #8b33f0;
+    height: 300px;
+}
+
+.emailFooter {
+    height: 100px;
+    bottom: 0px;
+}
