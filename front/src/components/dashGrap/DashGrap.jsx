@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import DashArea from "./dashArea/DashArea";
 import DashBar from "./dashBar/DashBar"
 import { Chart as chartJS} from 'chart.js/auto'
-import { data, movieGenre } from './data.js';
+import { movieGenre, userWeek } from './data.js';
 
-const DashGrap = ({movies, users, purchases}) => {
+const DashGrap = ({sid}) => {
     const [movieXgenre, setMovieXgenre] = useState({
         labels: 'Cargando..',
         datasets: [{
@@ -35,10 +35,9 @@ const DashGrap = ({movies, users, purchases}) => {
                     ...movieXgenre.datasets[0],
                     data: response.map(elem => elem.cant)}]})
         })
-
+        userWeek(sid)
     },[])
 
-    console.log(movies, users, purchases);
     return(
         <div>
             <DashArea chartData={movieXgenre}/>
