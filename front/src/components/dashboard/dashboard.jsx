@@ -6,7 +6,7 @@ import axios from 'axios'
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
-export default function Dashboard({datos, link, title}) {
+export default function Dashboard({datos, link, title, sid}) {
     const [column, setColumn] = useState([])
     const [body, setBody] = useState([])
     const [body2, setBody2] = useState([])
@@ -53,10 +53,16 @@ export default function Dashboard({datos, link, title}) {
 
     async function deleteAction(id){
         try {
-            const res = confirm('Estas seguro que deseas eliminar est pelicula')
+            const res = confirm('Estas seguro que deseas eliminar esta informacion')
             if(res){
-                await axios.delete(`${link}${id}`)
-                window.location.reload()
+                let res = ""
+                title === "Movies"
+                    ? (res = await axios.delete(`${link}${id}`))
+                    : (res = await axios.delete(`${link}${id}/${sid}`));
+                console.log(res)
+                const newBody = body2.filter((movie) => movie.id !== id);
+                setBody(newBody)
+                setBody2(newBody)
             }
         } catch (error) {
             console.log(error)
@@ -179,9 +185,9 @@ export default function Dashboard({datos, link, title}) {
         </div>
 
         <div className={style.paginado}>
-            <button onClick={()=>{menos()}}>{'<'}</button>
+            <button onClick={()=>{menos()}}>{'◀'}</button>
             <span>{`${page} de ${totalPage}`}</span>
-            <button onClick={()=>{mas()}}>{'>'}</button>
+            <button onClick={()=>{mas()}}>{'▶'}</button>
         </div>
 
         <div className={style.divTabla}>

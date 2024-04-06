@@ -70,6 +70,15 @@
 .menuText{
     visibility: hidden;
 }
+.menuText div{
+    transition: all 0.3s;
+    padding-left: 10px;
+}
+.menuText div:hover{
+    transform: scale(1.2);
+    margin-left: 15%;
+    cursor: pointer;
+}
 
 .menu:hover{
     width: 15%;    
@@ -86,6 +95,9 @@
 }
 .content{
     margin-left: 6%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .orderFilters{
@@ -120,4 +132,17 @@
     width: fit-content;
     border: 1px solid $mainColor;
     border-radius: 10px;
+}
+.paginado button{
+    margin: 0px 10px;
+    padding: 0px 10px;
+    font-size: 1.3rem;
+    background-color: rgba(139, 51, 240, 0.5);
+    border: 1pz solid $mainColor;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+.paginado button:hover{
+    color: white;
+    background-color: $mainColor;
 }
