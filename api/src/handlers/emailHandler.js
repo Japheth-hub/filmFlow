@@ -2,7 +2,6 @@ const sendEmail = require("../controllers/sendEmail")
 
 module.exports = async (req, res) => {
     try {
-        console.log(req.body)
         const emailInfo = req.body
         console.log(emailInfo)
         const data = await sendEmail(emailInfo)
