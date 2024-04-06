@@ -40,7 +40,9 @@ module.exports = async (body) => {
     });
 
     if (!created) {
-      
+      user.sid = sid;
+      await user.save();
+    } else {
       //Envio de correos al crear un registrarse
       const mailInfo = {
         destination: `${user.email}`,
@@ -50,9 +52,6 @@ module.exports = async (body) => {
       const emailResponse = await sendEmail(mailInfo)
       console.log(emailResponse)
       //
-
-      user.sid = sid;
-      await user.save();
     }
 
     const isAdmin = user.roleId === adminRole.id;
