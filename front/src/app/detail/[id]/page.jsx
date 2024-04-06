@@ -45,7 +45,6 @@ const DetailContent = () => {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [id]);
 
@@ -57,7 +56,7 @@ const DetailContent = () => {
   
   useEffect(()=>{
     if(reviewsData.length > 0  && user){
-      setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
+      setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.name))
     }
   }, [reviewsData]);
   
@@ -77,7 +76,7 @@ const DetailContent = () => {
     if(user){
       getPurchase()
     }
-  }, [])
+  }, [user])
   
 
 
