@@ -21,7 +21,7 @@ module.exports = async (mailInfo) => {
 
     try {
         const emailResponse = await resend.emails.send({
-            from: 'FilmFlow <noreply@resend.dev>',
+            from: 'FilmFlow <noreply@filmflow.chekogarcia.com.mx>',
             to: destination,
             subject: topic,
             html: htmlContent

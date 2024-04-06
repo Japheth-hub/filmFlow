@@ -25,10 +25,7 @@ module.exports = async (req) => {
            return {status:false,errors:validation.errors}
         }
 
-        let { name, director, genres, description, country, posterFile, trailerFile, movieFile} = body;
-        let countryCode = country
-       
-        const status = "pending" 
+        let { name, director, genres, year, description, countries, posterFile, trailerFile, movieFile} = body;
 
         //Cloudinary:
         //Convertir el archivo a buffer de bytes para que Cloudinary sea capaz de leerlo (Los .mp4 no se convierten a buffer)
@@ -77,18 +74,13 @@ module.exports = async (req) => {
 
         //Provisional mientras no existen estos inputs en el formulario
         const price = 25
-        const year = 2020
+        //
+
+        const status = "pending" 
         
         const userId = isAdmin(user) ? undefined : user.id;
+
         const [movieDB, created] = await Movie.findOrCreate({
-            include: [{
-                model: Country,
-                required: true,
-                attributes: [],
-                where: {
-                    id: countryCode 
-                }
-            }],
             where: { 
                 name: name,
                 director: director,
@@ -112,7 +104,7 @@ module.exports = async (req) => {
         
         if(created){
             genres = genres.split(',').map((item) => item.trim());
-            for (genre of genres) {
+            for (let genre of genres) {
                 const genreDB = await Genre.findOne({
                     where: { name: genre },
                 });
@@ -121,10 +113,14 @@ module.exports = async (req) => {
                     movieDB.addGenre(genreDB);
                 }
             }
-            const countryDB = await Country.findByPk(countryCode)
 
-            if(countryDB){
-                movieDB.addCountry(countryDB)
+            countries = countries.split(',').map((item) => item.trim());
+            for (let countryCode of countries) {
+                const countryDB = await Country.findByPk(countryCode)
+                
+                if(countryDB){
+                    movieDB.addCountry(countryDB)
+                }
             }
         }
 
@@ -133,8 +129,9 @@ module.exports = async (req) => {
         }
 
         //Prueba para el envio de mails
+
         const mailInfo = {
-            destination: `gerant9seminario@gmail.com`,
+            destination: `${user.email}`,
             topic: "Pelicula creada con exito",
             content: `Se ha creado su pelicula: ${name} exitosamente`,
         };
@@ -145,7 +142,7 @@ module.exports = async (req) => {
         } catch (error) {
             console.log('Error sending email:', error);
         }
-        //
+        
 
         return {status:true,movie:movieDB}
     } catch (error) {

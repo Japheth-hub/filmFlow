@@ -1,37 +1,28 @@
-// Validaciones.js
-
 export function validateMovieForm(data) {
   const errors = {};
   const validFields = {};
 
   // name
   if (!data.movieName || data.movieName.trim() === '') {
-    errors.movieName = 'El nombre de la película es obligatorio.';
+    errors.movieName = ' ';
+  } else if (data.movieName.trim().length < 2) {
+    errors.movieName = 'El nombre de la película debe tener al menos 2 caracteres.';
   } else if (!/^[A-Z0-9&#!¡¿?:,][A-Za-z0-9&#!¡¿?:,\s]*$/.test(data.movieName)) {
     errors.movieName = 'El nombre de la película debe comenzar con mayúscula y solo puede contener letras, números y los siguientes símbolos: (&, ;, :, #, !, ¡, ¿, ?)';
   } else {
     validFields.movieName = data.movieName;
   }
-
   // Director
   if (!data.director || data.director.trim() === '') {
-    errors.director = 'El nombre del director es obligatorio.';
-  } else if (!/^(?:[A-Z][a-z]*\s?)+$/.test(data.director)) {
-    errors.director = 'El nombre del director debe tener las iniciales de cada palabra en mayúscula.';
+    errors.director = ' ';
+  } else if (!/^[A-Z][a-z]*( [A-Z][a-z]*)*$/.test(data.director)) {
+    errors.director = 'El nombre del director debe comenzar con mayúscula cada inicio de palabra y no puede contener números.';
   } else {
     validFields.director = data.director;
   }
-
-  // Validate genre
-  if (data.selectedGenres.length === 0) {
-    errors.genre = 'Debes seleccionar al menos un género.';
-  } else {
-    validFields.selectedGenres = data.selectedGenres;
-  }
-
  // Description
  if (!data.description || data.description.trim() === '') {
-  errors.description = 'La descripción es obligatoria.';
+  errors.description = ' ';
 } else {
   const descriptionSymbolsRegex = /^[a-zA-Z0-9\s;,:.¡!¿?()]*$/;
   if (!descriptionSymbolsRegex.test(data.description)) {
@@ -47,18 +38,9 @@ export function validateMovieForm(data) {
     }
   }
 }
-// Country
-  if (!data.country || data.country.trim() === '') {
-    errors.country = 'El país es obligatorio.';
-  } else if (!/^[A-Z][a-zA-Z]*$/.test(data.country)) {
-    errors.country = 'El nombre del país debe comenzar con mayúscula.';
-  } else {
-    validFields.country = data.country;
-  }
-
   // Poster
   if (!data.poster) {
-    errors.posterFile = 'Selecciona un póster para la película.';
+    errors.posterFile = ' ';
   } else if (!data.poster.type.startsWith('image/')) {
     errors.posterFile = 'El archivo seleccionado no es una imagen.';
   } else {
@@ -67,21 +49,48 @@ export function validateMovieForm(data) {
 
   // Trailer
   if (!data.trailer) {
-    errors.trailerFile = 'Selecciona un trailer para la película.';
+    errors.trailerFile = ' ';
   } else if (!data.trailer.type.startsWith('video/')) {
     errors.trailerFile = 'El archivo seleccionado no es un video.';
   } else {
     validFields.trailer = data.trailer;
   }
-
   // Movie
   if (!data.movie) {
-    errors.movieFile = 'Selecciona la película.';
+    errors.movieFile = ' .';
   } else if (!data.movie.type.startsWith('video/')) {
     errors.movieFile = 'El archivo seleccionado no es un video.';
   } else {
     validFields.movie = data.movie;
   }
+  // Year
+  if (!data.year || data.year.trim() === '') {
+   errors.year = ' ';
+ } else if (!/^(19|20)\d{2}$/.test(data.year)) {
+   errors.year = 'El año debe comenzar con "19" o "20" y tener cuatro dígitos.';
+ } else {
+   validFields.year = data.year;
+ }
 
   return { errors, validFields };
 }
+
+// Country
+export function validateSelectForm(data) { 
+  const errors = {};
+  const validFields = {};
+if (data.selectedCountries.length === 0) {
+  errors.countries = 'Debes seleccionar al menos un pais.';
+} else {
+  validFields.selectedCountries = data.selectedCountries;
+}
+
+  // Validate genre
+  if (data.selectedGenres.length === 0) {
+    errors.genre = 'Debes seleccionar al menos un genero.';
+  } else {
+    validFields.selectedGenres = data.selectedGenres;
+  }
+return { errors, validFields };
+}
+
