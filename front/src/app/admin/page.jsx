@@ -35,6 +35,7 @@ function Admin() {
     const { data } = await axios.get(`${URL}users/${user.sid}`)
     const clearData = data.map((user) => {
       return {
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.roleId,
@@ -78,11 +79,11 @@ function Admin() {
       case 1:
         return <DashGrap sid={user.sid}/>;
       case 2:
-        return <Dashboard datos={datos} link={`${URL}movies/`}/>;
+        return <Dashboard datos={datos} title={`Movies`} link={`${URL}movies/`}/>;
       case 3:
-        return <Dashboard datos={datos} link={`${URL}users/`}/>;
+        return <Dashboard datos={datos} title={`Users`} link={`${URL}users/`}/>;
       case 4:
-        return <Dashboard datos={datos} link={`${URL}purchases/`}/>;
+        return <Dashboard datos={datos} title={`Purchases`} link={`${URL}purchases/`}/>;
       default:
           return <p>Selecciona una opción del menú</p>
     }
