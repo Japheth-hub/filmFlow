@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
 
         const data = await getUsers(req.query)
 
-        return res.status(200).json({users});
+        return res.status(200).json(data);
         
 
     } catch (error) {

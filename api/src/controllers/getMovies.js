@@ -36,9 +36,7 @@ module.exports = async function getMovies(query){
                 },
             }
         }
-        
-        
-        console.log(user);
+
         if(user && user.role.role !== 'admin'){
             if(!options.where){
                 options.where = {};

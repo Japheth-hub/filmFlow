@@ -5,7 +5,6 @@ module.exports = async (req, res)=>{
         const {id} = req.params
         const data = await getMoviesId(id)
         if(data.message){
-            console.log(data)
             res.status(404).json(data)
             return
         }
