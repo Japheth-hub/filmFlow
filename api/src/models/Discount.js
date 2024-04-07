@@ -1,0 +1,20 @@
+const { DataTypes } = require('sequelize')
+
+module.exports = (sequelize) => {
+    sequelize.define('discount', {
+        code: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        percentage:{
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        usedAt:{
+            type: DataTypes.DATE,
+            allowNull: true,
+        }
+    },
+    {paranoid : true})
+}
