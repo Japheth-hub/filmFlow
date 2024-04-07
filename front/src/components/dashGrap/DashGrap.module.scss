@@ -1,4 +1,9 @@
 .content{
-    width: 600px;
-    height: 400px;
+    width: 500px;
+    margin: 10px;
+}
+.contentGrap{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }

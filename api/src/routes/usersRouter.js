@@ -15,7 +15,8 @@ usersRouter.post('/', postUsersHandler);
 
 usersRouter.get('/:auth', getCheckAdmin, getUsersHandler);
 usersRouter.delete("/:id/:auth", getCheckAdmin, deleteUserHandler);
-usersRouter.put('/:id',checkOwner, putUserHandler);
+usersRouter.put('/', checkAdmin, putUserHandler);
+
 
 
 // usersRouter.get('/:id', getMoviesIdHandler);
