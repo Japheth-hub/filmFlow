@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
             unique: true,
         },
         percentage:{
-            type: DataTypes.FLOAT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         usedAt:{

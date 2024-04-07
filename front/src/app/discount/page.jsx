@@ -10,6 +10,8 @@ const Discount = () =>{
     const [movies, setMovies] = useState([]);
     const [genres, setGenres] = useState([]);
     const [percentage, setPercentage] = useState(0);
+    const [discounts, setDiscounts] = useState([]);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,6 +28,37 @@ const Discount = () =>{
       
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchDiscounts = async () => {
+            try {
+                const response = await axios.get(`${URL}discount`);
+                setDiscounts(response.data);
+            } catch (error) {
+                console.error('Error fetching discounts:', error);
+            }
+        };
+
+        fetchDiscounts();
+    }, []);
+
+    const deleteDiscount = async (code) => {
+        try {
+            const currentDate = new Date(); 
+            const isosDate = currentDate.toISOString(); 
+            await axios.put(`${URL}discount/${code}`, { usedAt: isosDate });
+            
+            setDiscounts((prevDiscounts) =>
+                prevDiscounts.map((discount) =>
+                    discount.code === code ? { ...discount, usedAt: isosDate } : discount
+                )
+            );
+        } catch (error) {
+            console.error('Error deleting discount:', error);
+        }
+    };
+    
+    
 
     const generateDiscountCode = async () => {
         
@@ -44,9 +77,10 @@ const Discount = () =>{
                 const response = await axios.post(`${URL}discount`, {
                     selectedMovies,
                     selectedGenres,
-                    percentage: parseFloat(percentage) / 100
+                    percentage: percentage,
                 });
                 setCode(response.data.code);
+                setDiscounts((prevDiscounts) => [...prevDiscounts, response.data]);
             } catch (error) {
                 console.error('Error generating discount code:', error);
             }
@@ -109,12 +143,27 @@ const Discount = () =>{
             <div>
                 <button onClick={generateDiscountCode}>Get your code!</button>
             </div>
+            
             {code && (
                 <div>
-                    <h3>Discount Codes:</h3>
+                    <h3>New Code:</h3>
                     <p>{code}</p>
                 </div>
             )}
+
+            <h2>Discount codes</h2>
+            <div>
+                {discounts.map((discount) => (
+                    <div key={discount.code}>
+                        <p>
+                            {discount.code}
+                            {discount.usedAt ? " ------Used------ " : ""}
+                        </p>
+                        <button onClick={() => deleteDiscount(discount.code)}>Delete</button>
+                    </div>
+                ))}
+            </div>
+
         </div>
     )
 }
