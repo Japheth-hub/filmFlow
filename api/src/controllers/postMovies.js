@@ -116,8 +116,10 @@ module.exports = async (req) => {
             }
 
             countries = countries.split(',').map((item) => item.trim());
-            for (countryCode of countries) {
-                const countryDB = await Country.findByPk(countryCode)
+            for (countryName of countries) {
+                const countryDB = await Country.findOne({
+                    where: { name: countryName}
+                })
                 
                 if(countryDB){
                     movieDB.addCountry(countryDB)
