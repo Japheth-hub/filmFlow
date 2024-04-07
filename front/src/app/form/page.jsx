@@ -151,7 +151,7 @@ const MovieForm = () => {
           title: '¡Advertencia!',
           text: 'La película ya existe. Cambie su nombre, año o director.',
         });
-    } else {
+    } else if (movieResponse.status !== 200 && movieResponse.status !== 204) {
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
