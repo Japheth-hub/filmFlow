@@ -28,7 +28,6 @@ const MovieForm = () => {
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
   
-  // console.log(user)
   useEffect(() => {
     axios.get(`${URL}genres`)
       .then(response => {
@@ -134,18 +133,24 @@ const MovieForm = () => {
           title: '¡Éxito!',
           text: 'El formulario se envió correctamente.',
         });
-      setSuccessMessage('Formulario enviado correctamente');
-      setErrorMessage('');
-      console.log('Server response:', movieResponse);
-      setMovieName('');
-      setDirector('');
-      setSelectedGenres([]);
-      setDescription('');
-      setPoster(null);
-      setTrailer(null);
-      setMovie(null);
-      setSelectedCountries([]);
-      setYear('');
+        setSuccessMessage('Formulario enviado correctamente');
+        setErrorMessage('');
+        console.log('Server response:', movieResponse);
+        setMovieName('');
+        setDirector('');
+        setSelectedGenres([]);
+        setDescription('');
+        setPoster(null);
+        setTrailer(null);
+        setMovie(null);
+        setSelectedCountries([]);
+        setYear('');
+      } else if (movieResponse.status === 204) {
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Advertencia!',
+          text: 'La película ya existe. Cambie su nombre, año o director.',
+        });
     } else {
       Swal.fire({
         icon: 'error',
@@ -227,6 +232,18 @@ const MovieForm = () => {
             {errors.director && <p className={style["error-message"]}>{errors.director}</p>}
           </div>
           <div className={style["form-group"]}>
+            <label htmlFor="year" className={style["form-label"]}>Año:</label>
+            <input
+              type="number"
+              id="year"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className={style["form-input"]}
+              
+            />
+            {errors.year && <p className={style["error-message"]}>{errors.year}</p>}
+          </div>
+          <div className={style["form-group"]}>
             <label htmlFor="genre" className={style["form-label"]}>Género:</label>
             <select
                 id="genre"
@@ -252,17 +269,6 @@ const MovieForm = () => {
             </ul>
           </div>
           <div className={style["form-group"]}>
-            <label htmlFor="description" className={style["form-label"]}>Breve descripción:</label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={style["form-input"]}
-              // required
-            ></textarea>
-            {errors.description && <p className={style["error-message"]}>{errors.description}</p>}
-          </div>
-          <div className={style["form-group"]}>
           <label htmlFor="country" className={style["form-label"]}>Países:</label>
             <select
               id="country"
@@ -274,14 +280,14 @@ const MovieForm = () => {
               {/* Renderizar opciones de países */}
               <option value="">Selecciona país</option>
               {countryOptions.map(country => (
-                <option key={country.name} value={country.id}>{country.name}</option>
+                <option key={country.name} value={country.name}>{country.name.toUpperCase()}</option>
               ))}
             </select>
             {errors.countries && <p className={style["error-message"]}>{errors.countries}</p>}
             <ul className={style["genre-list"]}>
               {selectedCountries.map(selectedCountry => (
                 <li key={selectedCountry}>
-                  {selectedCountry}{' '}
+                  {selectedCountry.toUpperCase()}{' '}
                   <button type="button" onClick={() => toggleCountry(selectedCountry)}>
                     x
                   </button>
@@ -290,16 +296,15 @@ const MovieForm = () => {
             </ul>
           </div>
           <div className={style["form-group"]}>
-            <label htmlFor="year" className={style["form-label"]}>Año:</label>
-            <input
-              type="number"
-              id="year"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
+            <label htmlFor="description" className={style["form-label"]}>Breve descripción:</label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className={style["form-input"]}
-              
-            />
-            {errors.year && <p className={style["error-message"]}>{errors.year}</p>}
+              // required
+            ></textarea>
+            {errors.description && <p className={style["error-message"]}>{errors.description}</p>}
           </div>
           <div className={style["file-group"]}>
             <div className={style["form-group"]}>
