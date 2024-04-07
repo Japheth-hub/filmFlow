@@ -5,141 +5,117 @@ import axios from 'axios'
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL
     const [code,setCode] = useState('')
-    const [generatedCodes, setGeneratedCodes] = useState({});
-    const [selectedMovies, setSelectedMovies] = useState(null); // State to track selected movie
+    const [selectedMovies, setSelectedMovies] = useState([]); 
     const [selectedGenres, setSelectedGenres] = useState([])
-    const [movieNames, setMovieNames] = useState([]); 
-    const [genreNames, setGenreNames] = useState([]);
+    const [movies, setMovies] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [percentage, setPercentage] = useState(0);
 
     useEffect(() => {
-        const getMovies = async () => {
+        const fetchData = async () => {
             try {
                 const moviesRes = await axios.get(`${URL}movies`);
-                const movieName = moviesRes.data.map(movie => movie.name);
-                setMovieNames(movieName);
-            } catch (error) {
-                console.error("Error fetching movies:", error);
-            }
-        };
-      
-        getMovies();
-    }, []);
-
-    useEffect(() => {
-        const getGenres = async () => {
-            try {
+                setMovies(moviesRes.data);
+                
                 const genresRes = await axios.get(`${URL}genres`);
-                const genreName = genresRes.data.map(genre => genre.name);
-                setGenreNames(genreName);
+                setGenres(genresRes.data);
             } catch (error) {
-                console.error("Error fetching genres:", error);
+                console.error("Error fetching data:", error);
             }
         };
       
-        getGenres();
+        fetchData();
     }, []);
-    
-    const generateCode = () => {
-        let genCode;
 
-        do {
-          genCode = coupon.generate(); 
-        } while (generatedCodes.hasOwnProperty(genCode)); 
+    const generateDiscountCode = async () => {
+        
 
-        const discount = 0.15 //15%- hacer variable? 
-
-        console.log("code:", genCode);
-
-        setCode(genCode); 
-        setGeneratedCodes(prevCodes => ({
-            ...prevCodes,
-            [genCode]: { discount, movies: selectedMovies, genres: selectedGenres } 
-        }));
+        if (selectedMovies.length === 0 && selectedGenres.length === 0) {
+            alert('Please choose at least one movie or genre.');
+            return;
+        }
+        
+        if ((selectedGenres.length === 0 && selectedMovies.length >= 1) || (selectedGenres.length >= 1 && selectedMovies.length === 0)) {
+           if (!percentage || percentage <= 0 || percentage > 100) {
+                alert('Please enter a valid discount percentage.');
+                return;
+            } 
+            try {
+                const response = await axios.post(`${URL}discount`, {
+                    selectedMovies,
+                    selectedGenres,
+                    percentage: parseFloat(percentage) / 100
+                });
+                setCode(response.data.code);
+            } catch (error) {
+                console.error('Error generating discount code:', error);
+            }
+        }     
     };
-    
-    //va en el carrito creo PREG
-    const removeCode = (codeToRemove) => {
-        const updatedCodes = { ...generatedCodes };
-        delete updatedCodes[codeToRemove];
-        setGeneratedCodes(updatedCodes);
+
+    const toggleMovieSelection = (movieId) => {
+        setSelectedMovies((prev) =>
+            prev.includes(movieId)
+                ? prev.filter((m) => m !== movieId)
+                : [...prev, movieId]
+        );
     };
 
-    const handleMovieSelection = (e) => {
-        const selectedCheckboxValues = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(checkbox => checkbox.value);
-        setSelectedMovies(selectedCheckboxValues);
+    const toggleGenreSelection = (genreId) => {
+        setSelectedGenres((prev) =>
+            prev.includes(genreId)
+                ? prev.filter((g) => g !== genreId)
+                : [...prev, genreId]
+        );
     };
     
     return(
-        //navbar
         <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Movie Name</th>
-                        <th>Select</th> {/* New column for checkboxes */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {movieNames.map((movieName, index) => (
-                        <tr key={index}>
-                            <td>{movieName}</td>
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    value={movieName}
-                                    onChange={handleMovieSelection}
-                                />
-                            </td>
-                        </tr>
-                    ))}
-                    <tr>
-                        <td>Genres</td>
-                        <td>
-                            <select
-                                multiple
-                                value={selectedGenres}
-                                onChange={(e) => setSelectedGenres(Array.from(e.target.selectedOptions, option => option.value))}
-                            >
-                                {genreNames.map((genreName, index) => (
-                                    <option key={index} value={genreName}>{genreName}</option>
-                                ))}
-                            </select>
-                        </td>
-                    </tr>           
-
-                </tbody>
-            </table>
-
-
-            <p>Generate a discount code {"-->"}</p>
-            <button onClick={generateCode}>click me!</button>
-
-            {/* lista de muestra!*/}
-            <p>Generated codes:</p>
-            <ul>
-                {Object.entries(generatedCodes).map(([code, { discount, movies, genres }], index) => (
-                    <li key={index}>
-                        {code} (Discount: {discount * 100}%) 
-                        {movies && movies.length > 0 && (
-                            <>
-                                for Movies: {movies.join(', ')} 
-                                <button onClick={() => removeCode(code)}>Use Code</button>
-                            </>
-                        )}
-                        {genres && genres.length > 0 && (
-                            <>
-                                for Genres: {genres.join(', ')} 
-                                <button onClick={() => removeCode(code)}>Use Code</button>
-                            </>
-                        )}
-                    </li>
+            <h2>Discount codes generator</h2>
+            <div>
+                <h3>Select movies</h3>
+                {movies.map((movie) => (
+                    <div key={movie.id}>
+                        <input
+                            type="checkbox"
+                            checked={selectedMovies.includes(movie.id)}
+                            onChange={() => toggleMovieSelection(movie.id)}
+                        />
+                        <label>{movie.name}</label>
+                    </div>
                 ))}
-            </ul>
-
-
-            
+            </div>
+            <div>
+                <h3>Select genres</h3>
+                {genres.map((genre) => (
+                    <div key={genre.id}>
+                        <input
+                            type="checkbox"
+                            checked={selectedGenres.includes(genre.id)}
+                            onChange={() => toggleGenreSelection(genre.id)}
+                        />
+                        <label>{genre.name}</label>
+                    </div>
+                ))}
+            </div>
+            <div>
+                <label>Discount percentage:</label>
+                <input
+                    type="number"
+                    value={percentage}
+                    onChange={(e) => setPercentage(e.target.value)}
+                />
+            </div>
+            <div>
+                <button onClick={generateDiscountCode}>Get your code!</button>
+            </div>
+            {code && (
+                <div>
+                    <h3>Discount Codes:</h3>
+                    <p>{code}</p>
+                </div>
+            )}
         </div>
-        //footer
     )
 }
 

@@ -10,9 +10,9 @@ module.exports = async (req, res) => {
             genCode = coupon.generate();
         } while (await Discount.findOne({ where: { code: genCode } }));
 
-        const { discount } = req.body;
+        const { percentage } = req.body;
 
-        const createdDiscount = await Discount.create({ code: genCode, percentage: discount });
+        const createdDiscount = await Discount.create({ code: genCode, percentage: percentage });
 
         const { selectedMovies, selectedGenres } = req.body;
 
