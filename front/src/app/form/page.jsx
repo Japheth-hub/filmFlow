@@ -253,14 +253,14 @@ const MovieForm = () => {
             >
               <option value="">Selecciona géneros</option>
               {genreOptions.map(genre => (
-                <option key={genre} value={genre}>{genre}</option>
+                <option key={genre} value={genre}>{genre.replace(/\b\w/g, c => c.toUpperCase())}</option>
               ))}
             </select>
             {errors.genre && <p className={style["error-message"]}>{errors.genre}</p>}
             <ul className={style["genre-list"]}>
               {selectedGenres.map(selectedGenre => (
                 <li key={selectedGenre}>
-                  {selectedGenre}{' '}
+                  {selectedGenre.replace(/\b\w/g, c => c.toUpperCase())}{' '}
                   <button type="button" onClick={() => toggleGenre(selectedGenre)}>
                     x
                   </button>
@@ -280,14 +280,14 @@ const MovieForm = () => {
               {/* Renderizar opciones de países */}
               <option value="">Selecciona país</option>
               {countryOptions.map(country => (
-                <option key={country.name} value={country.name}>{country.name.toUpperCase()}</option>
+                <option key={country.name} value={country.name}>{country.name.replace(/\b\w/g, c => c.toUpperCase())}</option>
               ))}
             </select>
             {errors.countries && <p className={style["error-message"]}>{errors.countries}</p>}
             <ul className={style["genre-list"]}>
               {selectedCountries.map(selectedCountry => (
                 <li key={selectedCountry}>
-                  {selectedCountry.toUpperCase()}{' '}
+                  {selectedCountry.replace(/\b\w/g, c => c.toUpperCase())}{' '}
                   <button type="button" onClick={() => toggleCountry(selectedCountry)}>
                     x
                   </button>
