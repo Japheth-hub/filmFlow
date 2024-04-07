@@ -21,12 +21,11 @@ module.exports = async (mailInfo) => {
 
     try {
         const emailResponse = await resend.emails.send({
-            from: 'FilmFlow <noreply@resend.dev>',
+            from: 'FilmFlow <noreply@filmflow.chekogarcia.com.mx>',
             to: destination,
             subject: topic,
             html: htmlContent
         });
-        console.log(emailResponse)
         return { status: true, message: `Email sent successfully to ${destination}`, emailResponse };
     } catch (error) {
         return { status: false, message: "Error occurred sending the email", error };

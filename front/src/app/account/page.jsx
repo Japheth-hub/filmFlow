@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import style from './account.module.scss'
@@ -27,11 +27,11 @@ export default function Account() {
   const handleMail = async () => {
     try {
       const emailInfo = {
-        destination: "gerant9seminario@gmail.com",
+        destination: `${user.email}`,
         topic: "Mail de prueba",
         content: "Mensaje de prueba"
       }
-      const response = await axios.post('http://localhost:3001/email', emailInfo)
+      const response = await axios.post(`${NEXT_PUBLIC_URL}email`, emailInfo)
       if (response.error) {
         alert('Error enviando el mail')
       } else {
@@ -43,9 +43,9 @@ export default function Account() {
   }
   //
 
-  if(!isLoading && movies.length === 0){
+  useEffect(()=>{
     fetchData()
-  }
+  }, [])
   
   if (error) {
     return <div>Error en su session</div>;
