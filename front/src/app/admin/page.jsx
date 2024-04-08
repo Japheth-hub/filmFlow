@@ -7,6 +7,7 @@ import style from './admin.module.scss'
 import Image from 'next/image'
 import burgerMenu from '@/img/burger-menu.png'
 import DashGrap from '@/components/dashGrap/DashGrap'
+import DashUsers from '@/components/dashUsers/DashUsers'
 
 function Admin() {
   const URL = process.env.NEXT_PUBLIC_URL
@@ -80,7 +81,7 @@ function Admin() {
       case 2:
         return <Dashboard datos={datos} link={`${URL}movies/`}/>;
       case 3:
-        return <Dashboard datos={datos} link={`${URL}users/`}/>;
+        return <DashUsers datos={datos} link={`${URL}users/`}/>;
       case 4:
         return <Dashboard datos={datos} link={`${URL}purchases/`}/>;
       default:
