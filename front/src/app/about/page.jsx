@@ -26,32 +26,32 @@ const About =()=>{
                 <h4>Developers</h4>
                 <ul className={style.noDecoration}>
                     <li>
-                        <Link href='https://github.com/lukeskip'>
+                        <Link href='https://github.com/lukeskip'target="_blank">
                             Sergio García
                         </Link>
                     </li>
                     <li>
-                        <Link href='https://github.com/Baideweii'>
+                        <Link href='https://github.com/Baideweii'target="_blank">
                             Gerant Seminario
                         </Link>
                     </li>
                     <li>
-                        <Link href='https://github.com/Japheth-hub'>
+                        <Link href='https://github.com/Japheth-hub'target="_blank">
                             Japhet Ramírez
                         </Link>
                     </li>
                     <li>
-                        <Link href='https://github.com/O-oyuco'>
+                        <Link href='https://github.com/O-oyuco'target="_blank">
                             Marcos Pacheco
                         </Link>
                     </li>
                     <li>
-                        <Link href='https://github.com/cngomez18'>
+                        <Link href='https://github.com/cngomez18'target="_blank">
                             Candela Gómez
                         </Link>
                     </li>
                     <li>
-                        <Link href='https://github.com/NDelPozo'>
+                        <Link href='https://github.com/NDelPozo'target="_blank">
                             Nicolás Del Pozo
                         </Link>
                     </li>

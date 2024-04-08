@@ -66,7 +66,7 @@ const Footer = () => {
                     <Link href="#">
                         <Image src={twt} alt="twitter"/>
                     </Link>
-                    <Link href="https://github.com/lukeskip/filmFlow">
+                    <Link href="https://github.com/lukeskip/filmFlow"target="_blank">
                         <Image src={gh} alt="github"/>   
                     </Link>
 

@@ -14,6 +14,7 @@ function Admin() {
   const {user, isLoading, error} = useUser()
   const [datos, setDatos] = useState([])
   const [component, setComponent] = useState(0)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const showMovies = async() => {
     const { data } = await axios.get(`${URL}movies`)
@@ -107,11 +108,11 @@ function Admin() {
           alt="menu"
         />
           <div className={style.menuText}>
-            <div onClick={() => setComponent(1)}><p>Gráficos</p></div>
-            <div onClick={() => showMovies()}><p>Películas</p></div>
-            <div onClick={() => showUsers()}><p>Usuarios</p></div>
-            <div onClick={() => showPurchases(4)}><p>Ventas</p></div>
-            <div onClick={() => setComponent()}><p>Promos</p></div>
+            <div onClick={() => setComponent(1)}><a role="img" aria-label="Gráficos">📈</a><span>Gráficos</span></div>
+            <div onClick={() => showMovies()}><a role="img" aria-label="Películas">🎬</a><span>Películas</span></div>
+            <div onClick={() => showUsers()}><a role="img" aria-label="Usuarios">👤</a><span>Usuarios</span></div>
+            <div onClick={() => showPurchases(4)}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
+            <div onClick={() => setComponent()}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
           </div>
         </div>
         <div className={style.content}>
