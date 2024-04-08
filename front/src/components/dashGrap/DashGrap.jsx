@@ -87,7 +87,7 @@ const DashGrap = ({sid}) => {
             return <p>No se encontraron datos para mostrar</p>
         })
         revrankGenre().then(response => {
-            //console.log(response);
+            console.log(response);
             // setSalesXday({
             //     ...userXday, labels: response.labels,
             //     datasets:[{
