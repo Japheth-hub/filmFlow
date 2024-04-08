@@ -138,15 +138,19 @@ const Nav = (props)=> {
                                       }
                                     </li>
                                     <li>
+                                        {user ? 
                                         <Link href="/account">
                                             <p>My Account</p>
-                                        </Link>
+                                        </Link> 
+                                        : null}
                                     </li>
 
                                     <li> 
+                                        {userLocalStorage && userLocalStorage.admin ?
                                         <Link href="/form">
                                             <p>Add Movie</p>
                                         </Link>
+                                        : null }
                                     </li>
 
                                     <li>
