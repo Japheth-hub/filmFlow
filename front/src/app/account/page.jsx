@@ -62,7 +62,7 @@ export default function Account() {
             <p>{user.email}</p>
           </div>
           <ul>
-            <li>
+            {/* <li>
               Direccion : <i>Tehuacan Puebla Mexico</i>
             </li>
             <li>
@@ -70,7 +70,7 @@ export default function Account() {
             </li>
             <li>
               Mas detalles : <i>231587556</i>
-            </li>
+            </li> */}
             {/* <button onClick={handleMail}>Enviar correo</button> */}
           </ul>
         </div>

@@ -106,6 +106,7 @@ const DetailContent = () => {
     duration,
     countries,
     genres,
+    year,
   } = movieData;
 
   // const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
@@ -154,8 +155,15 @@ const renderStarSelector = () => {
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
             <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
-            <p><span className={style['italic-dark']}>País:</span> {country}</p>
+            <div className={style.genres}>
+                      {countries.map((country, index) => (
+              <div key={index}>
+                <p  onClick={() => goToCategory(country.name)}><span className={style['italic-dark']}>Paises:</span> {country.name.replace(/\b\w/g, c => c.toUpperCase())}</p>
+              </div>
+            ))}
+          </div>
             <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
+            <p><span className={style['italic-dark']}>Año:</span> {year}</p>
             <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>

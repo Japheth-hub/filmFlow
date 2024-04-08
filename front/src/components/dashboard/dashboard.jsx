@@ -3,6 +3,7 @@ import style from '../../app/admin/admin.module.scss'
 import Link from 'next/link'
 import Button from '../button/Button'
 import axios from 'axios'
+import Swal from 'sweetalert2';
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
@@ -18,7 +19,7 @@ export default function Dashboard({datos, link, title, sid}) {
     const [page, setPage] = useState(1)
     const [totalPage, setTotalPage] = useState()
     const [pagina, setPagina] = useState([])
-    const porPagina = 5
+    const porPagina = 10
 
     function limpiar(){
         setBody(body2)
@@ -53,19 +54,33 @@ export default function Dashboard({datos, link, title, sid}) {
 
     async function deleteAction(id){
         try {
-            const res = confirm('Estas seguro que deseas eliminar esta informacion')
-            if(res){
-                let res = ""
-                title === "Movies"
-                    ? (res = await axios.delete(`${link}${id}`))
-                    : (res = await axios.delete(`${link}${id}/${sid}`));
-                console.log(res)
+            const res = await Swal.fire({
+                icon: 'warning',
+                title: '¿Estás seguro?',
+                text: 'Estas seguro que deseas eliminar esta información',
+                showCancelButton: true,
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'Cancelar',
+              });
+        
+              if (res.isConfirmed) {
+                let response = '';
+                title === 'Movies' ? (response = await axios.delete(`${link}${id}`)) : (response = await axios.delete(`${link}${id}/${sid}`));
                 const newBody = body2.filter((movie) => movie.id !== id);
-                setBody(newBody)
-                setBody2(newBody)
-            }
+                setBody(newBody);
+                setBody2(newBody);
+                Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.data.message,
+                });
+              }
         } catch (error) {
-            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: error.response.data.message || 'Ocurrió un error al eliminar la información.',
+              });
         }
     }
 
@@ -75,7 +90,11 @@ export default function Dashboard({datos, link, title, sid}) {
         setSelectGenre(genero)
         const newBody = body2.filter((movie) => movie.genre.includes(genero))
         if(newBody.length === 0 || !newBody){
-            alert("No hay Peliculas con este genero")
+            Swal.fire({
+                icon: 'info',
+                title: '¡Información!',
+                text: 'No hay películas con este género',
+              });
         } else {
             setBody(newBody)
             setPage(1);
@@ -88,7 +107,11 @@ export default function Dashboard({datos, link, title, sid}) {
             setStatus(status)
             setPage(1);
         } else {
-            alert(`No hay peliculas con el status ${status}`);
+            Swal.fire({
+                icon: 'info',
+                title: '¡Información!',
+                text: `No hay películas con el status ${status}`,
+                });
         }
     }
     //--------------------------------------------------------------------------------
@@ -100,7 +123,11 @@ export default function Dashboard({datos, link, title, sid}) {
             setBody(search)
             setPage(1);
         }else {
-            alert("No hay peliculas que coincidan con tu busqueda")
+            Swal.fire({
+                icon: 'info',
+                title: '¡Información!',
+                text: 'No hay películas que coincidan con tu búsqueda',
+                });
         }
     }
 
@@ -142,7 +169,11 @@ export default function Dashboard({datos, link, title, sid}) {
             const genre = data.map((genre) => genre.name)
             setGenres(genre)
         } catch (error) {
-            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: error.response.data.message || 'Ocurrió un error al obtener los géneros.',
+                });
         }
     }
     
