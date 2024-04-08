@@ -93,8 +93,8 @@ export default function DashUsers({datos, link}) {
                                             : <td className={style.td} key={i}>{item[prop]}</td>
                                             ))}
                                             <td className={style.td}>
-                                                <Button emoji={'🎬'} label={'Convertir en producer'} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button><br />
-                                                <Button emoji={'🛡️'} label={'Convertir en admin'} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button><br />
+                                                { item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={'Convertir en producer'} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )}<br />
+                                                { item.role !== "admin" && ( <Button emoji={'🛡️'} label={'Convertir en admin'} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}<br />
                                             </td>
                                     </tr>       
                                 ))

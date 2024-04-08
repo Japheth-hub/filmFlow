@@ -41,10 +41,10 @@ function Admin() {
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.roleId,
+          role: user.roleName,
           sid: user.sid,
           created: user.createdAt.slice(0, 10),
-          deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : ""
+          // deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : ""
         }
       })
       setDatos(clearData)
