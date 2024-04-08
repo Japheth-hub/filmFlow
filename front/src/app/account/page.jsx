@@ -71,7 +71,7 @@ export default function Account() {
             <li>
               Mas detalles : <i>231587556</i>
             </li>
-            <button onClick={handleMail}>Enviar correo</button>
+            {/* <button onClick={handleMail}>Enviar correo</button> */}
           </ul>
         </div>
         <div className={style["movies"]}>

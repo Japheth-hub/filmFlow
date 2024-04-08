@@ -7,6 +7,7 @@ import style from './admin.module.scss'
 import Image from 'next/image'
 import burgerMenu from '@/img/burger-menu.png'
 import DashGrap from '@/components/dashGrap/DashGrap'
+import DashUsers from '@/components/dashUsers/DashUsers'
 
 function Admin() {
   const URL = process.env.NEXT_PUBLIC_URL
@@ -32,19 +33,25 @@ function Admin() {
   }
   
   const showUsers = async() => {
-    const { data } = await axios.get(`${URL}users/${user.sid}`)
-    const clearData = data.map((user) => {
-      return {
-        name: user.name,
-        email: user.email,
-        role: user.roleId,
-        sid: user.sid,
-        created: user.createdAt.slice(0, 10),
-        deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : ""
-      }
-    })
-    setDatos(clearData)
-    setComponent(3)
+    try {
+      
+      const { data } = await axios.get(`${URL}users/${user.sid}`)
+      const clearData = data.map((user) => {
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.roleName,
+          sid: user.sid,
+          created: user.createdAt.slice(0, 10),
+          // deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : ""
+        }
+      })
+      setDatos(clearData)
+      setComponent(3)
+    } catch (error) {
+      console.log('Error en la funcion showUsers de admin/page.jsx', error)
+    }
   }
 
   const showPurchases = async() => {
@@ -78,11 +85,11 @@ function Admin() {
       case 1:
         return <DashGrap sid={user.sid}/>;
       case 2:
-        return <Dashboard datos={datos} link={`${URL}movies/`}/>;
+        return <Dashboard datos={datos} title={`Movies`} link={`${URL}movies/`} sid={user.sid}/>;
       case 3:
-        return <Dashboard datos={datos} link={`${URL}users/`}/>;
+        return <DashUsers datos={datos} link={`${URL}users/`}/>;
       case 4:
-        return <Dashboard datos={datos} link={`${URL}purchases/`}/>;
+        return <Dashboard datos={datos} title={`Purchases`} link={`${URL}purchases/`} sid={user.sid}/>;
       default:
           return <p>Selecciona una opción del menú</p>
     }

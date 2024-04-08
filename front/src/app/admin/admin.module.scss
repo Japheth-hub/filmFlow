@@ -1,5 +1,17 @@
 @import "../../scss/variables.scss";
 
+.tablasDash{
+    background-color: red;
+}
+
+.title{
+    font-size: 2rem;
+    text-align: center;
+    margin: auto;
+    color: rgba(221, 200, 245, 0.938);
+    text-shadow: 2px 0px 2px $mainColor, 0px 2px 2px $mainColor, -2px 0px 2px $mainColor, 0px -2px 2px $mainColor;
+}
+
 .tablas{
     width: 95%;
     margin: 30px auto;
@@ -24,7 +36,7 @@
 
 .table{
     width: 100%;
-    padding: 10px;
+    padding: 5px;
 }
 .thead{
     background-color: $mainColor;
@@ -34,12 +46,11 @@
     background-color: rgba(235, 187, 241, 0.932);
 }
 .th{
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     padding: 5px 10px;
 }
 .td{
     text-align: center;
-    padding: 10px 0px;
     font-weight: 700;
 }
 
@@ -54,9 +65,19 @@
     transition: 0.6s;
     padding: 5px;
     margin-top: 10px;
+
 }
 .menuText{
     visibility: hidden;
+}
+.menuText div{
+    transition: all 0.3s;
+    padding-left: 10px;
+}
+.menuText div:hover{
+    transform: scale(1.2);
+    margin-left: 15%;
+    cursor: pointer;
 }
 
 .menu:hover{
@@ -73,7 +94,10 @@
     height: 800px;
 }
 .content{
-    margin-left: 8%;
+    margin-left: 6%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .orderFilters{
@@ -82,7 +106,9 @@
     align-items: center;
 }
 
-.genreSelect{
+.genreSelect,
+.searchTable,
+.status{
     background-color: $mainColor;
     padding: 5px 10px;
     color: $neutralLight;
@@ -91,4 +117,32 @@
     font-size: 1.3em;
     border-radius: 5px;
     margin-top: 10px;
+}
+.searchTable{
+    border: 2px solid $mainColor;
+    background-color: rgba(139, 51, 240, 0.5);
+}
+
+.paginado{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px auto;
+    padding: 5px 5px;
+    width: fit-content;
+    border: 1px solid $mainColor;
+    border-radius: 10px;
+}
+.paginado button{
+    margin: 0px 10px;
+    padding: 0px 10px;
+    font-size: 1.3rem;
+    background-color: rgba(139, 51, 240, 0.5);
+    border: 1pz solid $mainColor;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+.paginado button:hover{
+    color: white;
+    background-color: $mainColor;
 }
