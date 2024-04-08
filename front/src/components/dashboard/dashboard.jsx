@@ -209,7 +209,7 @@ export default function Dashboard({datos, link, title, sid}) {
                                     <tr key={index}>
                                     {column.map((prop, i) => ( 
                                             i === 0 
-                                            ? <td className={style.td} key={i}><Link href={`${link}/${item[prop]}`}>{item[prop]}</Link></td>
+                                            ? <td className={style.td} key={i}><Link href={`${link}/${item[prop]}`} target="_blank">{item[prop]}</Link></td>
                                             : <td className={style.td} key={i}>{item[prop]}</td>
                                             ))}
                                             <td className={style.td}>

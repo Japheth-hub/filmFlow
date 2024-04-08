@@ -7,6 +7,7 @@ import style from './admin.module.scss'
 import Image from 'next/image'
 import burgerMenu from '@/img/burger-menu.png'
 import DashGrap from '@/components/dashGrap/DashGrap'
+import DashUsers from '@/components/dashUsers/DashUsers'
 
 function Admin() {
   const URL = process.env.NEXT_PUBLIC_URL
@@ -40,10 +41,10 @@ function Admin() {
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.roleId,
+          role: user.roleName,
           sid: user.sid,
           created: user.createdAt.slice(0, 10),
-          deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : ""
+          // deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : ""
         }
       })
       setDatos(clearData)
@@ -86,7 +87,7 @@ function Admin() {
       case 2:
         return <Dashboard datos={datos} title={`Movies`} link={`${URL}movies/`} sid={user.sid}/>;
       case 3:
-        return <Dashboard datos={datos} title={`Users`} link={`${URL}users/`} sid={user.sid}/>;
+        return <DashUsers datos={datos} link={`${URL}users/`}/>;
       case 4:
         return <Dashboard datos={datos} title={`Purchases`} link={`${URL}purchases/`} sid={user.sid}/>;
       default:

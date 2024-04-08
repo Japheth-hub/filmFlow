@@ -2,6 +2,12 @@ const { User, Role } = require('../db');
 
 module.exports = async (body) => {
     try {
+        //Esta esperando recibir los siguientes parametros por body de la siguiente manera:
+        //{
+        //     "auth": "(sid del admin actual)",
+        //     "userSid": "(sid del usuario a modificar)",
+        //     "roleToChange": "(rol al cual cambiar, producer o admin)"
+        //}
         const { userSid, roleToChange } = body;
 
         const user = await User.findOne({
@@ -14,11 +20,14 @@ module.exports = async (body) => {
         const producerRole = await Role.findOne({ where: { role: "producer" } });
         const adminRole = await Role.findOne({ where: { role: "admin" } });
 
-        if (user.roleId === producerRole.id && roleToChange !== "admin") {
-            return { status: false, message: 'El usuario ya es producer' };
-        }
-        if (user.roleId === adminRole.id && roleToChange !== "producer") {
+        if (user.roleId === adminRole.id && roleToChange === "admin") {
             return { status: false, message: 'El usuario ya es admin' };
+        }
+        if (user.roleId === adminRole.id && roleToChange === "producer") {
+            return { status: false, message: 'El usuario no puede dejar de ser admin' };
+        }
+        if (user.roleId === producerRole.id && roleToChange === "producer") {
+            return { status: false, message: 'El usuario ya es producer' };
         }
 
         if (roleToChange === 'admin') {
@@ -33,9 +42,10 @@ module.exports = async (body) => {
         }
     } catch (error) {
         console.log(error);
-        return { status: false, error };
+        return { status: false, message: 'Error en el servidor', error };
     }
 };
+
 
 //Viejo putUser:
 // const { User } = require('../db')
