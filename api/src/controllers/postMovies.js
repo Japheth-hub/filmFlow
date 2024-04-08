@@ -25,7 +25,7 @@ module.exports = async (req) => {
            return {status:false,errors:validation.errors}
         }
 
-        let { name, director, genres, description, countries, posterFile, trailerFile, movieFile} = body;
+        let { name, director, genres, year, description, countries, posterFile, trailerFile, movieFile} = body;
 
         //Cloudinary:
         //Convertir el archivo a buffer de bytes para que Cloudinary sea capaz de leerlo (Los .mp4 no se convierten a buffer)
@@ -74,7 +74,6 @@ module.exports = async (req) => {
 
         //Provisional mientras no existen estos inputs en el formulario
         const price = 25
-        const year = 2020
         //
 
         const status = "pending" 
@@ -105,7 +104,7 @@ module.exports = async (req) => {
         
         if(created){
             genres = genres.split(',').map((item) => item.trim());
-            for (genre of genres) {
+            for (let genre of genres) {
                 const genreDB = await Genre.findOne({
                     where: { name: genre },
                 });
@@ -116,8 +115,10 @@ module.exports = async (req) => {
             }
 
             countries = countries.split(',').map((item) => item.trim());
-            for (countryCode of countries) {
-                const countryDB = await Country.findByPk(countryCode)
+            for (countryName of countries) {
+                const countryDB = await Country.findOne({
+                    where: { name: countryName}
+                })
                 
                 if(countryDB){
                     movieDB.addCountry(countryDB)
@@ -130,7 +131,7 @@ module.exports = async (req) => {
         }
 
         //Prueba para el envio de mails
-        console.log(user)
+
         const mailInfo = {
             destination: `${user.email}`,
             topic: "Pelicula creada con exito",
@@ -143,7 +144,7 @@ module.exports = async (req) => {
         } catch (error) {
             console.log('Error sending email:', error);
         }
-        //
+        
 
         return {status:true,movie:movieDB}
     } catch (error) {

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import style from './account.module.scss'
@@ -43,9 +43,9 @@ export default function Account() {
   }
   //
 
-  if(!isLoading && movies.length === 0){
+  useEffect(()=>{
     fetchData()
-  }
+  }, [])
   
   if (error) {
     return <div>Error en su session</div>;
@@ -62,7 +62,7 @@ export default function Account() {
             <p>{user.email}</p>
           </div>
           <ul>
-            <li>
+            {/* <li>
               Direccion : <i>Tehuacan Puebla Mexico</i>
             </li>
             <li>
@@ -70,8 +70,8 @@ export default function Account() {
             </li>
             <li>
               Mas detalles : <i>231587556</i>
-            </li>
-            <button onClick={handleMail}>Enviar correo</button>
+            </li> */}
+            {/* <button onClick={handleMail}>Enviar correo</button> */}
           </ul>
         </div>
         <div className={style["movies"]}>
