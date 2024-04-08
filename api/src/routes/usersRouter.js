@@ -14,7 +14,7 @@ usersRouter.post('/', postUsersHandler);
 
 
 usersRouter.get('/:auth', getCheckAdmin, getUsersHandler);
-usersRouter.delete('/:id',checkAdmin, deleteUserHandler);
+usersRouter.delete("/:id/:auth", getCheckAdmin, deleteUserHandler);
 usersRouter.put('/', checkAdmin, putUserHandler);
 
 

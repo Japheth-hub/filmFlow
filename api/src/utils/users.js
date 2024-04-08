@@ -34,4 +34,11 @@ module.exports = [
         role: "admin",
         picture: "https://cdn2.iconfinder.com/data/icons/web-solid/32/user-512.png"
     },
+    {
+        name: 'FilmFlow Admin',
+        email: 'filmflowmail@gmail.com',
+        sid:"6666",
+        role: "admin",
+        picture: "https://raw.githubusercontent.com/lukeskip/filmFlow/development/front/src/img/logo-square.png"
+    },
 ]
