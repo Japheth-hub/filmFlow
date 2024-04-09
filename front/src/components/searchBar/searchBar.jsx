@@ -1,6 +1,6 @@
 'use client'
 import axios from "axios"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import styles from './searchBar.module.css'
 import Link from "next/link"
@@ -8,7 +8,8 @@ import Button from "../button/Button"
 
 const searchBar = ({onSearch}) => {
     
-    const [query, setQuery] = useState('')
+    const [query, setQuery] = useState('');
+    const router = useRouter();
 
     const handleChange = (e) =>{
         
@@ -16,7 +17,12 @@ const searchBar = ({onSearch}) => {
         setQuery(e.target.value)
         onSearch(e.target.value)
     }
-    
+
+
+    const handleSearch = ()=>{
+        router.push(`/movies?search=${query}`);
+        onSearch('')
+    }
     return(
         
             <div className={styles.searchbar}>
@@ -27,13 +33,12 @@ const searchBar = ({onSearch}) => {
                 value={query}
                 onChange={handleChange}
             />
-            <Link href= {`/filters/search=${query}`}>
+           
                     
-            <Button emoji={"🔎"}/>
+            <Button emoji={"🔎"} callback={handleSearch}/>
                     
-           </Link>
-            
-            
+        
+        
             </div>
         
     )

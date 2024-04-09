@@ -6,7 +6,6 @@ export default function Multiselect({items,initial,name,callback}) {
     const [selectedItems,setSelectedItems] = useState([]);
     
     const toggleItem = (item) => {
-        console.log(selectedItems)
         if (selectedItems.includes(item.name)) {
             setSelectedItems(selectedItems.filter(selectedItem => selectedItem !== item.name));
         } else {
@@ -20,18 +19,21 @@ export default function Multiselect({items,initial,name,callback}) {
     
 useEffect(() => {
     let cleanedSelected = selectedItems;
-    if(selectedItems.length > 0){
+    if(selectedItems.length >= 0){
         cleanedSelected = selectedItems.join(",")
+        callback({target:{name,value:cleanedSelected}});
     }
     
-    callback({target:{name,value:cleanedSelected}});
 }, [selectedItems])
 
 useEffect(() => {
     if(initial && !Array.isArray(initial)){
         initial = initial.split(',');
         if(initial.length > 0) setSelectedItems(initial);
+    }else{
+        setSelectedItems([]);
     }
+
 }, [initial])
 
 
