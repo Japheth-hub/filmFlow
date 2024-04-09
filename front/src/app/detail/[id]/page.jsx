@@ -8,6 +8,12 @@ import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
 import { useUser } from '@auth0/nextjs-auth0/client'; 
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  WhatsappShareButton,
+  WhatsappIcon
+} from "react-share";
 
 
 const DetailContent = () => {
@@ -152,6 +158,13 @@ const renderStarSelector = () => {
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
           <div className={style['description-container-info']}>
+          <FacebookShareButton
+            url="https://filmflow.chekogarcia.com.mx/"
+          >
+            <FacebookIcon size={32} round />
+          </FacebookShareButton>
+
+          
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
             <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
