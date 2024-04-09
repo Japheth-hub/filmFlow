@@ -111,22 +111,16 @@ const Movies = ({ params }) => {
   //?APLICAMOS CAMBIOS A LA QUERY DEL BACK CON LOS VALUES DEL USER
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setQueryParams({ ...queryParams, [name]: value });
-  
-    // Convertir searchParams a objeto simple de JavaScript
-    const searchParamsObject = {};
+ 
     searchParams.forEach((value, key) => {
       searchParamsObject[key] = value;
     });
   
-    // Actualizar el valor correspondiente en el objeto searchParamsObject
     searchParamsObject[name] = value;
   
-    // Construir la nueva URL de búsqueda
     const updatedSearchParams = new URLSearchParams(searchParamsObject);
     
     router.push(`movies?${updatedSearchParams.toString()}`);
-
     
   };
 
