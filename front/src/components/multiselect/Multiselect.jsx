@@ -19,7 +19,7 @@ export default function Multiselect({items,initial,name,callback}) {
     
 useEffect(() => {
     let cleanedSelected = selectedItems;
-    if(selectedItems.length >= 0){
+    if(selectedItems.length > 0){
         cleanedSelected = selectedItems.join(",")
         callback({target:{name,value:cleanedSelected}});
     }
@@ -27,9 +27,13 @@ useEffect(() => {
 }, [selectedItems])
 
 useEffect(() => {
+    console.log(initial);
+    console.log(typeof initial);
     if(initial && !Array.isArray(initial)){
         initial = initial.split(',');
         if(initial.length > 0) setSelectedItems(initial);
+    }else if(Array.isArray(initial) && initial.length > 0){
+        setSelectedItems(initial);
     }else{
         setSelectedItems([]);
     }
