@@ -8,9 +8,11 @@ import { useRouter } from "next/navigation";
 import Button from '@/components/button/Button'
 import notSearchIMG from '@/img/notSearch.png'
 import Image from "next/image";
+import Multiselect from '@/components/multiselect/Multiselect'
 
 const Movies = ({ params }) => {
-  const router = useRouter()
+  const URL = process.env.NEXT_PUBLIC_URL;
+  const router = useRouter();
   const [queryParams,setQueryParams] = useState();
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
@@ -19,15 +21,19 @@ const Movies = ({ params }) => {
   const order = searchParams.get("order");
 
 
+
   const cleanQuery = (query)=>{ 
     const cleaned = Object.entries(query).filter(([key, value]) => value !== null);
     const cleanedObject = Object.fromEntries(cleaned);
     return cleanedObject;
-}  
+  }  
 
-  const searchQuery = searchParams.get('s') || "";
-  const URL = process.env.NEXT_PUBLIC_URL;
-  let URL2 = URL;
+  const cleanFilter = ()=>{
+    const updatedSearchParams = new URLSearchParams({});
+    router.push(`movies?${updatedSearchParams.toString()}`);
+  }
+
+  
 
 
  //?ALMACENAMOS LAS PELICULAS 
@@ -45,14 +51,7 @@ const Movies = ({ params }) => {
       name: "cargando",
     },
   ]);
-  
-  //?ALMACENAMOS LOS DATOS QUE INGRESA EL USER
-  const [dataFilter, setDataFilter] = useState({
-    search: "",
-    genre: "",
-    orderType: "",
-    order: "",
-  });
+ 
   
   //?ALMACENAMOS LA PAGINACION
   const [pagination, setPagination] = useState({
@@ -71,32 +70,40 @@ const Movies = ({ params }) => {
   }, []);
 
   useEffect(() => {
+    
     setQueryParams({
       search,
       genre,
       orderType,
       order,
     });
+
   }, [searchParams])
   
 
   useEffect(() => {
     if(queryParams){
-      const getMovies = async () => {
-        const query = new URLSearchParams(cleanQuery(queryParams)).toString();
-        let { data } = await axios.get(`${URL}movies?${query}`);
-        setMovies(data);
-      };
-      getMovies();
+      
+      try{
+        const getMovies = async () => {
+          const query = new URLSearchParams(cleanQuery(queryParams)).toString();
+          let { data } = await axios.get(`${URL}movies?${query}`);
+          setMovies(data);
+        };
+        getMovies();
+      }catch(error){
+        console.log(error);
+      }
+  
+      
     }
   }, [queryParams]);
 
 
   //?APLICAMOS CAMBIOS A LA QUERY DEL BACK CON LOS VALUES DEL USER
   const handleChange = (event) => {
-    
     const { name, value } = event.target;
-    setDataFilter({ ...dataFilter, [name]: value });
+    setQueryParams({ ...queryParams, [name]: value });
   
     // Convertir searchParams a objeto simple de JavaScript
     const searchParamsObject = {};
@@ -125,33 +132,28 @@ const Movies = ({ params }) => {
       if (pagination.page < Math.ceil(movies.length / pagination.step)) {
         setPagination({ ...pagination, page: pagination.page + 1 });
       }
-    }};
+  }};
+
+  
 
   return (
     <div>
       <div>
         <form>
           <fieldset className={style.rowField}>
+         
             <div className={style.optionsField}>
-              <label>Género </label>
-              <select
-                name="genre"
-                value={dataFilter.genre}
-                onChange={handleChange}
-              >
-                <option value={""}>Seleccione...</option>
-                {genres.map((elem) => (
-                  <option key={elem.id} value={elem.name}>
-                    {elem.name}
-                  </option>
-                ))}
-              </select>
+              <label>Género</label>
+              {queryParams && 
+                <Multiselect name="genre" initial={queryParams.genre} items={genres} callback={handleChange} />
+              }
+              
             </div>
             <div className={style.optionsField}>
               <label>Ordernar por </label>
               <select
                 name="orderType"
-                value={dataFilter.orderType}
+                value={queryParams?.orderType}
                 onChange={handleChange}
               >
                 <option value={""} >Seleccione...</option>
@@ -163,7 +165,7 @@ const Movies = ({ params }) => {
               <label>Orden </label>
               <select
                 name="order"
-                value={dataFilter.order}
+                value={queryParams?.order}
                 onChange={handleChange}
               >
                 <option value={""}>Seleccione...</option>
