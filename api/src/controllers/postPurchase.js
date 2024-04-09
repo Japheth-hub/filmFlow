@@ -35,7 +35,6 @@ module.exports = async (purchaseInfo) => {
             });
        })
 
-        // purchase.setMovies(moviesDB);
 
         const rows = await Cart.destroy({
             where: {
