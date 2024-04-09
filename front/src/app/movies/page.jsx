@@ -27,6 +27,7 @@ const Movies = ({ params }) => {
   const genre = searchParams.get("genre");
   const orderType = searchParams.get("orderType");
   const order = searchParams.get("order");
+  const country = searchParams.get("country");
 
 
   const cleanQuery = (query)=>{ 
@@ -58,6 +59,13 @@ const Movies = ({ params }) => {
       name: "cargando",
     },
   ]);
+
+  const [countries, setCountries] = useState([
+    {
+      id: "cargando",
+      name: "cargando",
+    },
+  ]);
  
   
   //?ALMACENAMOS LA PAGINACION
@@ -70,7 +78,9 @@ const Movies = ({ params }) => {
   useEffect(() => {
     const getGenres = async () => {
       let { data } = await axios.get(`${URL}genres`);
+      let dataCountries = await axios.get(`${URL}countries?existent=true`);
       setGenres(data);
+      setCountries(dataCountries.data);
     };
     getGenres();
  
@@ -83,7 +93,10 @@ const Movies = ({ params }) => {
       genre,
       orderType,
       order,
+      country
     });
+
+    setPagination({...pagination, page: 1})
 
   }, [searchParams])
   
@@ -110,7 +123,7 @@ const Movies = ({ params }) => {
   //?APLICAMOS CAMBIOS A LA QUERY DEL BACK CON LOS VALUES DEL USER
   const handleChange = (event) => {
     const { name, value } = event.target;
- 
+    const searchParamsObject = {};
     searchParams.forEach((value, key) => {
       searchParamsObject[key] = value;
     });
@@ -118,7 +131,7 @@ const Movies = ({ params }) => {
     searchParamsObject[name] = value;
   
     const updatedSearchParams = new URLSearchParams(searchParamsObject);
-    
+
     router.push(`movies?${updatedSearchParams.toString()}`);
     
   };
@@ -147,7 +160,13 @@ const Movies = ({ params }) => {
                 <Multiselect name="genre" initial={queryParams.genre ? queryParams.genre: null} items={genres} callback={handleChange} />
               }
               
-          </div>
+        </div>
+        <div>
+              {queryParams && 
+                <Multiselect name="country" initial={queryParams.country ? queryParams.country: null} items={countries} callback={handleChange} type="select" />
+              }
+              
+        </div>
         <form>
           
           <fieldset className={style.rowField}>

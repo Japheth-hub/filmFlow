@@ -1,8 +1,23 @@
-const { Country } = require('../db')
+const { Country,Movie } = require('../db')
 
-module.exports = async () => {
+module.exports = async (req) => {
     try {
+        const {existent} = req.query;
+        let options = {};
+
+        if (existent) {
+            options = {
+                ...options,
+                include: {
+                    model: Movie,
+                    attributes: ["id","name"],
+                    required: true,
+                }
+            };
+        }
+
         const countries = await Country.findAll({
+            ...options,
             attributes: ['id', 'name']
         });
 
