@@ -55,7 +55,7 @@ module.exports = async function getMovies(query){
             options = {
                 ...options,
                 order: [
-                    [orderType, order.toLowerCase()]
+                    [orderType, order ? order.toLowerCase(): "asc"]
                 ]
             }
         }

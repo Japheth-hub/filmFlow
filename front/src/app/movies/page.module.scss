@@ -1,0 +1,31 @@
+@import "@/scss/variables.scss";
+.button {
+  background-color: $mainColor;
+  padding: 5px 10px;
+  color: $neutralLight;
+  border: 0;
+  font-family: $mainFont;
+  font-size: 1.3em;
+  border-radius: 5px;
+  margin-top: 2px;
+}
+
+.order {
+  flex-wrap: wrap;
+}
+.pagination {
+  margin: 10px;
+}
+.rowField {
+  display: inline-flex;
+  margin: 10px;
+  padding: 10px;
+}
+.optionsField {
+  margin: 10px;
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+}

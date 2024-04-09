@@ -1,16 +1,26 @@
 "use client";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import Movie from "../../../components/movie/Movie";
+import { useState, useEffect,Suspense } from "react";
+import Movie from "@/components/movie/Movie";
 import style from "./page.module.scss";
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from "next/navigation";
-import Button from '../../../components/button/Button'
-import notSearchIMG from '../../../img/notSearch.png'
+import Button from '@/components/button/Button'
+import notSearchIMG from '@/img/notSearch.png'
 import Image from "next/image";
+import Multiselect from '@/components/multiselect/Multiselect'
 
-const Filter = ({ params }) => {
-  const router = useRouter()
+const MoviesPage = () => {
+  return (
+    <Suspense>
+      <Movies />
+    </Suspense>
+  );
+};
+
+const Movies = ({ params }) => {
+  const URL = process.env.NEXT_PUBLIC_URL;
+  const router = useRouter();
   const [queryParams,setQueryParams] = useState();
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
@@ -19,24 +29,20 @@ const Filter = ({ params }) => {
   const order = searchParams.get("order");
 
 
+
   const cleanQuery = (query)=>{ 
     const cleaned = Object.entries(query).filter(([key, value]) => value !== null);
     const cleanedObject = Object.fromEntries(cleaned);
     return cleanedObject;
-}  
+  }  
 
-  const searchQuery = searchParams.get('s') || "";
-  const URL = process.env.NEXT_PUBLIC_URL;
-  let URL2 = URL;
+  const cleanFilter = ()=>{
+    const updatedSearchParams = new URLSearchParams({});
+    router.push(`movies?${updatedSearchParams.toString()}`);
+  }
 
-  //?LEE LO QUE VIENE POR PARAMS.
-  //  -> si es un GENERO O UNA FRASE DEL ONSEARCH
-  let condicion = params.genre.split("%3D")
-  condicion[0] !== "search"
-  ? condicion[1] !== "search" 
-    ?(URL2 += `movies?search=&genre=${condicion[1]}`)
-    :(URL2 += `movies?search=${searchQuery}`)
-  : (URL2 += `movies?search=${condicion[1]}`)
+  
+
 
  //?ALMACENAMOS LAS PELICULAS 
   const [movies, setMovies] = useState([
@@ -53,15 +59,8 @@ const Filter = ({ params }) => {
       name: "cargando",
     },
   ]);
-  //?ALMACENAMOS LOS DATOS QUE INGRESA EL USER
-  const [dataFilter, setDataFilter] = useState({
-    search: "",
-    genre: "",
-    orderType: "",
-    order: "",
-  });
-  //?ALMACENAMOS LA URL QUE HACE LA QUERY AL BACK
-  const [urlFilter, setUrlFilter] = useState(URL2);
+ 
+  
   //?ALMACENAMOS LA PAGINACION
   const [pagination, setPagination] = useState({
     page: 1,
@@ -79,77 +78,56 @@ const Filter = ({ params }) => {
   }, []);
 
   useEffect(() => {
+    
     setQueryParams({
       search,
       genre,
       orderType,
       order,
     });
+
   }, [searchParams])
   
 
   useEffect(() => {
     if(queryParams){
-      const getMovies = async () => {
-        const query = new URLSearchParams(cleanQuery(queryParams)).toString();
-        let { data } = await axios.get(`${URL}movies?${query}`);
-        setMovies(data);
-      };
-      getMovies();
+      
+      try{
+        const getMovies = async () => {
+          const query = new URLSearchParams(cleanQuery(queryParams)).toString();
+          let { data } = await axios.get(`${URL}movies?${query}`);
+          setMovies(data);
+        };
+        getMovies();
+      }catch(error){
+        console.log(error);
+      }
+  
+      
     }
   }, [queryParams]);
 
-  //?SETTEAMOS LO QUE VIENE DE SEARCHBAR EN LA QUERY AL BACK 
-  if(condicion[0] === "search"){
-    if(condicion[1]){
-      if(dataFilter.search !== condicion[1]){
-        let valueQuery = condicion[1];
-        setDataFilter({ ...dataFilter, search: valueQuery })
-      }
-    }
-  }
 
   //?APLICAMOS CAMBIOS A LA QUERY DEL BACK CON LOS VALUES DEL USER
   const handleChange = (event) => {
+    const { name, value } = event.target;
+    setQueryParams({ ...queryParams, [name]: value });
+  
+    // Convertir searchParams a objeto simple de JavaScript
+    const searchParamsObject = {};
+    searchParams.forEach((value, key) => {
+      searchParamsObject[key] = value;
+    });
+  
+    // Actualizar el valor correspondiente en el objeto searchParamsObject
+    searchParamsObject[name] = value;
+  
+    // Construir la nueva URL de búsqueda
+    const updatedSearchParams = new URLSearchParams(searchParamsObject);
     
-    if(event.target.name === "genre"){
-      setDataFilter({ ...dataFilter, genre: event.target.value })
-      URL2 = URL 
-                  + `movies?search=${dataFilter.search}`
-                  + `&genre=${event.target.value}`
-                  + `&orderType=${dataFilter.orderType}`
-                  + `&order=${dataFilter.order}`
-      setUrlFilter(URL2)
-      setPagination({...pagination, page: 1})
-    }
-    if(event.target.name === "orderType"){
-      setDataFilter({ ...dataFilter, orderType: event.target.value })
-      URL2 = URL 
-                  + `movies?search=${dataFilter.search}`
-                  + `&genre=${dataFilter.genre}`
-                  + `&orderType=${event.target.value}`
-                  + `&order=${dataFilter.order}`
-      setUrlFilter(URL2)
-      setPagination({...pagination, page: 1})
-    }
-    if(event.target.name === "order"){
-      setDataFilter({ ...dataFilter, order: event.target.value })
-      URL2 = URL 
-                  + `movies?search=${dataFilter.search}`
-                  + `&genre=${dataFilter.genre}`
-                  + `&orderType=${dataFilter.orderType}`
-                  + `&order=${event.target.value}`
-      setUrlFilter(URL2)
-      setPagination({...pagination, page: 1})
-    }
-  };
+    router.push(`movies?${updatedSearchParams.toString()}`);
 
-  //?APLICAMOS EL FILTER LIMPIANDO LA URL
-  const cleanFilter = () => {
-    setDataFilter({ ...dataFilter, search: "" })
-    URL2 = URL + `movies?search=`
-    router.push("/filters/search=")
-    setUrlFilter(URL2)
+    
   };
 
   //?Fn PARA MOVER EL PAGINADO 
@@ -162,33 +140,29 @@ const Filter = ({ params }) => {
       if (pagination.page < Math.ceil(movies.length / pagination.step)) {
         setPagination({ ...pagination, page: pagination.page + 1 });
       }
-    }};
+  }};
+
+  
 
   return (
     <div>
       <div>
+        <div className={style.genres}>
+              {queryParams && 
+                <Multiselect name="genre" initial={queryParams.genre ? queryParams.genre: null} items={genres} callback={handleChange} />
+              }
+              
+          </div>
         <form>
+          
           <fieldset className={style.rowField}>
-            <div className={style.optionsField}>
-              <label>Género </label>
-              <select
-                name="genre"
-                value={dataFilter.genre}
-                onChange={handleChange}
-              >
-                <option value={""}>Seleccione...</option>
-                {genres.map((elem) => (
-                  <option key={elem.id} value={elem.name}>
-                    {elem.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+         
+            
             <div className={style.optionsField}>
               <label>Ordernar por </label>
               <select
                 name="orderType"
-                value={dataFilter.orderType}
+                value={queryParams?.orderType || ""}
                 onChange={handleChange}
               >
                 <option value={""} >Seleccione...</option>
@@ -200,7 +174,7 @@ const Filter = ({ params }) => {
               <label>Orden </label>
               <select
                 name="order"
-                value={dataFilter.order}
+                value={queryParams?.order || ""}
                 onChange={handleChange}
               >
                 <option value={""}>Seleccione...</option>
@@ -263,4 +237,4 @@ const Filter = ({ params }) => {
   );
 };
 
-export default Filter;
+export default MoviesPage;
