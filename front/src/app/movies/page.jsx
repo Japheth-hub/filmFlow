@@ -64,7 +64,7 @@ const Movies = ({ params }) => {
   //?ALMACENAMOS LA PAGINACION
   const [pagination, setPagination] = useState({
     page: 1,
-    step: 12,
+    step: 15,
   });
 
   //?GENERA LOS GENEROS DEL SELECT
@@ -85,6 +85,8 @@ const Movies = ({ params }) => {
       orderType,
       order,
     });
+
+    setPagination({...pagination, page: 1})
 
   }, [searchParams])
   
@@ -111,7 +113,7 @@ const Movies = ({ params }) => {
   //?APLICAMOS CAMBIOS A LA QUERY DEL BACK CON LOS VALUES DEL USER
   const handleChange = (event) => {
     const { name, value } = event.target;
- 
+    const searchParamsObject = {};
     searchParams.forEach((value, key) => {
       searchParamsObject[key] = value;
     });
@@ -119,7 +121,7 @@ const Movies = ({ params }) => {
     searchParamsObject[name] = value;
   
     const updatedSearchParams = new URLSearchParams(searchParamsObject);
-    
+
     router.push(`movies?${updatedSearchParams.toString()}`);
     
   };
