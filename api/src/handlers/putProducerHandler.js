@@ -3,14 +3,12 @@ const putProducer = require('../controllers/putProducer')
 module.exports = async (req, res) => {
     try {
         const body = req.body
-        const user = req.user
 
         if (Object.keys(body).length === 0) {
             return res.status(422).json({ message: 'No hay datos para actualizar' });
         }
 
-        const data = await putProducer(user, body);
-        console.log(data)
+        const data = await putProducer(body);
 
         if (!data.status) {
             return res.status(422).json(data);

@@ -1,6 +1,6 @@
 const { User, Role } = require('../db');
 
-module.exports = async (user, body) => {
+module.exports = async (body) => {
     try {
         //Esta esperando recibir los siguientes parametros por body de la siguiente manera:
         //{
@@ -9,26 +9,30 @@ module.exports = async (user, body) => {
         //     "paymentAcoount": "(correo al que realizar el pago de la cuenta seleccionada)",
         //     "phoneNumber": "(numero telefonico)",
         //}
-        const { paymentMethod, paymentAccount, phoneNumber } = body;
+        const { auth, paymentMethod, paymentAccount, phoneNumber } = body;
+
+        const currentUser = await User.findOne({
+            where: { sid: auth }
+        })
 
         const existingUser = await User.findOne({
-            where: { phone_number: phoneNumber }
+            where: { phone: phoneNumber }
         });
 
-        if (existingUser && existingUser.sid !== user.sid) {
+        if (existingUser && existingUser.sid !== currentUser.sid) {
             return { status: false, message: "Ya hay un usuario con ese número de teléfono." };
         }
         
         const producerRole = await Role.findOne({
-            where: { role: producer }
+            where: { role: "producer" }
         })
 
-        user.roleId = producerRole.id;
-        user.phone_number = phoneNumber;
-        user.payment_method = paymentMethod;
-        user.payment_account = paymentAccount;
+        currentUser.roleId = producerRole.id;
+        currentUser.phone = phoneNumber;
+        currentUser.payment_method = paymentMethod;
+        currentUser.payment_account = paymentAccount;
 
-        await user.save();
+        await currentUser.save();
 
         return { status: true, message: "Datos actualizados exitosamente" };
     } catch (error) {
