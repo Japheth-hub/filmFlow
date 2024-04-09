@@ -26,7 +26,7 @@ const DetailContent = () => {
   const [review, setReview] = useState({})
 
   const goToCategory = (genre) => {
-    router.push(`/filters/genero=${genre}`);
+    router.push(`/movies?genre=${genre}`);
   };
 
 

@@ -153,7 +153,7 @@ const Movies = ({ params }) => {
               <label>Ordernar por </label>
               <select
                 name="orderType"
-                value={queryParams?.orderType}
+                value={queryParams?.orderType || ""}
                 onChange={handleChange}
               >
                 <option value={""} >Seleccione...</option>
@@ -165,7 +165,7 @@ const Movies = ({ params }) => {
               <label>Orden </label>
               <select
                 name="order"
-                value={queryParams?.order}
+                value={queryParams?.order || ""}
                 onChange={handleChange}
               >
                 <option value={""}>Seleccione...</option>

@@ -4,27 +4,28 @@ import Pill from '@/components/pill/Pill'
 
 export default function Multiselect({items,initial,name,callback}) {
     const [selectedItems,setSelectedItems] = useState([]);
+    
     const toggleItem = (item) => {
         if (selectedItems.includes(item)) {
             setSelectedItems(selectedItems.filter(selectedItem => selectedItem !== item));
         } else {
             setSelectedItems([...selectedItems, item]);
         }
-        console.log(selectedItems.join(","));
-        
     }; 
     
 useEffect(() => {
+    let cleanedSelected = selectedItems;
     if(selectedItems.length > 0){
-        callback({target:{name,value:selectedItems.join(",")}})
+        cleanedSelected = selectedItems.join(",")
     }
+    
+    callback({target:{name,value:cleanedSelected}});
 }, [selectedItems])
 
 useEffect(() => {
-    console.log(initial);
-    if(!Array.isArray(initial)){
+    if(initial && !Array.isArray(initial)){
         initial = initial.split(',');
-        setSelectedItems(initial);
+        if(initial.length > 0) setSelectedItems(initial);
     }
 }, [initial])
 
@@ -34,7 +35,7 @@ useEffect(() => {
     <>
         <select
             name={name}
-            value={selectedItems}
+            value={selectedItems.join(',')}
             onChange={(e) => toggleItem(e.target.value)}
             className={style["form-input"]}
         >
@@ -45,7 +46,7 @@ useEffect(() => {
         </select>
         <ul className={style.list}>
         {selectedItems && selectedItems.map((item, index) => (
-            <Pill key={index} label={item} callback={() => toggleItem(item)} />
+            item && <Pill key={index} label={item} callback={() => toggleItem(item)} />
         ))}
         </ul>
     </>

@@ -9,7 +9,6 @@ export default function layout({children}) {
     <>
       <Navbar />
       <div className="wrapper">  
-        <GoBack />
           {children}
       </div>
       <Footer />
