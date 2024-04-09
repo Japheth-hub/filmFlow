@@ -6,29 +6,27 @@ export default function Multiselect({items,initial,name,callback}) {
     const [selectedItems,setSelectedItems] = useState([]);
     
     const toggleItem = (item) => {
+        let totalItems = [];
         if (selectedItems.includes(item.name)) {
-            setSelectedItems(selectedItems.filter(selectedItem => selectedItem !== item.name));
+            totalItems = selectedItems.filter(selectedItem => selectedItem !== item.name)
+        
         } else {
+            totalItems = [...selectedItems, item.name]
             setSelectedItems([...selectedItems, item.name]);
         }
+
+        const cleanedSelected = totalItems.join(",")
+        callback({target:{name,value:cleanedSelected}});
+        setSelectedItems(totalItems);
     }; 
     const checkSelected = (item)=>{
         if(selectedItems.includes(item.name)) return true
         return false
     }
     
-useEffect(() => {
-    let cleanedSelected = selectedItems;
-    if(selectedItems.length > 0){
-        cleanedSelected = selectedItems.join(",")
-        callback({target:{name,value:cleanedSelected}});
-    }
-    
-}, [selectedItems])
 
 useEffect(() => {
-    console.log(initial);
-    console.log(typeof initial);
+
     if(initial && !Array.isArray(initial)){
         initial = initial.split(',');
         if(initial.length > 0) setSelectedItems(initial);

@@ -149,7 +149,7 @@ const Movies = ({ params }) => {
       <div>
         <div className={style.genres}>
               {queryParams && 
-                <Multiselect name="genre" initial={queryParams.genre} items={genres} callback={handleChange} />
+                <Multiselect name="genre" initial={queryParams.genre ? queryParams.genre: null} items={genres} callback={handleChange} />
               }
               
           </div>
