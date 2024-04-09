@@ -29,8 +29,8 @@ useEffect(() => {
 
     if(initial && !Array.isArray(initial)){
         initial = initial.split(',');
-        if(initial.length > 0) setSelectedItems(initial);
-    }else if(Array.isArray(initial) && initial.length > 0){
+        setSelectedItems(initial);
+    }else if(Array.isArray(initial)){
         setSelectedItems(initial);
     }else{
         setSelectedItems([]);
