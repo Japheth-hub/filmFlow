@@ -6,12 +6,17 @@ export default function Multiselect({items,initial,name,callback}) {
     const [selectedItems,setSelectedItems] = useState([]);
     
     const toggleItem = (item) => {
-        if (selectedItems.includes(item)) {
-            setSelectedItems(selectedItems.filter(selectedItem => selectedItem !== item));
+        console.log(selectedItems)
+        if (selectedItems.includes(item.name)) {
+            setSelectedItems(selectedItems.filter(selectedItem => selectedItem !== item.name));
         } else {
-            setSelectedItems([...selectedItems, item]);
+            setSelectedItems([...selectedItems, item.name]);
         }
     }; 
+    const checkSelected = (item)=>{
+        if(selectedItems.includes(item.name)) return true
+        return false
+    }
     
 useEffect(() => {
     let cleanedSelected = selectedItems;
@@ -33,22 +38,10 @@ useEffect(() => {
   return (
    
     <>
-        <select
-            name={name}
-            value={selectedItems.join(',')}
-            onChange={(e) => toggleItem(e.target.value)}
-            className={style["form-input"]}
-        >
-            <option value="">Selecciona...</option>
-            {items.map(item => (
-            <option key={item.id} value={item.name}>{item.name.replace(/\b\w/g, c => c.toUpperCase())}</option>
-            ))}
-        </select>
-        <ul className={style.list}>
-        {selectedItems && selectedItems.map((item, index) => (
-            item && <Pill key={index} label={item} callback={() => toggleItem(item)} />
-        ))}
-        </ul>
+        
+        {items.map(item => (
+            <Pill key={item.id} selected={checkSelected(item)} label={item.label} emoji={item.emoji} callback={()=>{toggleItem(item)}} />
+         ))}
     </>
     
   )

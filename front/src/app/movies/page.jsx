@@ -139,16 +139,17 @@ const Movies = ({ params }) => {
   return (
     <div>
       <div>
-        <form>
-          <fieldset className={style.rowField}>
-         
-            <div className={style.optionsField}>
-              <label>Género</label>
+        <div className={style.genres}>
               {queryParams && 
                 <Multiselect name="genre" initial={queryParams.genre} items={genres} callback={handleChange} />
               }
               
-            </div>
+          </div>
+        <form>
+          
+          <fieldset className={style.rowField}>
+         
+            
             <div className={style.optionsField}>
               <label>Ordernar por </label>
               <select
