@@ -30,7 +30,6 @@ const Movies = ({ params }) => {
   const country = searchParams.get("country");
 
 
-
   const cleanQuery = (query)=>{ 
     const cleaned = Object.entries(query).filter(([key, value]) => value !== null);
     const cleanedObject = Object.fromEntries(cleaned);
@@ -72,7 +71,7 @@ const Movies = ({ params }) => {
   //?ALMACENAMOS LA PAGINACION
   const [pagination, setPagination] = useState({
     page: 1,
-    step: 15,
+    step: 10,
   });
 
   //?GENERA LOS GENEROS DEL SELECT
@@ -149,7 +148,9 @@ const Movies = ({ params }) => {
       }
   }};
 
-
+  const handleElemPagination = (event) => {
+    setPagination({...pagination, step: event.target.value})
+  }
 
   return (
     <div>
@@ -193,6 +194,26 @@ const Movies = ({ params }) => {
                 <option value={""}>Seleccione...</option>
                 <option value={"asc"}>Ascendente</option>
                 <option value={"desc"}>Descendente</option>
+              </select>
+            </div>
+            <div className={style.optionsField}>
+              <label>Películas </label>
+              <select
+                name="elemPagination"
+                value={pagination.step}
+                onChange={handleElemPagination}
+              >
+              {(() => {
+                const options = [];
+                for (let i = 10; i < 21; i += 5) {
+                  options.push(
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  );
+                }
+                return options;
+              })()}
               </select>
             </div>
             <div >
