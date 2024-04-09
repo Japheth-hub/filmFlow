@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect,Suspense } from "react";
 import Movie from "@/components/movie/Movie";
 import style from "./page.module.scss";
 import { useSearchParams } from 'next/navigation'
@@ -9,6 +9,14 @@ import Button from '@/components/button/Button'
 import notSearchIMG from '@/img/notSearch.png'
 import Image from "next/image";
 import Multiselect from '@/components/multiselect/Multiselect'
+
+const MoviesPage = () => {
+  return (
+    <Suspense>
+      <Movies />
+    </Suspense>
+  );
+};
 
 const Movies = ({ params }) => {
   const URL = process.env.NEXT_PUBLIC_URL;
@@ -229,4 +237,4 @@ const Movies = ({ params }) => {
   );
 };
 
-export default Movies;
+export default MoviesPage;
