@@ -1,4 +1,4 @@
-const { Purchase, Cart, User,Movie } = require('../db');
+const { Purchase, Cart, User,Movie,MoviePurchase } = require('../db');
 const { Op } = require('sequelize');
 const sendEmail = require('./sendEmail');
 
@@ -27,7 +27,15 @@ module.exports = async (purchaseInfo) => {
             },
         });
 
-        purchase.setMovies(moviesDB);
+        moviesDB.map(async (movie)=>{
+            const newMoviePurchase = await MoviePurchase.create({
+                purchaseId: purchase.id,
+                movieId: movie.id,
+                price: movie.price,
+            });
+       })
+
+        // purchase.setMovies(moviesDB);
 
         const rows = await Cart.destroy({
             where: {

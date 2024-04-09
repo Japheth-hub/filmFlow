@@ -27,13 +27,20 @@ fs.readdirSync(path.join(__dirname, "/models"))
 
 modelDefiners.forEach((model) => model(sequelize));
 let entries = Object.entries(sequelize.models);
-let capsEntries = entries.map((entry) => [
-  entry[0][0].toUpperCase() + entry[0].slice(1),
-  entry[1],
-]);
+let capsEntries = entries.map((entry) => {
+  entry[0] = entry[0].split("_");
+  entry[0] = entry[0].map((item)=>{
+    return item[0].toUpperCase() + item.slice(1);
+  });
+  entry[0] = entry[0].join("");
+  return [
+    entry[0],
+    entry[1],
+  ]
+});
 
 sequelize.models = Object.fromEntries(capsEntries);
-const { User, Movie, Genre, Review, Role, Cart, Purchase, Country } = sequelize.models;
+const { User, Movie, Genre, Review, Role, Cart, Purchase,Country } = sequelize.models;
 
 Movie.belongsToMany(Genre, { through: "movie_genre" });
 Genre.belongsToMany(Movie, { through: "movie_genre" });

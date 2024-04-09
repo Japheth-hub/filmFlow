@@ -20,11 +20,19 @@ module.exports = async(query)=>{
     }
 
     if(user.role.role === 'producer'){
+        console.log("Soy producer");
         const purchases = await getPurchases({limit:10,user:user.id,month:true});
-        const purchasesSum = purchases.reduce((accumulator, item) => {
-            return accumulator + Number(item.amount);
+        const purchasesSum = purchases.reduce((total, purchase) => {
+          // Sumar los precios de las películas dentro de cada compra
+          const purchaseTotal = purchases.reduce((purchaseTotal, innerPurchase) => {
+              const moviesTotal = innerPurchase.movies.reduce((moviesTotal, movie) => {
+                  return moviesTotal + movie.movie_purchase.price; // Sumar los precios de las películas
+              }, 0);
+              return purchaseTotal + moviesTotal; // Sumar el total de precios de las películas en esta compra
           }, 0);
-
+          
+          return total + purchaseTotal; // Sumar el total de precios de las películas en todas las compras
+      }, 0);
         data.movies = await getMovies({limit:10,user:user});
         data.purchases  = purchases
         data.purchasesSum  = purchasesSum;
