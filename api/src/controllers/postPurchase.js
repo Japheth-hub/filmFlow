@@ -26,6 +26,24 @@ module.exports = async (purchaseInfo) => {
                 },
             },
         });
+ 
+        //Pago a los producers involucrados en la compra:
+        for (const movie of moviesDB) {
+            if (!movie.userId) {
+                continue;
+            }
+
+            const producer = await User.findOne({
+                where: { id: movie.userId }
+            });
+
+            const producerPay = movie.price * 0.5;
+            
+            producer.payment_amount = (producer.payment_amount || 0) + producerPay;
+            
+            await producer.save();
+        }
+        //
 
         purchase.setMovies(moviesDB);
 
