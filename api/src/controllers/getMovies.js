@@ -1,21 +1,27 @@
-const { Movie, Genre,User,Role } = require('../db');
+const { Movie, Genre,Country } = require('../db');
 const { Op } = require("sequelize");
 const orderFunction = require('../helpers/order')
 
 
 module.exports = async function getMovies(query){
 
-    let {search, genre, orderType, order,limit,user} = query;
+    let {search, genre, orderType, order,limit,user,country} = query;
    
     try {
         let data = {}
         let options = {
-            include:{
-                model:Genre,
-                attributes:["id","name"],
-                through: { attributes: [] }
-            }
-        }; 
+            include: [
+                {
+                    model: Genre,
+                    attributes: ["id", "name"],
+                    through: { attributes: [] }
+                },
+                {
+                    model: Country, // Agregando el modelo Country
+                    attributes: ["id", "name"]
+                }
+            ]
+        };
 
         if(search){
             options.where = {
@@ -25,16 +31,13 @@ module.exports = async function getMovies(query){
             }
         }
 
-        if(genre){    
+        if (genre) {
             genre = genre.split(',').map((item) => item.trim().toLowerCase());
-            options.include = {
-                ...options.include,
-                where: { 
-                    name: { 
-                      [Op.or]: genre
-                    }
-                },
-            }
+            options.include[0].where = {
+                name: {
+                    [Op.or]: genre
+                }
+            };
         }
 
         if(user && user.role.role !== 'admin'){
@@ -51,11 +54,20 @@ module.exports = async function getMovies(query){
             }
         }
 
+        if (country) {
+            country = country.split(',').map((item) => item.trim().toLowerCase());
+            options.include[1].where = {
+                name: {
+                    [Op.or]: country
+                }
+            };
+        }
+
         if(orderType){    
             options = {
                 ...options,
                 order: [
-                    [orderType, order.toLowerCase()]
+                    [orderType, order ? order.toLowerCase(): "asc"]
                 ]
             }
         }

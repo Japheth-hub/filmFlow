@@ -6,4 +6,8 @@
   color: $neutralLight;
   border-radius: 5px;
   cursor: pointer;
+  text-transform: capitalize;
+  &.selected {
+    background-color: $successColor;
+  }
 }

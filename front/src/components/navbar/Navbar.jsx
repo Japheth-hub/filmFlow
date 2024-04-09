@@ -25,13 +25,14 @@ const Nav = (props)=> {
 
     const handleAccountClick = () => {
       setShowDropdown(!showDropdown);
+      if(userLocalStorage === null) setUserLocalStorage(JSON.parse(window.localStorage.getItem('FilmFlowUsr')))
     };
 
     const handleSearch = async (query) => {
       
   
       if (!query || query.trim() === "" || query.length < 3) {
-        console.log("La consulta de búsqueda está vacía.");
+        //console.log("La consulta de búsqueda está vacía.");
         setQuickSearch([]);
         setSearch(false);
         return;
@@ -45,7 +46,7 @@ const Nav = (props)=> {
         const data = response.data;
         
         if (data === "No hay Peliculas") {
-          console.log("No se encontraron películas con ese nombre.");
+          //console.log("No se encontraron películas con ese nombre.");
           setQuickSearch([]);
           setSearch(true);
   
@@ -56,7 +57,7 @@ const Nav = (props)=> {
           setSearch(true);
         }
       } catch (error) {
-        console.error("Error al realizar la búsqueda:", error);
+        //console.error("Error al realizar la búsqueda:", error);
       }
     };
 
@@ -65,7 +66,9 @@ const Nav = (props)=> {
     }
 
     useEffect(() => {  
-      setUserLocalStorage(typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('FilmFlowUsr')):null);
+      setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+        ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+        : null);
     }, [])
     
     
@@ -92,8 +95,8 @@ const Nav = (props)=> {
                       <div className={styles.searchResultsContainer}>
                         <ul className={styles.movieList}>
                           {quickSearch.map((result, index) => (
-                          <Link href = {`/detail/${result.id}`}>
-                            <li key={index}>
+                          <Link key={index} href = {`/detail/${result.id}`}>
+                            <li>
                               <div className={styles.card} onClick={()=>router.push(`/detail/${result.id}`)}>
                                 <div>{result.name}</div>
                                 <div>
@@ -132,7 +135,7 @@ const Nav = (props)=> {
                                     <li>
                                       {userLocalStorage && userLocalStorage.admin 
                                         ? <Link href="/admin">
-                                            <p>Admin dashboard</p>
+                                            <p>Tablero</p>
                                           </Link>
                                         : null
                                       }
@@ -140,7 +143,7 @@ const Nav = (props)=> {
                                     <li>
                                         {user ? 
                                         <Link href="/account">
-                                            <p>My Account</p>
+                                            <p>Perfil</p>
                                         </Link> 
                                         : null}
                                     </li>
@@ -148,15 +151,15 @@ const Nav = (props)=> {
                                     <li> 
                                         {userLocalStorage && userLocalStorage.admin ?
                                         <Link href="/form">
-                                            <p>Add Movie</p>
+                                            <p>Agregar película</p>
                                         </Link>
                                         : null }
                                     </li>
 
                                     <li>
                                         {user
-                                        ? <a href="/api/auth/logout"><button onClick={()=>{logout()}}>Log out</button></a> 
-                                        : <a href="/api/auth/login"><button>Login</button></a>}
+                                        ? <a href="/api/auth/logout"><button onClick={()=>{logout()}}>Salir</button></a> 
+                                        : <a href="/api/auth/login"><button>Ingresar</button></a>}
                                     </li>
 
                                   </ul>
