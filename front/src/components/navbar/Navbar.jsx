@@ -92,8 +92,8 @@ const Nav = (props)=> {
                       <div className={styles.searchResultsContainer}>
                         <ul className={styles.movieList}>
                           {quickSearch.map((result, index) => (
-                          <Link href = {`/detail/${result.id}`}>
-                            <li key={index}>
+                          <Link key={index} href = {`/detail/${result.id}`}>
+                            <li>
                               <div className={styles.card} onClick={()=>router.push(`/detail/${result.id}`)}>
                                 <div>{result.name}</div>
                                 <div>
