@@ -3,7 +3,7 @@ const crearCompra = require('../helpers/crearCompra')
 
 module.exports = async (req, res) => {
   try {
-    const  movies  = req.body;
+    const  {movies,sid,code}  = req;
     if (!movies || movies.length === 0) {
       res.status(404).json("No hay productos");
       return;

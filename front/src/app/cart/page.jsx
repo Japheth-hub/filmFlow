@@ -17,7 +17,7 @@ const Cart = () => {
     const [totalPrice,setTotalPrice] = useState(null);
     const [userDiscountCode, setUserDiscountCode] = useState('');
     const [discountApplied, setDiscountApplied] = useState(false);
-
+    const event = new Event('localChanged');
 
     const fetchMoviePercentage = async (movieId) => {
         try {
@@ -119,16 +119,11 @@ const Cart = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const movieDiscounts = await Promise.all(
-                cartData.map((movie) => fetchMoviePercentage(movie.id))
-            );
-    
-            const updatedCart = cartData.map((movie, index) => {
-                const discounts = movieDiscounts[index]; 
-                return applyDiscountToCart(movie, discounts); 
+            const {data} = await axios.post(`${URL}discount/apply`,{
+                code:userDiscountCode,
+                movies:cartData
             });
-    
-            setCartData(updatedCart); 
+            setCartData(data.movies);
             setDiscountApplied(true);
         } catch (error) {
             console.error('Error applying discounts:', error);
@@ -143,6 +138,7 @@ const Cart = () => {
         
     useEffect(() => {
         fetchData();
+        
         const handleStorageChange = (event) => {
             fetchData();
         };
@@ -164,6 +160,7 @@ const Cart = () => {
       }, [user]);
 
       useEffect(() => {
+        console.log("se actualiza CartData");
         setTotalPrice(cartData.reduce((total, movie) => total + movie.price, 0));
       }, [cartData])
       
@@ -204,7 +201,7 @@ const Cart = () => {
             </div>
             </div>
             <div className={style.buy}> 
-            {user ? <Buy sid = {user.sid}/>: <Link href="/api/auth/login"><Button label="loggeate"/></Link>}
+            {user ? <Buy cart={cartData} code={userDiscountCode} sid = {user.sid}/>: <Link href="/api/auth/login"><Button label="loggeate"/></Link>}
             
             </div>
             <form onSubmit={handleSubmit}>

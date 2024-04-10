@@ -30,15 +30,19 @@ module.exports = async (req, res) => {
 
         const genCode = coupon.generate();
 
-        const [discount,created] = await Discount.findOrCreate({ where: { code: genCode },defaults:{
-            percentage,starts,ends
-        } });
+        const [discount,created] = await Discount.findOrCreate(
+            { 
+                where: { code: genCode },
+                defaults:{
+                    percentage,starts,ends
+                }
+            });
 
 
         if(created){
-            if(selectedMovies){
+            if(selectedMovies && !selectedGenres){
 
-                const movies = await Movie.findAll({where: {
+                movies = await Movie.findAll({where: {
                     id: {
                         [Op.in]: selectedMovies,
                     },
@@ -47,7 +51,7 @@ module.exports = async (req, res) => {
                 discount.setMovies(movies);
             }
 
-            if(selectedGenres){
+            if(selectedGenres && !selectedMovies){
 
                 const genres = await Genre.findAll({where: {
                     id: {

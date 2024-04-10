@@ -4,10 +4,10 @@ const checkDiscount = require('../services/checkDiscount')
 module.exports = async (req, res) => {
     try {
 
-        const discount = await checkDiscount(req);
-        console.log(discount);
+        const discount = await checkDiscount(req.body);
+
         if(discount.status){
-           return  res.status(201).json({ code: discount.discount });
+           return  res.status(201).json({ movies: discount.movies });
         }else{
             return res.status(500).json({ message: discount.message });
         }

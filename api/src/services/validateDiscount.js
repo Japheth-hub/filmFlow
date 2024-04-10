@@ -1,13 +1,21 @@
-const {Discount,Movie} = require('../db');
-module.exports = async (id)=>{
+const {Discount,Movie,Genre} = require('../db');
+module.exports = async (code)=>{
     try {
         
         const currentDate  = new Date();
         const discount = await Discount.findOne({
-            where:{id},
-            include:{
-                model:Movie,
-            }
+            where:{code},
+            include:[
+                {
+                    model:Movie,
+                },
+                {
+                    model:Genre,
+                    include:{
+                        model:Movie,
+                    }
+                }
+            ]
         });
     
     
