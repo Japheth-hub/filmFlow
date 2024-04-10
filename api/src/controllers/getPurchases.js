@@ -18,7 +18,7 @@ module.exports = async function getPurchases(query){
               where: { userId: user },
               through: {
                 model: PurchaseMovie,
-                attributes: ['price'], // Solo seleccionamos el precio pagado
+                attributes: ['price'], 
               },
             }
           ]

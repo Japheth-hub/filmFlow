@@ -41,4 +41,11 @@ module.exports = [
         role: "admin",
         picture: "https://raw.githubusercontent.com/lukeskip/filmFlow/development/front/src/img/logo-square.png"
     },
+    {
+        name: 'FilmFlow Producer',
+        email: 'filmflowmail@gmailproducer.com',
+        sid:"7777",
+        role: "producer",
+        picture: "https://raw.githubusercontent.com/lukeskip/filmFlow/development/front/src/img/logo-square.png"
+    },
 ]

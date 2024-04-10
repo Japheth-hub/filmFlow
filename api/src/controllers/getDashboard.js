@@ -1,6 +1,7 @@
 const getMovies = require('../controllers/getMovies');
 const getUsers = require('../controllers/getUsers');
 const getPurchases = require('../controllers/getPurchases');
+const getReportsMonth = require('../controllers/getReportsMonth');
 
 module.exports = async(query)=>{
     const user = query.user;
@@ -21,12 +22,11 @@ module.exports = async(query)=>{
 
     if(user.role.role === 'producer'){
         console.log("Soy producer");
-        const purchases = await getPurchases({limit:10,user:user.id,month:true});
-        const purchasesSum = getReports({user});
-          
+        const purchasesTotal = await getReportsMonth({user});
         data.movies = await getMovies({limit:10,user:user});
-        data.purchases  = purchases
-        data.purchasesSum  = purchasesSum;
+        data.moviesPurchased = await getMovies({user:user,purchases:true});
+        data.purchasesMonthTotal = purchasesTotal;
+
     }
 
     return data;
