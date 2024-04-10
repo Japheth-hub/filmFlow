@@ -204,21 +204,21 @@ const renderStarSelector = () => {
       </div>  
       {purchase.includes(movieData.id) && !review || purchase.includes(movieData.id) && reviewsData.length === 0
         ? <div className={style['review-form-container']}>
-            <h4>Leave a Review</h4>
+            <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
-              <label>Rating:</label>
+              <label>Puntuación:</label>
               <div className={style['star-selector']}>
                 {renderStarSelector()}
               </div>
               <label>Comentario:</label>
               <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-              <button onClick={handleReviewSubmit}>Subir opinión</button>
+              <button onClick={handleReviewSubmit}>Subir comentario</button>
             </div>
           </div>
         : ""
       }
-          <h4>Opiniones</h4>
+          <h4>Comentarios</h4>
         {reviewsData.map((review) => (
           <div key={review.id} className={style['review-container']}>
             <img src={review.user.picture} alt={review.user.name} className={style['user-picture']} />
