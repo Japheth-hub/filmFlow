@@ -59,21 +59,25 @@ function Admin() {
   }
 
   const showPurchases = async() => {
-    const { data } = await axios.get(`${URL}purchases/${user.sid}`)
-    const clearData = data.map((purch) => {
-      return {
-        id: purch.id,
-        stripeId: purch.stripeId,
-        status: purch.status,
-        method: purch.method,
-        currency: purch.currency,
-        amount: purch.amount,
-        userId: purch.userId,
-        createdAt: purch.createdAt.slice(0, 10)
-      }
-    })
-    setDatos(clearData)
-    setComponent(4)
+    try {
+      const { data } = await axios.get(`${URL}purchases/${user.sid}`);
+      const clearData = data.map((purch) => {
+        return {
+          id: purch.id,
+          stripeId: purch.stripeId,
+          status: purch.status,
+          method: purch.method,
+          currency: purch.currency,
+          amount: purch.amount,
+          userId: purch.userId,
+          createdAt: purch.createdAt.slice(0, 10),
+        };
+      });
+      setDatos(clearData);
+      setComponent(4);
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   if(error){
