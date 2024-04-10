@@ -4,7 +4,7 @@ import Movies from "../../components/movies/Movies";
 import Carousel from "../../components/carousel/Carousel";
 import SearchBar from "../../components/searchBar/searchBar";
 import { useState, useEffect } from "react";
-import Filters from "../filters/Filters";
+import Filters from "@/components/filters/Filters";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Link from "next/link";
 import Loading from "@/components/loading/loading";
@@ -91,7 +91,7 @@ const Home = () => {
     <div>
       <h3>Novedades</h3>
       <Movies movie={movie} />
-      <Link href={`/filters/search=`}><h6>Ver más..</h6></Link>
+      <Link href={`/filters/search=`}><h3>Ver más..</h3></Link>
     </div>
   </div>
   );

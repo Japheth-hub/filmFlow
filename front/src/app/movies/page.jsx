@@ -151,7 +151,7 @@ const Movies = ({ params }) => {
   }};
 
   const handleElemPagination = (event) => {
-    setPagination({...pagination, step: event.target.value})
+    setPagination({...pagination, step: event.target.value, page: 1})
   }
 
   return (
