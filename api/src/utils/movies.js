@@ -396,7 +396,7 @@ const sampleMovies = [
         description: "Una madre soltera busca la ayuda de dos sacerdotes cuando su hija de 13 años comienza a mostrar un comportamiento extraño y violento.",
         duration: 115,
         country: "United States",
-        poster: "https://image.tmdb.org/t/p/original/gQDPQxUNep5TPgFPRRORAWFQueQ.jpg",
+        poster: "https://m.media-amazon.com/images/M/MV5BNWU2Y2JiYTktODMxYi00OTZlLWEyNjQtM2RiYjg3ZDY5YzZmXkEyXkFqcGdeQXVyMTYyNjA4MzQ@._V1_.jpg",
         trailer: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481607/trailers/lj6i2daebvzjypemoxzi.mp4",
         movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711481685/trailers/ffl00y1xeda7snkjfee8.mp4"
     },
