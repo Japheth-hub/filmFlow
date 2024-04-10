@@ -2,19 +2,27 @@ import React,{useState,useEffect} from 'react'
 import style from './Multiselect.module.scss'
 import Pill from '@/components/pill/Pill'
 
-export default function Multiselect({items,initial,name,callback}) {
+export default function Multiselect({items,initial,name,callback,type}) {
     const [selectedItems,setSelectedItems] = useState([]);
+    const [selectValue,setSelectValue] = useState("");
     
     const toggleItem = (item) => {
         let totalItems = [];
-        if (selectedItems.includes(item.name)) {
-            totalItems = selectedItems.filter(selectedItem => selectedItem !== item.name)
-        
-        } else {
-            totalItems = [...selectedItems, item.name]
-            setSelectedItems([...selectedItems, item.name]);
+        if (item.name) {
+            if(selectedItems.includes(item.name)){
+                totalItems = selectedItems.filter(selectedItem => selectedItem !== item.name);
+                
+            }else {
+                totalItems = [...selectedItems, item.name]
+            }
+        }else{
+            if(selectedItems.includes(item)){
+                totalItems = selectedItems.filter(selectedItem => selectedItem !== item)
+            }else {
+                totalItems = [...selectedItems, item]
+            }
         }
-
+        
         const cleanedSelected = totalItems.join(",")
         callback({target:{name,value:cleanedSelected}});
         setSelectedItems(totalItems);
@@ -26,7 +34,7 @@ export default function Multiselect({items,initial,name,callback}) {
     
 
 useEffect(() => {
-
+    console.log(items)
     if(initial && !Array.isArray(initial)){
         initial = initial.split(',');
         setSelectedItems(initial);
@@ -38,14 +46,42 @@ useEffect(() => {
 
 }, [initial])
 
+const handleChange = (e)=>{
+    console.log(e.target.value);
+    toggleItem(e.target.value);
+    setSelectValue(e.target.value);
+}
+
+useEffect(()=>{
+    console.log(selectedItems);
+},[selectedItems])
 
   return (
    
     <>
         
-        {items.map(item => (
-            <Pill key={item.id} selected={checkSelected(item)} label={item.label} emoji={item.emoji} callback={()=>{toggleItem(item)}} />
+        {type !== 'select' && items.map(item => (
+            <Pill key={item.id} selected={checkSelected(item)} label={item.label || item.name} emoji={item.emoji} callback={()=>{toggleItem(item)}} />
          ))}
+
+        {type === 'select' &&
+           <>   
+           
+               <select name="" id="" value={selectValue} onChange={handleChange}>
+                    {items.map((item)=>{
+                        return <option key={item.id} value={item.name}>{item.name}</option>
+                    })}
+                </select>
+                <div className={style.list}>
+                    {selectedItems.map((item,index)=>{
+                            return <Pill key={index} selected={checkSelected(item)} label={item} callback={()=>{toggleItem(item)}} />
+                    })}
+                </div>
+
+           </>
+            
+        }
+
     </>
     
   )
