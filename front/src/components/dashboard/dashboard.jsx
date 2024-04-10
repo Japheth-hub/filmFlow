@@ -81,8 +81,8 @@ export default function Dashboard({datos, link, title, sid}) {
         
               if (res.isConfirmed) {
                 let response = '';
-                title === 'Movies' ? (response = await axios.delete(`${link}${id}`)) : (response = await axios.delete(`${link}${id}/${sid}`));
-                const newBody = body2.filter((movie) => movie.id !== id);
+                title !== 'Users' ? (response = await axios.delete(`${link}${id}`)) : (response = await axios.delete(`${link}${id}/${sid}`));
+                const newBody = body2.filter((data) => data.id !== id);
                 setBody(newBody);
                 setBody2(newBody);
                 Swal.fire({
@@ -204,6 +204,7 @@ export default function Dashboard({datos, link, title, sid}) {
     }, [page, body])
 
     useEffect(()=>{
+        setPage(1);
         getGenre()
         getData(datos)
         setTotalPage(Math.ceil(datos.length/porPagina))

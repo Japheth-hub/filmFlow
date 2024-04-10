@@ -16,8 +16,8 @@ module.exports = async () => {
         const reviews = data.map((review) => {
             return {
                 id: review.id,
-                movie: review.movie.name,
-                user: review.user.name,
+                movie: review.movie?.name,
+                user: review.user?.name,
                 comment: review.comment,
                 points: review.points,
                 update: review.updatedAt
