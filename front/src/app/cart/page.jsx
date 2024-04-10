@@ -7,6 +7,7 @@ import style from './cart.module.scss'
 import Link from 'next/link';
 import AddToCart from '../../components/addToCart/AddToCart'
 import Button  from '@/components/button/Button';
+import Loading from "@/components/loading/loading";
 
 const Cart = () => {
     const URL = process.env.NEXT_PUBLIC_URL;
@@ -101,9 +102,7 @@ const Cart = () => {
         )
     }
     if (isLoading) {
-        return (
-            <div>Loading</div>
-        )
+        return <Loading></Loading>;
     }
 
     return (
