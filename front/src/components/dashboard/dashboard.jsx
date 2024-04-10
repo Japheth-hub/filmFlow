@@ -49,6 +49,22 @@ export default function Dashboard({datos, link, title, sid}) {
                 const newBody = body.sort((a, b) => a.duration - b.duration);
                 setBody([...newBody]);
             }
+        } else if(tipo === 'Movie'){
+            if(!order){
+                const newBody = body.sort((a, b) => a.movie.localeCompare(b.movie));
+                setBody([...newBody]);
+            } else {
+                const newBody = body.sort((a, b) => b.movie.localeCompare(a.movie));
+                setBody([...newBody]);
+            }
+        } else if(tipo === 'Points'){
+            if(!order){
+                const newBody = body.sort((a, b) => b.points - a.points);
+                setBody([...newBody]);
+            } else {
+                const newBody = body.sort((a, b) => a.points - b.points);
+                setBody([...newBody]);
+            }
         }
     }
 
@@ -117,7 +133,10 @@ export default function Dashboard({datos, link, title, sid}) {
     //--------------------------------------------------------------------------------
 
     function handleSearch(e){
-        const search = body2.filter((movie) => movie.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        let search = []
+        title === 'Reviews' 
+        ? search = body2.filter((data) => data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
+        : search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase()))
         if(search.length > 0){
             setSearch(e.target.value)
             setBody(search)
@@ -196,7 +215,13 @@ export default function Dashboard({datos, link, title, sid}) {
         <h3 className={style.title}>{title}</h3>
         <div className={style.orderFilters}>
             <Button emoji={'🔄'} label={'Limpiar'} callback={()=>{limpiar()}}></Button>
-            <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
+            {title === 'Reviews'
+                ? (<>
+                    <Button callback={()=>{handleOrder('Movie')}} emoji={order ? '🔻' : '🔺'} label={'Movie'}></Button>
+                    <Button callback={()=>{handleOrder('Points')}} emoji={order ? '🔻' : '🔺'} label={'Points'}></Button>
+                    </>)
+                : <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
+            }
             {title === 'Movies' && (<>
               <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duration'}></Button>
               <select className={style.status} name="status" onChange={handleStatus} defaultValue='Status' value={status}>
@@ -240,7 +265,7 @@ export default function Dashboard({datos, link, title, sid}) {
                                     <tr key={index}>
                                     {column.map((prop, i) => ( 
                                             i === 0 
-                                            ? <td className={style.td} key={i}><Link href={`${link}/${item[prop]}`} target="_blank">{item[prop]}</Link></td>
+                                            ? <td className={style.td} key={i}>{item[prop]}</td>
                                             : <td className={style.td} key={i}>{item[prop]}</td>
                                             ))}
                                             <td className={style.td}>
