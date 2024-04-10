@@ -37,9 +37,8 @@ function Admin() {
     }
   }
   
-  const showUsers = async() => {
+  const showUsers = async () => {
     try {
-      
       const { data } = await axios.get(`${URL}users/${user.sid}`)
       const clearData = data.map((user) => {
         return {
@@ -55,7 +54,7 @@ function Admin() {
       setDatos(clearData)
       setComponent(3)
     } catch (error) {
-      console.log('Error en la funcion showUsers de admin/page.jsx', error)
+      console.log('Error en la función showUsers de admin/page.jsx', error)
     }
   }
 
@@ -76,22 +75,6 @@ function Admin() {
       });
       setDatos(clearData);
       setComponent(4);
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const showReviews = async () => {
-    try {
-      const { data } = await axios(`${URL}reviews`);
-      const clearData = data.map((review) => {
-        return {
-          ...review,
-          update: review.update.slice(0,10)
-        }
-      })
-      setDatos(clearData)
-      setComponent(5)
     } catch (error) {
       console.log(error)
     }
