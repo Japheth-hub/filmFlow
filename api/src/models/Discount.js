@@ -12,7 +12,11 @@ module.exports = (sequelize) => {
             allowNull: false,
         },
         used:{
-            type: DataTypes.DATE,
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        allowedUses:{
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
         starts:{

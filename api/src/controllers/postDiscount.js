@@ -1,37 +1,72 @@
 
 const coupon = require('coupon-code');
-const { Discount, Movie, Genre, discount_movie, discount_genre } = require('../db');
+const { Op } = require('sequelize');
+const { Discount, Movie, Genre, } = require('../db');
+const isValidDate = require('../services/isValidDate');
 
 module.exports = async (req, res) => {
     try {
-        let genCode;
 
-        do {
-            genCode = coupon.generate();
-        } while (await Discount.findOne({ where: { code: genCode } }));
+        const { percentage,starts,ends,selectedMovies, selectedGenres } = req.body;
 
-        const { percentage } = req.body;
-
-        const createdDiscount = await Discount.create({ code: genCode, percentage: percentage });
-
-        const { selectedMovies, selectedGenres } = req.body;
-
-        if (selectedMovies && selectedMovies.length > 0) {
-            await Promise.all(selectedMovies.map(async (movieId) => {
-                await discount_movie.create({ discountId: createdDiscount.id, movieId });
-            }));
+        if(!percentage){
+            return {status:false,message:"faltan datos"} 
         }
 
-        if (selectedGenres && selectedGenres.length > 0) {
-            await Promise.all(selectedGenres.map(async (genreId) => {
-                await discount_genre.create({ discountId: createdDiscount.id, genreId });
-            }));
+
+        if(!Number.isInteger(percentage)){
+            return {status:false,message:"el porcentaje debe ser un número entero"} 
         }
 
-        res.status(201).json({ code: genCode });
+        if(starts && !isValidDate(starts)){
+            return {status:false,message:"La fecha de comienzo tiene que ser futura"} 
+        }
+        
+        if(ends && !isValidDate(ends)){
+            return {status:false,message:"La fecha de témino tiene que ser futura"} 
+        }
+
+
+
+        const genCode = coupon.generate();
+
+        const [discount,created] = await Discount.findOrCreate({ where: { code: genCode },defaults:{
+            percentage,starts,ends
+        } });
+
+
+        if(created){
+            if(selectedMovies){
+
+                const movies = await Movie.findAll({where: {
+                    id: {
+                        [Op.in]: selectedMovies,
+                    },
+                }});
+
+                discount.setMovies(movies);
+            }
+
+            if(selectedGenres){
+
+                const genres = await Genre.findAll({where: {
+                    id: {
+                        [Op.in]: selectedGenres,
+                    },
+                }});
+        
+                discount.setGenres(genres);
+            }
+    
+            return {status:true,discount}
+        }else{
+            return {status:false,message:"El código ya existe"}
+        }
+
+
     } catch (error) {
         console.error("Error generating code:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        return {status:false,message:error}
     }
 };
 
