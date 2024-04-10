@@ -95,7 +95,7 @@ export default function Dashboard({datos, link, title, sid}) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: error.response.data.message || 'Ocurrió un error al eliminar la información.',
+                text: error || 'Ocurrió un error al eliminar la información.',
               });
         }
     }
@@ -265,12 +265,16 @@ export default function Dashboard({datos, link, title, sid}) {
                                 pagina.map((item, index) => (
                                     <tr key={index}>
                                     {column.map((prop, i) => ( 
-                                            i === 0 
-                                            ? <td className={style.td} key={i}>{item[prop]}</td>
-                                            : <td className={style.td} key={i}>{item[prop]}</td>
+                                            <td className={style.td} key={i}>{item[prop]}</td>
                                             ))}
                                             <td className={style.td}>
-                                                <Button emoji={'🗑️'} label={'Delete'} color={'red'} callback={()=>{deleteAction(item.id)}}></Button><br />
+                                                {title === "Movies" 
+                                                ? item.deleted === "Active"
+                                                    ? <Button emoji={'🗑️'} label={'Delete'} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                    : <Button emoji={'🗑️'} label={'Restore'} color={'green'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                : <Button emoji={'🗑️'} label={'Delete'} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                }
+                                                
                                                 {/* <Button emoji={'✏️'} label={'Edit'} color={'blue'}></Button> */}
                                             </td>
                                     </tr>       

@@ -5,7 +5,7 @@ const orderFunction = require('../helpers/order')
 
 module.exports = async function getMovies(query){
 
-    let {search, genre, orderType, order,limit,user,country} = query;
+    let {search, genre, orderType, order,limit,user,country, paranoid} = query;
    
     try {
         let data = {}
@@ -71,8 +71,15 @@ module.exports = async function getMovies(query){
                 ]
             }
         }
+
+        if(paranoid === "false"){
+            options = {
+                ...options,
+                paranoid: false
+            }
+        }
         
-        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price"]})
+        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price", "deletedAt"]})
 
         if(movies.length === 0){
             return data.message = 'No hay Peliculas'

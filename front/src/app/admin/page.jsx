@@ -18,7 +18,7 @@ function Admin() {
 
   const showMovies = async() => {
     try {
-      const { data } = await axios.get(`${URL}movies`);
+      const { data } = await axios.get(`${URL}movies?paranoid=false`);
       const clearData = data.map((movie) => {
         return {
           id: movie.id,
@@ -28,6 +28,7 @@ function Admin() {
           userId: movie.userId,
           price: movie.price,
           genre: movie.genres.map((genero) => genero.name).join("/"),
+          deleted: movie.deletedAt ? movie.deletedAt.slice(0, 10) : "Active"
         };
       });
       setDatos(clearData);
