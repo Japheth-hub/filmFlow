@@ -7,11 +7,19 @@ import Button from "@/components/button/Button";
 import logo from '../../img/logo-white-expanded.png'
 import { useState } from "react";
 import axios from 'axios'
+import Modal from "./modal"
+import Loading from '@/components/loading/loading'
+
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
+
 
 export default function Account() {
   const { error, isLoading, user } = useUser();
   const [movies, setMovies] = useState([])
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
   async function fetchData(){
     try {
       const { data } = await axios(`${NEXT_PUBLIC_URL}purchases/${user.sid}`);
@@ -22,27 +30,14 @@ export default function Account() {
       console.log(error)
     }
   }
-  
-  //Funcion temporal para enviar correos
-  const handleMail = async () => {
-    try {
-      const emailInfo = {
-        destination: `${user.email}`,
-        topic: "Mail de prueba",
-        content: "Mensaje de prueba"
-      }
-      const response = await axios.post(`${NEXT_PUBLIC_URL}email`, emailInfo)
-      if (response.error) {
-        alert('Error enviando el mail')
-      } else {
-        alert('Mail enviado con exito')
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  //
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   useEffect(()=>{
     fetchData()
   }, [])
@@ -51,7 +46,11 @@ export default function Account() {
     return <div>Error en su session</div>;
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading></Loading>
+      </div>
+    );
   }
   return (
     <div className={style["contenedor"]}>
@@ -62,6 +61,8 @@ export default function Account() {
             <p>{user.email}</p>
           </div>
           <ul>
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          <button onClick={openModal}>Formulario de Producer</button>
             {/* <li>
               Direccion : <i>Tehuacan Puebla Mexico</i>
             </li>
@@ -71,7 +72,6 @@ export default function Account() {
             <li>
               Mas detalles : <i>231587556</i>
             </li> */}
-            {/* <button onClick={handleMail}>Enviar correo</button> */}
           </ul>
         </div>
         <div className={style["movies"]}>
