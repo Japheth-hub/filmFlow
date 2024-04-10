@@ -7,7 +7,7 @@ import style from './admin.module.scss'
 import Image from 'next/image'
 import burgerMenu from '@/img/burger-menu.png'
 import DashGrap from '@/components/dashGrap/DashGrap'
-import DashUsers from '@/components/dashUsers/DashUsers'
+import Loading from "@/components/loading/loading";
 
 function Admin() {
   const URL = process.env.NEXT_PUBLIC_URL
@@ -122,6 +122,10 @@ function Admin() {
     }
   }
 
+  if (isLoading) {
+    return <Loading></Loading>
+  }
+
   if(user){
     return (
     <div>
@@ -137,7 +141,7 @@ function Admin() {
             <div onClick={() => setComponent(1)}><a role="img" aria-label="Gráficos">📈</a><span>Gráficos</span></div>
             <div onClick={() => showMovies()}><a role="img" aria-label="Películas">🎬</a><span>Películas</span></div>
             <div onClick={() => showUsers()}><a role="img" aria-label="Usuarios">👤</a><span>Usuarios</span></div>
-            <div onClick={() => showReviews()}><a role="img" aria-label="Reviews">👤</a><span>Reviews</span></div>
+            <div onClick={() => showReviews()}><a role="img" aria-label="Reviews">⭐</a><span>Reviews</span></div>
             <div onClick={() => showPurchases()}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
             <div onClick={() => setComponent()}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
           </div>
