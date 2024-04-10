@@ -69,13 +69,17 @@ const DetailContent = () => {
 
   useEffect(() => {
     async function getPurchase(){
-      const {data} = await axios(`${URL}purchases/${user.sid}`)
-      if(typeof data === "object"){
-        const idsMovies = []
-        for(let movie of data){
-          idsMovies.push(movie.id)
+      try {
+        const {data} = await axios(`${URL}purchases/${user.sid}`)
+        if(typeof data === "object"){
+          const idsMovies = []
+          for(let movie of data){
+            idsMovies.push(movie.id)
+          }
+          setPurchase(idsMovies)
         }
-        setPurchase(idsMovies)
+      } catch (error) {
+        console.error('Error fetching purchase data:', error);
       }
     }
 

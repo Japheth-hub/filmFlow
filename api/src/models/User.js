@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
       unique: true,
       allowNull: true,
     },
-    payment_acoount: {
+    payment_account: {
       type: DataTypes.STRING,
       allowNull: true
     },

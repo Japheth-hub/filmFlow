@@ -77,13 +77,16 @@ const Movies = ({ params }) => {
   //?GENERA LOS GENEROS DEL SELECT
   useEffect(() => {
     const getGenres = async () => {
-      let { data } = await axios.get(`${URL}genres`);
-      let dataCountries = await axios.get(`${URL}countries?existent=true`);
-      setGenres(data);
-      setCountries(dataCountries.data);
+      try {
+        let { data } = await axios.get(`${URL}genres`);
+        let dataCountries = await axios.get(`${URL}countries?existent=true`);
+        setGenres(data);
+        setCountries(dataCountries.data);
+      } catch (error) {
+        console.error('Error fetching genres or countries:', error);
+      }
     };
     getGenres();
- 
   }, []);
 
   useEffect(() => {
@@ -103,7 +106,6 @@ const Movies = ({ params }) => {
 
   useEffect(() => {
     if(queryParams){
-      
       try{
         const getMovies = async () => {
           const query = new URLSearchParams(cleanQuery(queryParams)).toString();

@@ -16,26 +16,29 @@ function Admin() {
   const [component, setComponent] = useState(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const showMovies = async() => {
-    const { data } = await axios.get(`${URL}movies`)
-    const clearData = data.map((movie)=>{
-      return {
-        id: movie.id,
-        name: movie.name,
-        duration: movie.duration,
-        status: movie.status,
-        userId: movie.userId,
-        price: movie.price,
-        genre: movie.genres.map((genero) => genero.name).join("/")
-      }
-    })
-    setDatos(clearData)
-    setComponent(2)
+  const showMovies = async () => {
+    try {
+      const { data } = await axios.get(`${URL}movies`)
+      const clearData = data.map((movie) => {
+        return {
+          id: movie.id,
+          name: movie.name,
+          duration: movie.duration,
+          status: movie.status,
+          userId: movie.userId,
+          price: movie.price,
+          genre: movie.genres.map((genero) => genero.name).join("/")
+        }
+      })
+      setDatos(clearData)
+      setComponent(2)
+    } catch (error) {
+      console.log('Error en la función showMovies de admin/page.jsx', error)
+    }
   }
   
-  const showUsers = async() => {
+  const showUsers = async () => {
     try {
-      
       const { data } = await axios.get(`${URL}users/${user.sid}`)
       const clearData = data.map((user) => {
         return {
@@ -51,26 +54,30 @@ function Admin() {
       setDatos(clearData)
       setComponent(3)
     } catch (error) {
-      console.log('Error en la funcion showUsers de admin/page.jsx', error)
+      console.log('Error en la función showUsers de admin/page.jsx', error)
     }
   }
 
-  const showPurchases = async() => {
-    const { data } = await axios.get(`${URL}purchases/${user.sid}`)
-    const clearData = data.map((purch) => {
-      return {
-        id: purch.id,
-        stripeId: purch.stripeId,
-        status: purch.status,
-        method: purch.method,
-        currency: purch.currency,
-        amount: purch.amount,
-        userId: purch.userId,
-        createdAt: purch.createdAt.slice(0, 10)
-      }
-    })
-    setDatos(clearData)
-    setComponent(4)
+  const showPurchases = async () => {
+    try {
+      const { data } = await axios.get(`${URL}purchases/${user.sid}`)
+      const clearData = data.map((purch) => {
+        return {
+          id: purch.id,
+          stripeId: purch.stripeId,
+          status: purch.status,
+          method: purch.method,
+          currency: purch.currency,
+          amount: purch.amount,
+          userId: purch.userId,
+          createdAt: purch.createdAt.slice(0, 10)
+        }
+      })
+      setDatos(clearData)
+      setComponent(4)
+    } catch (error) {
+      console.log('Error en la función showPurchases de admin/page.jsx', error)
+    }
   }
 
   if(error){

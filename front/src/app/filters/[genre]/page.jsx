@@ -71,11 +71,14 @@ const Filter = ({ params }) => {
   //?GENERA LOS GENEROS DEL SELECT
   useEffect(() => {
     const getGenres = async () => {
-      let { data } = await axios.get(`${URL}genres`);
-      setGenres(data);
+      try {
+        let { data } = await axios.get(`${URL}genres`);
+        setGenres(data);
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+      }
     };
     getGenres();
- 
   }, []);
 
   useEffect(() => {
@@ -89,11 +92,15 @@ const Filter = ({ params }) => {
   
 
   useEffect(() => {
-    if(queryParams){
+    if (queryParams) {
       const getMovies = async () => {
-        const query = new URLSearchParams(cleanQuery(queryParams)).toString();
-        let { data } = await axios.get(`${URL}movies?${query}`);
-        setMovies(data);
+        try {
+          const query = new URLSearchParams(cleanQuery(queryParams)).toString();
+          let { data } = await axios.get(`${URL}movies?${query}`);
+          setMovies(data);
+        } catch (error) {
+          console.error('Error fetching movies:', error);
+        }
       };
       getMovies();
     }
