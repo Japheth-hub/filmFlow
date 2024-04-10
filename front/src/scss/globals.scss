@@ -8,6 +8,10 @@ body {
   height: 100%;
   margin: 0;
   font-family: $secondaryFont;
+  height: 120vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .wrapper {

@@ -45,7 +45,11 @@ export default function Account() {
     return <div>Error en su session</div>;
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading></Loading>
+      </div>
+    );
   }
   return (
     <div className={style["contenedor"]}>
