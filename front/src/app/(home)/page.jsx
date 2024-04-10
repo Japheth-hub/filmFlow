@@ -28,19 +28,27 @@ const Home = () => {
 
   useEffect(() => {
     const getMovies = async() => {
-      let { data } = await axios.get(`${URL}movies`)
-      setMovie(data)
+      try {
+        let { data } = await axios.get(`${URL}movies`)
+        setMovie(data)
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
     }
     const getGenres = async() => {
-      let { data } = await axios.get(`${URL}genres`)
-      let listGenre = data
-      listGenre.unshift({
-        id: '-1',
-        name: 'search',
-        label: 'Search',
-        emoji:"🔍"
-      })
-      setGenres(data)
+      try {
+        let { data } = await axios.get(`${URL}genres`)
+        let listGenre = data
+        listGenre.unshift({
+          id: '-1',
+          name: 'search',
+          label: 'Search',
+          emoji:"🔍"
+        })
+        setGenres(data)
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      }
     }
     getMovies()
     getGenres();
@@ -50,16 +58,20 @@ const Home = () => {
   useEffect( () => {
     if(user){
       const upUser = async() => {
-        const { data } = await axios.post(`${URL}users`, user)    
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(
-            'FilmFlowUsr', JSON.stringify({...user, admin:data.isAdmin})
-          )
-        } 
-        if(data.isAdmin) {
-          console.log("Si soy admin")
-        } else {
-          console.log("No soy admin")
+        try {
+          const { data } = await axios.post(`${URL}users`, user)    
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(
+              'FilmFlowUsr', JSON.stringify({...user, admin:data.isAdmin})
+            )
+          } 
+          if(data.isAdmin) {
+            console.log("Si soy admin")
+          } else {
+            console.log("No soy admin")
+          }
+        } catch (error) {
+          console.error("Error updating user:", error);
         }
       }
       upUser()
