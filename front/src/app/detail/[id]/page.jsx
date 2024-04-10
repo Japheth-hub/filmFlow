@@ -211,14 +211,14 @@ const renderStarSelector = () => {
               <div className={style['star-selector']}>
                 {renderStarSelector()}
               </div>
-              <label>Comment:</label>
+              <label>Comentario:</label>
               <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-              <button onClick={handleReviewSubmit}>Submit Review</button>
+              <button onClick={handleReviewSubmit}>Subir opinión</button>
             </div>
           </div>
         : ""
       }
-          <h4>Reviews</h4>
+          <h4>Opiniones</h4>
         {reviewsData.map((review) => (
           <div key={review.id} className={style['review-container']}>
             <img src={review.user.picture} alt={review.user.name} className={style['user-picture']} />

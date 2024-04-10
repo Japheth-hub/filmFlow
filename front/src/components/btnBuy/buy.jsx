@@ -20,7 +20,7 @@ export default function Buy({sid}) {
     <div>
       <Button
         callback={() => buy(sid)}
-        label="Buy"
+        label="Comprar"
         emoji="💲"
       />
     </div>
