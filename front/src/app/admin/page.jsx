@@ -17,47 +17,11 @@ function Admin() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const showMovies = async() => {
-    try {
-      const { data } = await axios.get(`${URL}movies?paranoid=false`);
-      const clearData = data.map((movie) => {
-        return {
-          id: movie.id,
-          name: movie.name,
-          duration: movie.duration,
-          status: movie.status,
-          userId: movie.userId,
-          price: movie.price,
-          genre: movie.genres.map((genero) => genero.name).join("/"),
-          deleted: movie.deletedAt ? movie.deletedAt.slice(0, 10) : "Active"
-        };
-      });
-      setDatos(clearData);
       setComponent(2);
-    } catch (error) {
-      console.log(error)
-    }
   }
   
   const showUsers = async() => {
-    try {
-      
-      const { data } = await axios.get(`${URL}users/${user.sid}`)
-      const clearData = data.map((user) => {
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.roleName,
-          sid: user.sid,
-          created: user.createdAt.slice(0, 10),
-          deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : ""
-        }
-      })
-      setDatos(clearData)
       setComponent(3)
-    } catch (error) {
-      console.log('Error en la funcion showUsers de admin/page.jsx', error)
-    }
   }
 
   const showPurchases = async() => {
@@ -83,19 +47,7 @@ function Admin() {
   }
 
   const showReviews = async () => {
-    try {
-      const { data } = await axios(`${URL}reviews`);
-      const clearData = data.map((review) => {
-        return {
-          ...review,
-          update: review.update.slice(0,10)
-        }
-      })
-      setDatos(clearData)
       setComponent(5)
-    } catch (error) {
-      console.log(error)
-    }
   }
 
   if(error){
@@ -111,13 +63,13 @@ function Admin() {
       case 1:
         return <DashGrap sid={user.sid}/>;
       case 2:
-        return <Dashboard datos={datos} title={`Movies`} link={`${URL}movies/`} sid={user.sid}/>;
+        return <Dashboard title={`Movies`} link={`${URL}movies/`} sid={user.sid}/>;
       case 3:
-        return <Dashboard datos={datos} title={'Users'} link={`${URL}users/`} sid={user.sid}/>;
+        return <Dashboard title={'Users'} link={`${URL}users/`} sid={user.sid}/>;
       case 4:
         return <Dashboard datos={datos} title={`Purchases`} link={`${URL}purchases/`} sid={user.sid}/>;
       case 5:
-        return <Dashboard datos={datos} title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
+        return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
       default:
           return <p>Selecciona una opción del menú</p>
     }

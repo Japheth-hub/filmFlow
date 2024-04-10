@@ -4,10 +4,11 @@ import Link from 'next/link'
 import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
+import { showMovies, showReviews, showUsers } from "@/helpers/dashboard";
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
-export default function Dashboard({datos, link, title, sid}) {
+export default function Dashboard({link, title, sid}) {
     const [column, setColumn] = useState([])
     const [body, setBody] = useState([])
     const [body2, setBody2] = useState([])
@@ -195,6 +196,32 @@ export default function Dashboard({datos, link, title, sid}) {
                 });
         }
     }
+
+    useEffect(()=>{
+        async function datos(type){
+            let datos
+            switch(type){
+                case "Movies":
+                    datos = await showMovies();
+                    break
+                case "Users":
+                    datos = await showUsers(sid);
+                    break
+                case "Reviews":
+                    datos = await showReviews();
+                    break
+                default :
+                    console.log('No hay Datos para mostrar')
+                    break
+            }
+            getData(datos)
+            setPage(1);
+            getGenre();
+            setTotalPage(Math.ceil(datos.length / porPagina));
+            handlePagination(datos);
+        }
+        datos(title)
+    }, [title])
     
     useEffect(()=>{
         if(body){
@@ -202,14 +229,6 @@ export default function Dashboard({datos, link, title, sid}) {
             setTotalPage(Math.ceil(body.length / porPagina));
         }
     }, [page, body])
-
-    useEffect(()=>{
-        setPage(1);
-        getGenre()
-        getData(datos)
-        setTotalPage(Math.ceil(datos.length/porPagina))
-        handlePagination(datos);
-    }, [datos])
 
   return (
     <div>
