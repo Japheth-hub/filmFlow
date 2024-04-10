@@ -181,7 +181,7 @@ const sampleMovies = [
         movie: "https://res.cloudinary.com/dtn2ewtqg/video/upload/v1711218456/movies/prnsgwdtbqoqsfuwtegy.mp4"
     },
     {
-        name: "Sueño de Fuga",
+        name: "Sueños de Fuga",
         director: "Frank Darabont",
         genres: "Drama",
         description: "Dos hombres encarcelados forman un vínculo a lo largo de varios años, encontrando consuelo y una eventual redención a través de actos de simple humanidad.",
