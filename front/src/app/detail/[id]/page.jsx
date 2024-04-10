@@ -8,6 +8,12 @@ import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
 import { useUser } from '@auth0/nextjs-auth0/client'; 
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  WhatsappShareButton,
+  WhatsappIcon
+} from "react-share";
 
 
 const DetailContent = () => {
@@ -26,7 +32,7 @@ const DetailContent = () => {
   const [review, setReview] = useState({})
 
   const goToCategory = (genre) => {
-    router.push(`/filters/genero=${genre}`);
+    router.push(`/movies?genre=${genre}`);
   };
 
 
@@ -106,6 +112,7 @@ const DetailContent = () => {
     duration,
     countries,
     genres,
+    year,
   } = movieData;
 
   // const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
@@ -151,11 +158,25 @@ const renderStarSelector = () => {
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
           <div className={style['description-container-info']}>
+          <FacebookShareButton
+            url="https://filmflow.chekogarcia.com.mx/"
+          >
+            <FacebookIcon size={32} round />
+          </FacebookShareButton>
+
+          
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
             <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
-            <p><span className={style['italic-dark']}>País:</span> {country}</p>
+            <div className={style.genres}>
+                      {countries.map((country, index) => (
+              <div key={index}>
+                <p  onClick={() => goToCategory(country.name)}><span className={style['italic-dark']}>Paises:</span> {country.name.replace(/\b\w/g, c => c.toUpperCase())}</p>
+              </div>
+            ))}
+          </div>
             <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
+            <p><span className={style['italic-dark']}>Año:</span> {year}</p>
             <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>

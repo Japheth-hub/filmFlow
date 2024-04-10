@@ -7,6 +7,7 @@ import Button from "@/components/button/Button";
 import logo from '../../img/logo-white-expanded.png'
 import { useState } from "react";
 import axios from 'axios'
+import Loading from '@/components/loading/loading'
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 
 export default function Account() {
@@ -51,7 +52,11 @@ export default function Account() {
     return <div>Error en su session</div>;
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading></Loading>
+      </div>
+    );
   }
   return (
     <div className={style["contenedor"]}>
@@ -62,7 +67,7 @@ export default function Account() {
             <p>{user.email}</p>
           </div>
           <ul>
-            <li>
+            {/* <li>
               Direccion : <i>Tehuacan Puebla Mexico</i>
             </li>
             <li>
@@ -70,8 +75,8 @@ export default function Account() {
             </li>
             <li>
               Mas detalles : <i>231587556</i>
-            </li>
-            <button onClick={handleMail}>Enviar correo</button>
+            </li> */}
+            {/* <button onClick={handleMail}>Enviar correo</button> */}
           </ul>
         </div>
         <div className={style["movies"]}>

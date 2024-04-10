@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Filters from "../filters/Filters";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Link from "next/link";
+import Loading from "@/components/loading/loading";
 
 const Home = () => {
   const {error, isLoading, user} = useUser()
@@ -64,6 +65,10 @@ const Home = () => {
       upUser()
     }
   }, [user])
+
+  if(isLoading){
+    return <Loading></Loading>
+  }
 
   return (
   <div>

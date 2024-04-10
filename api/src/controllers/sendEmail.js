@@ -26,7 +26,6 @@ module.exports = async (mailInfo) => {
             subject: topic,
             html: htmlContent
         });
-        console.log(emailResponse)
         return { status: true, message: `Email sent successfully to ${destination}`, emailResponse };
     } catch (error) {
         return { status: false, message: "Error occurred sending the email", error };
