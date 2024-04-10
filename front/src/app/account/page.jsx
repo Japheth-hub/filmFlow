@@ -8,6 +8,7 @@ import logo from '../../img/logo-white-expanded.png'
 import { useState } from "react";
 import axios from 'axios'
 import Modal from "./modal"
+import Loading from '@/components/loading/loading'
 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 
