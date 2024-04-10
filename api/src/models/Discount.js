@@ -11,7 +11,15 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        usedAt:{
+        used:{
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        starts:{
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        ends:{
             type: DataTypes.DATE,
             allowNull: true,
         }
