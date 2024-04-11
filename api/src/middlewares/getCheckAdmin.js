@@ -1,7 +1,13 @@
 const { User, Role } = require("../db");
 module.exports = async (req, res, next) => {
   const errors = {};
-  const { auth } = req.params;
+  let { auth } = req.params;
+
+  console.log(req.body);
+  if(!auth){
+    auth  = req.body.auth;
+    console.log(`el Auth iene en body ${auth}`);
+  }
 
   if (!auth)
     return res

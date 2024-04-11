@@ -4,7 +4,7 @@ module.exports = async (req, res, next) => {
   let { auth } = req.params;
 
   if(!auth){
-    auth  = req.body.sid;
+    auth  = req.body.auth;
   }
 
   if (!auth)
