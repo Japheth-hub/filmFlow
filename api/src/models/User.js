@@ -41,7 +41,7 @@ module.exports = (sequelize) => {
       allowNull: true,
     },
     payment_amount: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     }
   },
