@@ -35,7 +35,6 @@ module.exports = async(query) =>{
 
                 // Si trae géneros, le asignamos el descuento a las películas de esos géneros
                 if(data.discount.genres){
-                    console.log("tiene generos");
                     const hasDiscount = movie.genres.some(movieGenre =>
                         data.discount.genres.some(discountGenre =>
                             movieGenre.name === discountGenre.name
