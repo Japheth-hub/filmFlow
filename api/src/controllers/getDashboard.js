@@ -43,8 +43,10 @@ module.exports = async(query)=>{
 
     if(user.role.role === 'producer'){
       
-        const purchasesTotalMonth = (await getReportsMonth({user})).result;
+        const purchasesTotalMonth = await getReportsMonth({user});
         const movies = await getMovies({user:user,purchases:true});
+
+        console.log("purcahses",purchasesTotalMonth);
 
         data = {
             purchasesTotalMonth,
