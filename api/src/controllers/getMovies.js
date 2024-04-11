@@ -1,4 +1,4 @@
-const { Movie, Genre,Country } = require('../db');
+const { Movie, Genre,Country, User, Review } = require('../db');
 const { Op } = require("sequelize");
 const orderFunction = require('../helpers/order')
 
@@ -19,6 +19,14 @@ module.exports = async function getMovies(query){
                 {
                     model: Country, // Agregando el modelo Country
                     attributes: ["id", "name"]
+                },
+                {
+                    model: User, 
+                    attributes: ["id", "name"]
+                },
+                {
+                    model: Review, 
+                    attributes: ["id", "comment", "points"]
                 }
             ]
         };

@@ -11,7 +11,7 @@ export const showMovies = async () => {
         name: movie.name,
         duration: movie.duration,
         status: movie.status,
-        userId: movie.userId,
+        user: movie.user ? movie.user.name : "Admin",
         price: movie.price,
         genre: movie.genres.map((genero) => genero.name).join("/"),
         deleted: movie.deletedAt ? movie.deletedAt.slice(0, 10) : "Active",
