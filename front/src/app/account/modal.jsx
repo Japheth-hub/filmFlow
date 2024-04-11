@@ -11,7 +11,6 @@ const Modal = ({ isOpen, onClose }) => {
     const userEmail= user.email;
 
     const URL = process.env.NEXT_PUBLIC_URL;
-    console.log(user)
     const [formData, setFormData] = useState({
     auth: userSid,
     paymentMethod: "",
@@ -61,8 +60,6 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     try {
         await axios.put(`${URL}users/producer`, formData);
-        console.log("Datos enviados correctamente");
-        console.log(formData);
         onClose(); // Cierra la ventana modal después de enviar los datos
         Swal.fire(
             '¡Datos enviados!',
