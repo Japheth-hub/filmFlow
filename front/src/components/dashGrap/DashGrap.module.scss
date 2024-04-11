@@ -1,9 +1,44 @@
+@import "@/scss/variables.scss";
 .content{
+    display: grid;
+    grid-template-columns: 90% 10%;
     width: 500px;
     margin: 10px;
 }
+.card{
+    border: 0.5px #bbbaba solid;
+    border-radius: 10px;
+    box-shadow: 3px 5px #888888;
+}
 .contentGrap{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-items: center;
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: $mainColor;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 3px;
+    font-size: .6em;
+    width: 120px;
+    left: -60px;
+    margin-left: -60px;
+
+
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

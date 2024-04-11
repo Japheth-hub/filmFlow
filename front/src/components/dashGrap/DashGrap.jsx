@@ -7,7 +7,7 @@ import { Chart as chartJS} from 'chart.js/auto'
 import { movieGenre, userDay, salesDay, revrankGenre } from './data.js';
 
 const DashGrap = ({sid}) => {
-    console.log(sid);
+    const { admin } = JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
     const [movieXgenre, setMovieXgenre] = useState({
         labels: 'Cargando..',
         datasets: [{
@@ -62,7 +62,6 @@ const DashGrap = ({sid}) => {
         })
 
         userDay(sid).then(response => {
-            console.log(response);
             setUserXday({
                 ...userXday, labels: response.labels,
                 datasets:[{
@@ -101,11 +100,21 @@ const DashGrap = ({sid}) => {
     },[])
 
     return(
-        <div className={style.contentGrap}>
-            <DashArea chartData={salesXday} title={'Ventas diarias'} className={style.content}/>
-            <DashBar chartData={movieXgenre} title={'Películas por género'} className={style.content}/>
-            <DashArea chartData={salesXday} title={'Ranking y reviews por género'} className={style.content}/>
-            <DashBar chartData={userXday} title={'Usuarios Creados por día'} className={style.content}/>
+        <div>
+            {
+                admin 
+                ?(<div className={style.contentGrap}>
+                    <DashArea chartData={salesXday} title={'Ventas diarias'} className={style.content}/>
+                    <DashBar chartData={movieXgenre} title={'Películas por género'} className={style.content}/>
+                    <DashArea chartData={salesXday} title={'Ranking y reviews por género'} className={style.content}/>
+                    <DashBar chartData={userXday} title={'Usuarios Creados por día'} className={style.content}/>
+                </div>)
+                :(<div className={style.contentGrap}>
+                    <DashArea chartData={salesXday} title={'Ventas diarias'} className={style.content}/>
+                    <DashBar chartData={movieXgenre} title={'Películas por género'} className={style.content}/>
+                    <DashArea chartData={salesXday} title={'Ranking y reviews por género'} className={style.content}/>
+                </div>)
+            }
         </div>
     )
 }
