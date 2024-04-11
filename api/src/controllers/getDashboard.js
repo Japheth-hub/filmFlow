@@ -1,31 +1,55 @@
 const getMovies = require('../controllers/getMovies');
 const getUsers = require('../controllers/getUsers');
 const getPurchases = require('../controllers/getPurchases');
+const getGenres = require('../controllers/getGenres');
 const getReportsMonth = require('../controllers/getReportsMonth');
 
 module.exports = async(query)=>{
-    const user = query.user;
-    const data = {};
+    const {user} = query;
+    let data = {};
 
     if(user.role.role === 'admin'){
 
-        const purchases = await getPurchases({limit:10,month:true});
-        const purchasesSum = purchases.reduce((accumulator, item) => {
-            return accumulator + Number(item.amount);
+        const purchasesMonth = await getPurchases({month:true});
+        const totalPurchasesMonth = purchasesMonth.reduce((accumulator, item) => {
+            return accumulator + Math.floor(Number(item.amount));
           }, 0);
+        
+        const usersToday = await getUsers({today:true});
+        const totalUsersToday = usersToday.length;
+        const moviesToday = await getMovies({today:true,orderType:"id",order:'desc'});
+        const totalMoviesToday = moviesToday.length;
+        const moviesByGenre = await getGenres({movies:true});
+        const totalMoviesByGenre = moviesByGenre.map((genre)=>{
+            genre = {
+                name:genre.name,
+                movies:genre.movies.length
+            }
+            return genre
+        })
+ 
 
-        data.movies = await getMovies({limit:10,orderType:"id",order:'desc'});
-        data.users  = await getUsers({limit:10});
-        data.purchases  = purchases;
-        data.purchasesSum  = purchasesSum;
+        data = {
+            moviesToday,
+            totalMoviesToday,
+            usersToday,
+            totalUsersToday,
+            purchasesMonth,
+            totalPurchasesMonth,
+            totalMoviesByGenre
+        }
+        
     }
 
     if(user.role.role === 'producer'){
-        console.log("Soy producer");
-        const purchasesTotal = await getReportsMonth({user});
-        data.movies = await getMovies({limit:10,user:user});
-        data.moviesPurchased = await getMovies({user:user,purchases:true});
-        data.purchasesMonthTotal = purchasesTotal;
+      
+        const purchasesTotalMonth = (await getReportsMonth({user})).result;
+        const movies = await getMovies({user:user,purchases:true});
+
+        data = {
+            purchasesTotalMonth,
+            movies
+        }
 
     }
 

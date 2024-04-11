@@ -1,11 +1,11 @@
 const { Movie, Genre,Country,Purchase, User, Review } = require('../db');
 const { Op } = require("sequelize");
-const orderFunction = require('../helpers/order')
+
 
 
 module.exports = async function getMovies(query){
 
-    let {search, genre, orderType, order,limit,user,country,purchases, paranoid} = query;
+    let {search, genre, orderType, order,limit,user,country,purchases, paranoid,today} = query;
    
     try {
         let data = {}
@@ -53,6 +53,17 @@ module.exports = async function getMovies(query){
                 options.where = {};
             }
             options.where.userId = user.id;
+        }
+
+        if(today){
+            if(!options.where){
+                options.where = {};
+            }
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            options.where.createdAt = {
+                [Op.gte]: currentDate  
+            }
         }
 
         if(limit){

@@ -7,6 +7,7 @@ module.exports = async(query)=>{
         if(user){
             options = {
                 where:{
+                    type:"getReportsMonth",
                     userId:user.id,
                     period:getCurrentMonth(),
                 },
