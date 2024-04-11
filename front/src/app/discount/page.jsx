@@ -7,11 +7,13 @@ const Discount = () =>{
     const [code,setCode] = useState('')
     const [selectedMovies, setSelectedMovies] = useState([]); 
     const [selectedGenres, setSelectedGenres] = useState([])
+    const [starts, setStarts] = useState('');
+    const [ends, setEnds] = useState('');
     const [movies, setMovies] = useState([]);
     const [genres, setGenres] = useState([]);
     const [percentage, setPercentage] = useState(0);
     const [discounts, setDiscounts] = useState([]);
-
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +44,7 @@ const Discount = () =>{
         fetchDiscounts();
     }, []);
 
+ ///dudoso seguramente borrar 
     const deleteDiscount = async (code) => {
         try {
             const currentDate = new Date(); 
@@ -58,7 +61,6 @@ const Discount = () =>{
         }
     };
     
-    
 
     const generateDiscountCode = async () => {
         
@@ -74,13 +76,17 @@ const Discount = () =>{
                 return;
             } 
             try {
+
                 const response = await axios.post(`${URL}discount`, {
                     selectedMovies,
                     selectedGenres,
                     percentage: percentage,
+                    starts,
+                    ends
                 });
-                setCode(response.data.code);
-                setDiscounts((prevDiscounts) => [...prevDiscounts, response.data]);
+
+                setCode(response.data.code.code);
+                setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
             } catch (error) {
                 console.error('Error generating discount code:', error);
             }
@@ -137,13 +143,45 @@ const Discount = () =>{
                 <input
                     type="number"
                     value={percentage}
-                    onChange={(e) => setPercentage(e.target.value)}
+                    onChange={(e) => setPercentage(parseInt(e.target.value))}
+                />
+
+            </div>
+            <div>
+                <label htmlFor="startsDate">Start Date:</label>
+                <input
+                    type="date"
+                    id="startsDate"
+                    value={starts.substr(0, 10)} 
+                    onChange={(e) => setStarts(e.target.value + 'T12:00:00Z')} 
+                />
+                <input
+                    type="time"
+                    value={starts.substr(11, 5)} 
+                    onChange={(e) => setStarts(`${starts.substr(0, 10)}T${e.target.value}:00Z`)}
                 />
             </div>
             <div>
+                <label htmlFor="endsDate">End Date:</label>
+                <input
+                    type="date"
+                    id="endsDate"
+                    value={ends.substr(0, 10)} 
+                    onChange={(e) => setEnds(e.target.value + 'T12:00:00Z')} 
+                />
+                <input
+                    type="time"
+                    value={ends.substr(11, 5)} 
+                    onChange={(e) => setEnds(`${ends.substr(0, 10)}T${e.target.value}:00Z`)} 
+                />
+            </div>
+
+
+
+
+            <div>
                 <button onClick={generateDiscountCode}>Get your code!</button>
             </div>
-            
             {code && (
                 <div>
                     <h3>New Code:</h3>
@@ -152,17 +190,17 @@ const Discount = () =>{
             )}
 
             <h2>Discount codes</h2>
-            <div>
-                {discounts.map((discount) => (
-                    <div key={discount.code}>
-                        <p>
-                            {discount.code}
-                            {discount.usedAt ? " ------Used------ " : ""}
-                        </p>
-                        <button onClick={() => deleteDiscount(discount.code)}>Delete</button>
-                    </div>
-                ))}
-            </div>
+            
+            {discounts.map((discount,index)=>      
+                <div key={discount.id}>
+                    <p>Code: {discount.code ? discount.code : discount.id}</p>
+                    <p>Percentage: {discount.percentage}</p>
+                    <p>Starts: {discount.starts}</p>
+                    <p>Ends: {discount.ends}</p>
+                    <p>-----------</p>
+                </div>
+            )}
+
 
         </div>
     )
