@@ -64,7 +64,6 @@ export const showOrder = async (order, tipo, body) => {
   if (tipo === "Name") {
     if (!order) {
       newBody = body.sort((a, b) => a.name.localeCompare(b.name));
-    
     } else {
       newBody = body.sort((a, b) => b.name.localeCompare(a.name));
     }
@@ -85,6 +84,12 @@ export const showOrder = async (order, tipo, body) => {
       newBody = body.sort((a, b) => b.points - a.points);
     } else {
       newBody = body.sort((a, b) => a.points - b.points);
+    }
+  } else if (tipo === "Role") {
+    if (!order) {
+      newBody = body.sort((a, b) => a.role.localeCompare(b.role));
+    } else {
+      newBody = body.sort((a, b) => b.role.localeCompare(a.role));
     }
   }
   return newBody

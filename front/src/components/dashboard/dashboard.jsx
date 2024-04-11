@@ -4,6 +4,7 @@ import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
 import { showMovies, showReviews, showUsers, showOrder } from "@/helpers/dashboard";
+import { useUser } from "@auth0/nextjs-auth0/client"; 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
@@ -21,6 +22,58 @@ export default function Dashboard({link, title, sid}) {
     const [pagina, setPagina] = useState([])
     const [update, setUpdate] = useState(true)
     const porPagina = 10
+
+    const { error, isLoading, user } = useUser();
+
+    async function rolChange(sid, rolToChange) {
+        try {
+            if (user.sid === sid) {
+                return Swal.fire({
+                    icon: "warning",
+                    title: "¡Advertencia!",
+                    text: "No puedes cambiar tu propio rol",
+                });
+            }
+            const res = await Swal.fire({
+                icon: "question",
+                title: "¿Estás seguro?",
+                text: `Estas seguro que deseas convertir a ese usuario en ${rolToChange}`,
+                showCancelButton: true,
+                confirmButtonText: "Sí",
+                cancelButtonText: "Cancelar",
+            });
+            if (res.isConfirmed) {
+                const rolUpdateInfo = {
+                    auth: `${user.sid}`,
+                    userSid: `${sid}`,
+                    roleToChange: `${rolToChange}`,
+                };
+                try {
+                    const rolUpdateResponse = await axios.put(`${link}`, rolUpdateInfo);
+                    Swal.fire({
+                    icon: "success",
+                    title: "¡Éxito!",
+                    text: rolUpdateResponse.data.message,
+                    });
+                    const updatedBody = body.map((item) => {
+                    if (item.sid === sid) {
+                        return { ...item, role: rolToChange };
+                    }
+                    return item;
+                    });
+                    setBody(updatedBody);
+                } catch (error) {
+                    Swal.fire({
+                    icon: "error",
+                    title: "¡Error!",
+                    text: error.response.data.message,
+                    });
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     function limpiar(){
         setBody(body2)
@@ -221,6 +274,7 @@ export default function Dashboard({link, title, sid}) {
             <h3 className={style.title}>{title}</h3>
             <div className={style.orderFilters}>
                 <Button emoji={'🔄'} label={'Limpiar'} callback={()=>{limpiar()}}></Button>
+                {title === "Users" && <Button callback={()=>{handleOrder('Role')}} emoji={order ? '🔻' : '🔺'} label={'Role'}></Button>}
                 {title === 'Reviews'
                 ? (<>
                     <Button callback={()=>{handleOrder('Movie')}} emoji={order ? '🔻' : '🔺'} label={'Movie'}></Button>
@@ -272,11 +326,15 @@ export default function Dashboard({link, title, sid}) {
                                                 <td className={style.td} key={i}>{item[prop]}</td>
                                                 ))}
                                                 <td className={style.td}>
+                                                    <div className={style['btn-actions']}>
                                                         {item.deleted === "Active"
-                                                            ? <Button emoji={'🗑️'} label={'Delete'} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
-                                                            : <Button emoji={'🗑️'} label={'Restore'} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
+                                                            ? <div className={style['btn']}><Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button></div>
+                                                            : <div className={style['btn']}><Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button></div>
                                                         }
-                                                    {/* <Button emoji={'✏️'} label={'Edit'} color={'blue'}></Button> */}
+                                                        <div className={style['btn']}><Button emoji={'✏️'} label={''} color={'blue'}></Button></div>
+                                                        {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <div className={style['btn']}><Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button></div> )}
+                                                        {title === "Users" && item.role !== "admin" && ( <div className={style['btn']}><Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button></div> )}
+                                                    </div>
                                                 </td>
                                         </tr>       
                                     ))
