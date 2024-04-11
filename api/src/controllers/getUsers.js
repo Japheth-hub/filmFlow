@@ -4,7 +4,7 @@ module.exports = async () => {
     try {
         const roles = await Role.findAll();
 
-        const users = await User.findAll();
+        const users = await User.findAll({ paranoid : false});
         for (const user of users) {
             const userRole = roles.find(role => role.id === user.roleId);
             if (userRole) {
@@ -16,6 +16,7 @@ module.exports = async () => {
 
         return users;
     } catch (error) {
+        console.log(error)
         return error;
     }
 }

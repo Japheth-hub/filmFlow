@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import style from '../../app/admin/admin.module.scss'
-import Link from 'next/link'
 import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
+import { showMovies, showReviews, showUsers, showOrder } from "@/helpers/dashboard";
+import { useUser } from "@auth0/nextjs-auth0/client"; 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
-export default function Dashboard({datos, link, title, sid}) {
+export default function Dashboard({link, title, sid}) {
     const [column, setColumn] = useState([])
     const [body, setBody] = useState([])
     const [body2, setBody2] = useState([])
@@ -19,7 +20,60 @@ export default function Dashboard({datos, link, title, sid}) {
     const [page, setPage] = useState(1)
     const [totalPage, setTotalPage] = useState()
     const [pagina, setPagina] = useState([])
+    const [update, setUpdate] = useState(true)
     const porPagina = 10
+
+    const { error, isLoading, user } = useUser();
+
+    async function rolChange(sid, rolToChange) {
+        try {
+            if (user.sid === sid) {
+                return Swal.fire({
+                    icon: "warning",
+                    title: "¡Advertencia!",
+                    text: "No puedes cambiar tu propio rol",
+                });
+            }
+            const res = await Swal.fire({
+                icon: "question",
+                title: "¿Estás seguro?",
+                text: `Estas seguro que deseas convertir a ese usuario en ${rolToChange}`,
+                showCancelButton: true,
+                confirmButtonText: "Sí",
+                cancelButtonText: "Cancelar",
+            });
+            if (res.isConfirmed) {
+                const rolUpdateInfo = {
+                    auth: `${user.sid}`,
+                    userSid: `${sid}`,
+                    roleToChange: `${rolToChange}`,
+                };
+                try {
+                    const rolUpdateResponse = await axios.put(`${link}`, rolUpdateInfo);
+                    Swal.fire({
+                    icon: "success",
+                    title: "¡Éxito!",
+                    text: rolUpdateResponse.data.message,
+                    });
+                    const updatedBody = body.map((item) => {
+                    if (item.sid === sid) {
+                        return { ...item, role: rolToChange };
+                    }
+                    return item;
+                    });
+                    setBody(updatedBody);
+                } catch (error) {
+                    Swal.fire({
+                    icon: "error",
+                    title: "¡Error!",
+                    text: error.response.data.message,
+                    });
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     function limpiar(){
         setBody(body2)
@@ -30,26 +84,10 @@ export default function Dashboard({datos, link, title, sid}) {
         body.sort((a, b) => a.id - b.id)
     }
 
-    function handleOrder(tipo){
+    async function handleOrder(tipo){
         setOrder(!order)
         setPage(1)
-        if(tipo === 'Name'){
-            if(!order){
-                const newBody = body.sort((a, b) => a.name.localeCompare(b.name));
-                setBody([...newBody])
-            } else {
-                const newBody = body.sort((a, b) => b.name.localeCompare(a.name));
-                setBody([...newBody]);
-            }
-        } else if(tipo === 'Duration'){
-            if(!order){
-                const newBody = body.sort((a, b) => b.duration - a.duration);
-                setBody([...newBody]);
-            } else {
-                const newBody = body.sort((a, b) => a.duration - b.duration);
-                setBody([...newBody]);
-            }
-        }
+        setBody([...(await showOrder(order, tipo, body))]);
     }
 
     async function deleteAction(id){
@@ -61,30 +99,57 @@ export default function Dashboard({datos, link, title, sid}) {
                 showCancelButton: true,
                 confirmButtonText: 'Sí',
                 cancelButtonText: 'Cancelar',
-              });
+            });
         
-              if (res.isConfirmed) {
+            if (res.isConfirmed) {
                 let response = '';
-                title === 'Movies' ? (response = await axios.delete(`${link}${id}`)) : (response = await axios.delete(`${link}${id}/${sid}`));
-                const newBody = body2.filter((movie) => movie.id !== id);
-                setBody(newBody);
-                setBody2(newBody);
+                title !== 'Users' ? (response = await axios.delete(`${link}${id}`)) : (response = await axios.delete(`${link}${id}/${sid}`));
+                setUpdate(!update)
                 Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.data.message,
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.data.message,
                 });
-              }
+            }
         } catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: error.response.data.message || 'Ocurrió un error al eliminar la información.',
-              });
+                text: error || 'Ocurrió un error al eliminar la información.',
+            });
         }
     }
 
-    //functions Movies*---------------------------------------------------------------
+    async function restoreAction(id){
+        try {
+            const res = await Swal.fire({
+                icon: "warning",
+                title: "¿Estás seguro?",
+                text: "Estas seguro que deseas restaurar esta información",
+                showCancelButton: true,
+                confirmButtonText: "Sí",
+                cancelButtonText: "Cancelar",
+            });
+
+            if (res.isConfirmed) {
+                let response = "";
+                response = await axios.get(`${link}restore/${id}`)
+                setUpdate(!update);
+                Swal.fire({
+                icon: "success",
+                title: "¡Éxito!",
+                text: response.data.message,
+                });
+            }
+            } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "¡Error!",
+                text: error || "Ocurrió un error al eliminar la información.",
+            });
+        }
+    }
+
     function handleGenre(e){
         const genero = e.target.value
         setSelectGenre(genero)
@@ -100,6 +165,7 @@ export default function Dashboard({datos, link, title, sid}) {
             setPage(1);
         }
     }
+    
     function handleStatus(e){
         const status = e.target.value
         const newBody = body2.filter((movie) => movie.status === status)
@@ -114,10 +180,12 @@ export default function Dashboard({datos, link, title, sid}) {
                 });
         }
     }
-    //--------------------------------------------------------------------------------
 
     function handleSearch(e){
-        const search = body2.filter((movie) => movie.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        let search = []
+        title === 'Reviews' 
+        ? search = body2.filter((data) => data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
+        : search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase()))
         if(search.length > 0){
             setSearch(e.target.value)
             setBody(search)
@@ -131,17 +199,8 @@ export default function Dashboard({datos, link, title, sid}) {
         }
     }
 
-
-    function menos(){
-        if(page > 1){
-            setPage(page - 1)
-        }
-    }
-
-    function mas(){
-        if(page < totalPage){
-            setPage(page + 1)
-        }
+    function masMenos(tipo){
+        tipo ? page < totalPage ? setPage(page + 1) : setPage(page) : page > 1 ? setPage(page - 1) : setPage(page);
     }
     
     function handlePagination(body) {
@@ -176,6 +235,32 @@ export default function Dashboard({datos, link, title, sid}) {
                 });
         }
     }
+
+    useEffect(()=>{
+        async function datos(type){
+            let datos
+            switch(type){
+                case "Movies":
+                    datos = await showMovies();
+                    break
+                case "Users":
+                    datos = await showUsers(sid);
+                    break
+                case "Reviews":
+                    datos = await showReviews();
+                    break
+                default :
+                    console.log('No hay Datos para mostrar')
+                    break
+            }
+            getData(datos)
+            setPage(1);
+            getGenre();
+            setTotalPage(Math.ceil(datos.length / porPagina));
+            handlePagination(datos);
+        }
+        datos(title)
+    }, [title, update])
     
     useEffect(()=>{
         if(body){
@@ -184,78 +269,80 @@ export default function Dashboard({datos, link, title, sid}) {
         }
     }, [page, body])
 
-    useEffect(()=>{
-        getGenre()
-        getData(datos)
-        setTotalPage(Math.ceil(datos.length/porPagina))
-        handlePagination(datos);
-    }, [datos])
-
-  return (
-    <div>
-        <h3 className={style.title}>{title}</h3>
-        <div className={style.orderFilters}>
-            <Button emoji={'🔄'} label={'Limpiar'} callback={()=>{limpiar()}}></Button>
-            <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
-            {title === 'Movies' && (<>
-              <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duration'}></Button>
-              <select className={style.status} name="status" onChange={handleStatus} defaultValue='Status' value={status}>
-                  <option value="Status" disabled>Status</option>
-                  <option value="approved">Approved</option>
-                  <option value="pending">Pending</option>
-                  <option value="declined">Declined</option>
-              </select>
-              <select name="genre" className={style.genreSelect} defaultValue="Genero" value={selectGenre} onChange={handleGenre}>
-                  <option value="Genero">Selecciona un genero</option>
-                  {genres && genres.map((genre, index) => {
-                      return <option key={index} value={genre}>{genre}</option>
-                  })}
-              </select>
-            </>)}
-            <input className={style.searchTable} type="text" onChange={handleSearch} placeholder='Search...' value={search} />
+    return (
+        <div>
+            <h3 className={style.title}>{title}</h3>
+            <div className={style.orderFilters}>
+                <Button emoji={'🔄'} label={'Limpiar'} callback={()=>{limpiar()}}></Button>
+                {title === "Users" && <Button callback={()=>{handleOrder('Role')}} emoji={order ? '🔻' : '🔺'} label={'Role'}></Button>}
+                {title === 'Reviews'
+                ? (<>
+                    <Button callback={()=>{handleOrder('Movie')}} emoji={order ? '🔻' : '🔺'} label={'Movie'}></Button>
+                    <Button callback={()=>{handleOrder('Points')}} emoji={order ? '🔻' : '🔺'} label={'Points'}></Button>
+                </>)
+                    : <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
+                }
+                {title === 'Movies' && 
+                    (<>
+                        <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duration'}></Button>
+                        <select className={style.status} name="status" onChange={handleStatus} defaultValue='Status' value={status}>
+                            <option value="Status" disabled>Status</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="declined">Declined</option>
+                        </select>
+                        <select name="genre" className={style.genreSelect} defaultValue="Genero" value={selectGenre} onChange={handleGenre}>
+                            <option value="Genero">Selecciona un genero</option>
+                            {genres && genres.map((genre, index) => {
+                                return <option key={index} value={genre}>{genre}</option>
+                            })}
+                        </select>
+                    </>)}
+                <input className={style.searchTable} type="text" onChange={handleSearch} placeholder='Search...' value={search} />
+            </div>
+            <div className={style.paginado}>
+                <button onClick={()=>{masMenos(false);}}>{'◀'}</button>
+                <span>{`${page} de ${totalPage}`}</span>
+                <button onClick={()=>{masMenos(true);}}>{'▶'}</button>
+            </div>
+            <div className={style.divTabla}>
+                {column.length > 0 &&
+                <table className={style.table}>
+                        <thead className={style.thead}>
+                            <tr>
+                                {column && column.length > 0 &&
+                                    column.map((item, index) => {
+                                        return <th className={style.th} key={index}>{item.toUpperCase()}</th>
+                                    })
+                                }
+                                <th className={style.th}>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody className={style.tbody}>
+                                {pagina && pagina.length > 0 && column && column.length > 0 &&
+                                    pagina.map((item, index) => (
+                                        <tr key={index}>
+                                        {column.map((prop, i) => ( 
+                                                <td className={style.td} key={i}>{item[prop]}</td>
+                                                ))}
+                                                <td className={style.td}>
+                                                    <div className={style['btn-actions']}>
+                                                        {item.deleted === "Active"
+                                                            ? <div className={style['btn']}><Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button></div>
+                                                            : <div className={style['btn']}><Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button></div>
+                                                        }
+                                                        <div className={style['btn']}><Button emoji={'✏️'} label={''} color={'blue'}></Button></div>
+                                                        {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <div className={style['btn']}><Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button></div> )}
+                                                        {title === "Users" && item.role !== "admin" && ( <div className={style['btn']}><Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button></div> )}
+                                                    </div>
+                                                </td>
+                                        </tr>       
+                                    ))
+                                }
+                        </tbody>
+                    </table>
+            }
+            </div>
         </div>
-
-        <div className={style.paginado}>
-            <button onClick={()=>{menos()}}>{'◀'}</button>
-            <span>{`${page} de ${totalPage}`}</span>
-            <button onClick={()=>{mas()}}>{'▶'}</button>
-        </div>
-
-        <div className={style.divTabla}>
-            {column.length > 0 
-            ? <table className={style.table}>
-                    <thead className={style.thead}>
-                        <tr>
-                            {column && column.length > 0 &&
-                                column.map((item, index) => {
-                                    return <th className={style.th} key={index}>{item.toUpperCase()}</th>
-                                })
-                            }
-                            <th className={style.th}>ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody className={style.tbody}>
-                            {pagina && pagina.length > 0 && column && column.length > 0 &&
-                                pagina.map((item, index) => (
-                                    <tr key={index}>
-                                    {column.map((prop, i) => ( 
-                                            i === 0 
-                                            ? <td className={style.td} key={i}><Link href={`${link}/${item[prop]}`} target="_blank">{item[prop]}</Link></td>
-                                            : <td className={style.td} key={i}>{item[prop]}</td>
-                                            ))}
-                                            <td className={style.td}>
-                                                <Button emoji={'🗑️'} label={'Delete'} color={'red'} callback={()=>{deleteAction(item.id)}}></Button><br />
-                                                {/* <Button emoji={'✏️'} label={'Edit'} color={'blue'}></Button> */}
-                                            </td>
-                                    </tr>       
-                                ))
-                            }
-                    </tbody>
-                </table>
-            :
-                <span className={style.welcome}>Bienvenido a tu Dashboard</span>
-        }
-        </div>
-    </div>
-  )
+    )
 }

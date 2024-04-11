@@ -34,7 +34,6 @@ export default function Multiselect({items,initial,name,callback,type}) {
     
 
 useEffect(() => {
-    console.log(items)
     if(initial && !Array.isArray(initial)){
         initial = initial.split(',');
         setSelectedItems(initial);
@@ -47,13 +46,11 @@ useEffect(() => {
 }, [initial])
 
 const handleChange = (e)=>{
-    console.log(e.target.value);
     toggleItem(e.target.value);
     setSelectValue(e.target.value);
 }
 
 useEffect(()=>{
-    console.log(selectedItems);
 },[selectedItems])
 
   return (

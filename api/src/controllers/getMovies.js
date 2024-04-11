@@ -1,11 +1,11 @@
-const { Movie, Genre,Country,Purchase } = require('../db');
+const { Movie, Genre,Country,Purchase, User, Review } = require('../db');
 const { Op } = require("sequelize");
 const orderFunction = require('../helpers/order')
 
 
 module.exports = async function getMovies(query){
 
-    let {search, genre, orderType, order,limit,user,country,purchases} = query;
+    let {search, genre, orderType, order,limit,user,country,purchases, paranoid} = query;
    
     try {
         let data = {}
@@ -19,6 +19,14 @@ module.exports = async function getMovies(query){
                 {
                     model: Country, // Agregando el modelo Country
                     attributes: ["id", "name"]
+                },
+                {
+                    model: User, 
+                    attributes: ["id", "name"]
+                },
+                {
+                    model: Review, 
+                    attributes: ["id", "comment", "points"]
                 }
             ]
         };
@@ -89,8 +97,15 @@ module.exports = async function getMovies(query){
                 ]
             }
         }
+
+        if(paranoid === "false"){
+            options = {
+                ...options,
+                paranoid: false
+            }
+        }
         
-        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price"]})
+        const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price", "deletedAt"]})
 
         if(movies.length === 0){
             return data.message = 'No hay Peliculas'

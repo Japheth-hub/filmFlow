@@ -7,6 +7,7 @@ import style from './cart.module.scss'
 import Link from 'next/link';
 import AddToCart from '../../components/addToCart/AddToCart'
 import Button  from '@/components/button/Button';
+import Loading from "@/components/loading/loading";
 
 const Cart = () => {
     const URL = process.env.NEXT_PUBLIC_URL;
@@ -16,14 +17,10 @@ const Cart = () => {
     const [totalPrice,setTotalPrice] = useState(null);
 
 
-
     const fetchData = async () => {
-        console.log("fetching data");
         try {
             const localCart =  typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')): null;
-            console.log(localCart);
             if(user){
-                console.log("Hay usuario");
                 try {
                     const syncData = await axios.post(`${URL}cart`,{
                         movies:localCart,
@@ -72,8 +69,6 @@ const Cart = () => {
         const handleStorageChange = (event) => {
             fetchData();
         };
-
-        console.log(cartData);
         if(typeof window !== "undefined"){
 
             window.addEventListener('localChanged', handleStorageChange);
@@ -101,9 +96,7 @@ const Cart = () => {
         )
     }
     if (isLoading) {
-        return (
-            <div>Loading</div>
-        )
+        return <Loading></Loading>;
     }
 
     return (
