@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import style from '../../app/admin/admin.module.scss'
-import Link from 'next/link'
 import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
@@ -47,24 +46,54 @@ export default function Dashboard({link, title, sid}) {
                 showCancelButton: true,
                 confirmButtonText: 'Sí',
                 cancelButtonText: 'Cancelar',
-              });
+            });
         
-              if (res.isConfirmed) {
+            if (res.isConfirmed) {
                 let response = '';
                 title !== 'Users' ? (response = await axios.delete(`${link}${id}`)) : (response = await axios.delete(`${link}${id}/${sid}`));
                 setUpdate(!update)
                 Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.data.message,
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.data.message,
                 });
-              }
+            }
         } catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
                 text: error || 'Ocurrió un error al eliminar la información.',
-              });
+            });
+        }
+    }
+
+    async function restoreAction(id){
+        try {
+            const res = await Swal.fire({
+                icon: "warning",
+                title: "¿Estás seguro?",
+                text: "Estas seguro que deseas restaurar esta información",
+                showCancelButton: true,
+                confirmButtonText: "Sí",
+                cancelButtonText: "Cancelar",
+            });
+
+            if (res.isConfirmed) {
+                let response = "";
+                response = await axios.get(`${link}restore/${id}`)
+                setUpdate(!update);
+                Swal.fire({
+                icon: "success",
+                title: "¡Éxito!",
+                text: response.data.message,
+                });
+            }
+            } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "¡Error!",
+                text: error || "Ocurrió un error al eliminar la información.",
+            });
         }
     }
 
@@ -245,7 +274,7 @@ export default function Dashboard({link, title, sid}) {
                                                 <td className={style.td}>
                                                         {item.deleted === "Active"
                                                             ? <Button emoji={'🗑️'} label={'Delete'} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
-                                                            : <Button emoji={'🗑️'} label={'Restore'} color={'green'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                            : <Button emoji={'🗑️'} label={'Restore'} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                         }
                                                     {/* <Button emoji={'✏️'} label={'Edit'} color={'blue'}></Button> */}
                                                 </td>

@@ -46,7 +46,6 @@ export const showUsers = async (sid) => {
 export const showReviews = async () => {
   try {
     const { data } = await axios(`${URL}reviews`);
-    console.log(data)
     const clearData = data.map((review) => {
       return {
         ...review,
