@@ -1,23 +1,52 @@
-@import '../../scss/variables.scss';
+@import "../../scss/variables.scss";
 
-.about{
-  font: $mainFont;
+.about {
+  font-family: $mainFont;
   font-size: 14px;
-  padding: 50px;
-  margin: auto;
-  width: 50%;
+
+  .profiles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0 0 0;
+
+    .profile {
+      width: 200px;
+      border-radius: 5px;
+      border: $neutralDark solid 2px;
+
+      .image {
+        img {
+          max-width: 100%;
+        }
+      }
+
+      .info {
+        min-height: 200px;
+        padding: 0 10px 10px 10px;
+      }
+      .social {
+        background-color: $mainColor;
+        padding: 20px;
+        img {
+          width: 25px;
+          height: auto;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
 }
-.institutional{
-  text-align: justify;
-  max-width: 500px;
-}
-.noDecoration{
+
+.noDecoration {
   list-style-type: none;
-  
-  a{
+
+  a {
     text-decoration: none;
-    color:black;
-    &:hover{
+    color: black;
+    &:hover {
       color: #693a9e;
     }
   }
