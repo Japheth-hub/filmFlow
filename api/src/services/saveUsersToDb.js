@@ -11,7 +11,7 @@ module.exports = async () => {
             const userDB = await User.create({name, email,  sid, picture});
             await userDB.setRole(roleDB);
             if (role === "producer") {
-                userDB.phone = 123456789
+                userDB.phone = 123456789+Math.floor(Math.random() * (10 - 1 + 1)) + 1;
                 userDB.payment_method = "paypal"
                 userDB.payment_account = email
                 userDB.payment_amount = 85

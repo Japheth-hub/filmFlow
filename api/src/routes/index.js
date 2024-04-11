@@ -9,6 +9,7 @@ const checkoutRouter = require('./checkoutRouter')
 const purchaseRouter = require('./purchaseRouter')
 const countriesRouter = require('./countriesRouter')
 const dashboardRouter = require('./dashboardRouter')
+const discountRouter = require('./discountRouter')
 const emailHandler = require('../handlers/emailHandler')
 
 const router = Router()
@@ -28,7 +29,7 @@ router.use('/cart', cartRouter);
 router.use('/checkout', checkoutRouter);
 router.use('/purchases', purchaseRouter);
 router.use('/dashboard', dashboardRouter);
-
+router.use('/discount', discountRouter)
 router.use('/countries', countriesRouter)
 
 
