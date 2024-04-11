@@ -9,6 +9,15 @@ const dashboardRouter = Router();
 
 
 dashboardRouter.get('/:auth', getCheckAuth, getDashboardHandler);
-dashboardRouter.post('/report/', getCheckAdmin, async()=> await postProducerReportCron.dailyJob());
+dashboardRouter.post('/report/', getCheckAdmin, async(req,res )=>{
+    try {
+        const reports = await postProducerReportCron.dailyJob();
+        console.log(reports);
+        res.json({messege:"se corrio el reporte"})
+    } catch (error) {
+        console.log(error);
+    }
+    
+});
 
 module.exports = dashboardRouter;
