@@ -34,7 +34,7 @@ export const showUsers = async (sid) => {
         role: user.roleName,
         sid: user.sid,
         created: user.createdAt.slice(0, 10),
-        deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : "",
+        deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : "Active"
       };
     });
     return clearData;
@@ -46,10 +46,12 @@ export const showUsers = async (sid) => {
 export const showReviews = async () => {
   try {
     const { data } = await axios(`${URL}reviews`);
+    console.log(data)
     const clearData = data.map((review) => {
       return {
         ...review,
         update: review.update.slice(0, 10),
+        deleted: review.deleted ? review.deleted.slice(0, 10) : "Active",
       };
     });
     return clearData;
@@ -57,3 +59,34 @@ export const showReviews = async () => {
     console.log(error);
   }
 };
+
+export const showOrder = async (order, tipo, body) => {
+  let newBody
+  if (tipo === "Name") {
+    if (!order) {
+      newBody = body.sort((a, b) => a.name.localeCompare(b.name));
+    
+    } else {
+      newBody = body.sort((a, b) => b.name.localeCompare(a.name));
+    }
+  } else if (tipo === "Duration") {
+    if (!order) {
+      newBody = body.sort((a, b) => b.duration - a.duration);
+    } else {
+      newBody = body.sort((a, b) => a.duration - b.duration);
+    }
+  } else if (tipo === "Movie") {
+    if (!order) {
+      newBody = body.sort((a, b) => a.movie.localeCompare(b.movie));
+    } else {
+      newBody = body.sort((a, b) => b.movie.localeCompare(a.movie));
+    }
+  } else if (tipo === "Points") {
+    if (!order) {
+      newBody = body.sort((a, b) => b.points - a.points);
+    } else {
+      newBody = body.sort((a, b) => a.points - b.points);
+    }
+  }
+  return newBody
+}

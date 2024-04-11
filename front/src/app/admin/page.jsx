@@ -1,7 +1,6 @@
 'use client'
-import React,  {useEffect, useState} from 'react'
+import React,  {useState} from 'react'
 import Dashboard from '@/components/dashboard/dashboard'
-import axios from 'axios'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import style from './admin.module.scss'
 import Image from 'next/image'
@@ -12,9 +11,7 @@ import Loading from "@/components/loading/loading";
 function Admin() {
   const URL = process.env.NEXT_PUBLIC_URL
   const {user, isLoading, error} = useUser()
-  const [datos, setDatos] = useState([])
   const [component, setComponent] = useState(0)
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const showMovies = async() => {
       setComponent(2);
@@ -23,31 +20,9 @@ function Admin() {
   const showUsers = async() => {
       setComponent(3)
   }
-
-  const showPurchases = async() => {
-    try {
-      const { data } = await axios.get(`${URL}purchases/${user.sid}`);
-      const clearData = data.map((purch) => {
-        return {
-          id: purch.id,
-          stripeId: purch.stripeId,
-          status: purch.status,
-          method: purch.method,
-          currency: purch.currency,
-          amount: purch.amount,
-          userId: purch.userId,
-          createdAt: purch.createdAt.slice(0, 10),
-        };
-      });
-      setDatos(clearData);
-      setComponent(4);
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
+  
   const showReviews = async () => {
-      setComponent(5)
+      setComponent(4)
   }
 
   if(error){
@@ -67,9 +42,9 @@ function Admin() {
       case 3:
         return <Dashboard title={'Users'} link={`${URL}users/`} sid={user.sid}/>;
       case 4:
-        return <Dashboard datos={datos} title={`Purchases`} link={`${URL}purchases/`} sid={user.sid}/>;
-      case 5:
         return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
+        case 5:
+        return <div>Aqui va el dashVentas</div>;
       default:
           return <p>Selecciona una opción del menú</p>
     }
