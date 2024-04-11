@@ -1,5 +1,5 @@
 'use client'
-import Genre from "../../components/genre/Genre";
+import Genre from "../genre/Genre";
 import Link from "next/link";
 import style from "./Filters.module.scss"
 import { useState } from "react";

@@ -151,7 +151,7 @@ const Movies = ({ params }) => {
   }};
 
   const handleElemPagination = (event) => {
-    setPagination({...pagination, step: event.target.value})
+    setPagination({...pagination, step: event.target.value, page: 1})
   }
 
   return (
@@ -160,20 +160,16 @@ const Movies = ({ params }) => {
         <div className={style.genres}>
               {queryParams && 
                 <Multiselect name="genre" initial={queryParams.genre ? queryParams.genre: null} items={genres} callback={handleChange} />
-              }
-              
+              } 
         </div>
-        <div>
+        <form>
+          <fieldset className={style.rowField}>
+            <div className={style.optionsField}>
+              <label>Países </label>
               {queryParams && 
                 <Multiselect name="country" initial={queryParams.country ? queryParams.country: null} items={countries} callback={handleChange} type="select" />
               }
-              
-        </div>
-        <form>
-          
-          <fieldset className={style.rowField}>
-         
-            
+            </div>
             <div className={style.optionsField}>
               <label>Ordernar por </label>
               <select
