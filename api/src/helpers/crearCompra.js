@@ -1,4 +1,5 @@
-module.exports = ({movies, sid}) => {
+module.exports = ({movies, user,code}) => {
+
   try {
     const products = [];
     const metaData = {};
@@ -20,7 +21,8 @@ module.exports = ({movies, sid}) => {
       products.push(product);
     }
     metaData.movies = movieIds.join(",");
-    metaData.sid = sid
+    metaData.userId = user.id
+    metaData.code = code
     return { products, metaData }
   } catch (error) {
     console.log("error webhook",error);

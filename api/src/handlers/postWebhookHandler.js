@@ -22,8 +22,9 @@ module.exports = async (request, response) => {
     case "checkout.session.completed":
       const checkoutSessionCompleted = event.data.object;
       const purchaseInfo = {
-        sid:checkoutSessionCompleted.metadata.sid,
-        amount:checkoutSessionCompleted.amount_total,
+        userId:checkoutSessionCompleted.metadata.userId,
+        code:checkoutSessionCompleted.metadata.code,
+        amount:checkoutSessionCompleted.amount_total/100,
         currency:checkoutSessionCompleted.currency,
         stripeId:checkoutSessionCompleted.id,
         movies:checkoutSessionCompleted.metadata.movies,

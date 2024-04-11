@@ -9,7 +9,7 @@ module.exports = async(query)=>{
 
     if(user.role.role === 'admin'){
 
-        const purchases = await getPurchases({limit:10,month:true});
+        const purchases = await getPurchases({limit:10,month:true,user});
         const purchasesSum = purchases.reduce((accumulator, item) => {
             return accumulator + Number(item.amount);
           }, 0);

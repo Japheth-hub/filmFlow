@@ -1,7 +1,11 @@
 const { User, Role } = require("../db");
 
 module.exports = async (req, res, next) => {
-  const { auth } = req.params;
+  let { auth } = req.params;
+
+  if(!auth){
+    auth  = req.body.sid;
+  }
 
   if (!auth)
     return res
@@ -21,5 +25,7 @@ module.exports = async (req, res, next) => {
       .status(403)
       .json({ status: false, message: "El usuario no existe" });
   req.user = user.toJSON();
+  req.query.user = user.toJSON();
+  req.body.user = user.toJSON();
   return next();
 };
