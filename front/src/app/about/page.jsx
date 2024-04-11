@@ -4,7 +4,8 @@ import Link from 'next/link';
 import gh from '../../img/github.png';
 import linkedIn from '../../img/linkedin.png';
 import Image from 'next/image';
-import developers from '../../utils/developers'
+import developers from '@/utils/developers'
+
 import { useEffect } from 'react';
 
 const About = ()=>{
