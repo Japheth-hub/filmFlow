@@ -1,11 +1,11 @@
-const { Movie, Genre,Country, User, Review } = require('../db');
+const { Movie, Genre,Country,Purchase, User, Review } = require('../db');
 const { Op } = require("sequelize");
-const orderFunction = require('../helpers/order')
+
 
 
 module.exports = async function getMovies(query){
 
-    let {search, genre, orderType, order,limit,user,country, paranoid} = query;
+    let {search, genre, orderType, order,limit,user,country,purchases, paranoid,today} = query;
    
     try {
         let data = {}
@@ -55,6 +55,17 @@ module.exports = async function getMovies(query){
             options.where.userId = user.id;
         }
 
+        if(today){
+            if(!options.where){
+                options.where = {};
+            }
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            options.where.createdAt = {
+                [Op.gte]: currentDate  
+            }
+        }
+
         if(limit){
             options = {
                 ...options,
@@ -69,6 +80,24 @@ module.exports = async function getMovies(query){
                     [Op.or]: country
                 }
             };
+        }
+
+        if (purchases) {
+            const endDate = new Date();
+            const startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+         
+            options.include = [
+               ...options.include,
+               {
+                model:Purchase,
+                required: true,
+                where:{
+                    createdAt: {
+                        [Op.between]: [startDate, endDate]
+                    }
+                }
+               } 
+            ]
         }
 
         if(orderType){    
