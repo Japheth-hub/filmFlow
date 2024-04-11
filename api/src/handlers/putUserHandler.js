@@ -5,11 +5,10 @@ module.exports = async (req, res) => {
         const body = req.body
 
         if (Object.keys(body).length === 0) {
-            return res.status(400).json({ message: 'No hay datos para actualizar' });
+            return res.status(422).json({ message: 'No hay datos para actualizar' });
         }
 
         const data = await putUser(body);
-        console.log(data);
 
         if (!data.status) {
             return res.status(422).json(data);

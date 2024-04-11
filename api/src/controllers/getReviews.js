@@ -4,6 +4,7 @@ module.exports = async () => {
     try {
         const error = {}
         const data = await Review.findAll({
+            paranoid : false,
             include: [
                 { model: User },
                 { model: Movie }
@@ -20,7 +21,8 @@ module.exports = async () => {
                 user: review.user?.name,
                 comment: review.comment,
                 points: review.points,
-                update: review.updatedAt
+                update: review.updatedAt,
+                deleted: review.deletedAt
             }
         })
 

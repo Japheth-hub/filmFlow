@@ -57,12 +57,9 @@ const Cart = () => {
     
 
     const fetchData = async () => {
-        console.log("fetching data");
         try {
             const localCart =  typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')): null;
-            console.log(localCart);
             if(user){
-                console.log("Hay usuario");
                 try {
                     const syncData = await axios.post(`${URL}cart`,{
                         movies:localCart,
@@ -142,8 +139,6 @@ const Cart = () => {
         const handleStorageChange = (event) => {
             fetchData();
         };
-
-        console.log(cartData);
         if(typeof window !== "undefined"){
 
             window.addEventListener('localChanged', handleStorageChange);

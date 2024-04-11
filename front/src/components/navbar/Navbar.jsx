@@ -32,7 +32,6 @@ const Nav = (props)=> {
       
   
       if (!query || query.trim() === "" || query.length < 3) {
-        //console.log("La consulta de búsqueda está vacía.");
         setQuickSearch([]);
         setSearch(false);
         return;
@@ -46,7 +45,6 @@ const Nav = (props)=> {
         const data = response.data;
         
         if (data === "No hay Peliculas") {
-          //console.log("No se encontraron películas con ese nombre.");
           setQuickSearch([]);
           setSearch(true);
   
@@ -57,7 +55,6 @@ const Nav = (props)=> {
           setSearch(true);
         }
       } catch (error) {
-        //console.error("Error al realizar la búsqueda:", error);
       }
     };
 
