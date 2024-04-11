@@ -9,7 +9,7 @@ export default function Buy({sid,code,cart}) {
       const movies = await axios.post(`${NEXT_PUBLIC_URL}checkout`, {
         movies:cart,
         code:code,
-        sid
+        auth:sid
       });
       if(typeof window !== "undefined"){
         window.location = movies.data.url;

@@ -9,7 +9,7 @@ const dashboardRouter = Router();
 
 
 dashboardRouter.get('/:auth', getCheckAuth, getDashboardHandler);
-dashboardRouter.post('/report/', getCheckAdmin, async(req,res )=>{
+dashboardRouter.post('/report/',  async(req,res )=>{
     try {
         const reports = await postProducerReportCron.dailyJob();
         console.log(reports);
