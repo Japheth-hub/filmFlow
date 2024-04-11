@@ -37,7 +37,7 @@ module.exports = async (purchaseInfo) => {
                 where: { id: movie.userId }
             });
 
-            const producerPay = movie.price * 0.5;
+            const producerPay = movie.price / 2;
             
             producer.payment_amount = (producer.payment_amount || 0) + producerPay;
             
