@@ -174,3 +174,14 @@
     color: white;
     background-color: $mainColor;
 }
+
+.btn-actions{
+    display: flex;
+}
+
+.btn{
+    transition: all 0.4s;
+}
+.btn:hover{
+    transform: scale(1.1);
+}

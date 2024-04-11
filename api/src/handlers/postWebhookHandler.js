@@ -4,6 +4,7 @@ const stripe = require("stripe")(KEY_SECRET);
 const postPurchase = require('../controllers/postPurchase.js');
 
 module.exports = async (request, response) => {
+  console.log("Se hace compra desde stripe");
   const sig = request.headers["stripe-signature"];
   const endpointSecret = ENDPOINT;
   let event;

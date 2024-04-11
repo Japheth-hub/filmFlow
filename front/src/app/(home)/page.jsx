@@ -66,9 +66,7 @@ const Home = () => {
             )
           } 
           if(data.isAdmin) {
-            console.log("Si soy admin")
           } else {
-            console.log("No soy admin")
           }
         } catch (error) {
           console.error("Error updating user:", error);

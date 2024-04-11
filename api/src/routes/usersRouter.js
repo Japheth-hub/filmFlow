@@ -3,8 +3,8 @@ const postUsersHandler = require('../handlers/postUsersHandler');
 const getUsersHandler = require('../handlers/getUsersHandler');
 const deleteUserHandler = require('../handlers/deleteUserHandler');
 const putUserHandler = require("../handlers/putUserHandler");
+const restoredUsersHandler = require("../handlers/restoredUsersHandler");
 const putProducerHandler = require("../handlers/putProducerHandler");
-
 const checkAdmin = require('../middlewares/checkAdmin');
 const getCheckAdmin = require('../middlewares/getCheckAdmin')
 const checkAuth = require('../middlewares/checkAuth');
@@ -16,6 +16,7 @@ usersRouter.post('/', postUsersHandler);
 
 
 usersRouter.get('/:auth', getCheckAdmin, getUsersHandler);
+usersRouter.get("/restore/:id", restoredUsersHandler);
 usersRouter.delete("/:id/:auth", getCheckAdmin, deleteUserHandler);
 usersRouter.put('/', checkAdmin, putUserHandler);
 usersRouter.put('/producer', checkAuth, putProducerHandler);

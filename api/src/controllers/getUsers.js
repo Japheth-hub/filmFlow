@@ -1,10 +1,22 @@
-const { User, Role } = require('../db')
+const { User, Role } = require('../db');
+const { Op } = require('sequelize');
 
-module.exports = async () => {
+module.exports = async (query) => {
+    const {today,limit} = query;
     try {
-        const roles = await Role.findAll();
+        options = {};
+        if(today){
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            options.where = {
+                createdAt: {
+                    [Op.gte]: currentDate
+                  }
+            }
+        }
+        const roles = await Role.findAll({...options});
 
-        const users = await User.findAll();
+        const users = await User.findAll({ paranoid : false});
         for (const user of users) {
             const userRole = roles.find(role => role.id === user.roleId);
             if (userRole) {
@@ -16,6 +28,7 @@ module.exports = async () => {
 
         return users;
     } catch (error) {
+        console.log(error)
         return error;
     }
 }
