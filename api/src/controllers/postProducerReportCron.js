@@ -17,14 +17,15 @@ module.exports.dailyJob = async()=>{
         if(users){
             users.map(async(user)=>{
                 const purchases = await getPurchases({user:user.id,month:true});
-                const purchaseTotal = purchases.reduce((purchaseTotal, innerPurchase) => {
+                
+                const purchaseTotalEnd = purchases.reduce((purchaseTotal, innerPurchase) => {
                     const moviesTotal = innerPurchase.movies.reduce((moviesTotal, movie) => {
                         return moviesTotal + movie.movie_purchase.price;
                     }, 0);
                     return purchaseTotal + moviesTotal; 
                 }, 0);
-        
-              const report = await postReport('producerMonthReport',purchaseTotal,user);
+                
+              const report = await postReport('producerMonthReport',purchaseTotalEnd,user);
             }) 
         }
     } catch (error) {
