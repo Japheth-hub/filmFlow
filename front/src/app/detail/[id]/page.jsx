@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import userpic from "@/img/userpic.png";
 import style from '../detail.module.scss';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
@@ -217,10 +218,10 @@ const renderStarSelector = () => {
           <h4>Reviews</h4>
         {reviewsData.map((review) => (
           <div key={review.id} className={style['review-container']}>
-            <img src={review.user.picture} alt={review.user.name} className={style['user-picture']} />
+            <img src={review.user?.picture ? review.user.picture : userpic.src} alt={review.user?.name ? review.user.name : "Desconocido"} className={style['user-picture']} />
             <div className={style['review-content']}>
               <div className={style['star-rating']} data-rating={review.points}>
-                <span className={style['italic-dark']}><p>{review.user.name}</p></span>
+                <span className={style['italic-dark']}><p>{review.user?.name ? review.user.name : "Desconocido"}</p></span>
                 {[...Array(review.points)].map((_, index) => (
                   <span key={index} className={style['filled']}>&#9733;</span>
                 ))}

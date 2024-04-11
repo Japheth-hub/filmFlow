@@ -43,8 +43,6 @@ function Admin() {
         return <Dashboard title={'Users'} link={`${URL}users/`} sid={user.sid}/>;
       case 4:
         return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
-        case 5:
-        return <div>Aqui va el dashVentas</div>;
       default:
           return <p>Selecciona una opción del menú</p>
     }
@@ -70,7 +68,7 @@ function Admin() {
             <div onClick={() => showMovies()}><a role="img" aria-label="Películas">🎬</a><span>Películas</span></div>
             <div onClick={() => showUsers()}><a role="img" aria-label="Usuarios">👤</a><span>Usuarios</span></div>
             <div onClick={() => showReviews()}><a role="img" aria-label="Reviews">⭐</a><span>Reviews</span></div>
-            <div onClick={() => showPurchases()}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
+            <div onClick={() => setComponent()}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
             <div onClick={() => setComponent()}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
           </div>
         </div>
