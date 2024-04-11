@@ -81,6 +81,7 @@ export default function AddToCart({movie}) {
             })
             saveCart(newCart);
         }else{
+            try{ 
             const remoteCart = await axios({
                 url:`${URL}cart/${movie.id}`,
                 method:'delete',
@@ -89,10 +90,12 @@ export default function AddToCart({movie}) {
               });
 
             saveCart(remoteCart.data.movies);
-           
         }
-        
-      }
+        catch(error) {
+            console.error('Error removing item from cart:', error);
+        }
+    }
+}
 
       const fetchData = ()=>{
         const localCart = typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')):null;
