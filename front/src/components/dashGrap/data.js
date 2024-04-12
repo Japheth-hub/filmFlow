@@ -12,7 +12,6 @@ export const data = {
     usersByDay: 'Nuevos usuarios crados por día',
     totalUsers: 'Usuarios totales de la aplicación',
 }
-
 export const movieGenre = async(sid) => {
     let listMoviesGenres = [[],[]]
     try {
@@ -24,12 +23,16 @@ export const movieGenre = async(sid) => {
         return listMoviesGenres;
         
     } catch (error) {
-        return("FALLA DE DATOS movies:", error);
+        return("FALLÓ movieGenre:", error);
     }
 }
-export const totalMoviesDay = async (sid) =>{
-    const { data } = await axios.get(`${URL}dashboard/${sid}`);
-    return data.totalMoviesToday
+export const totalMoviesDay = async(sid) => {
+    try {
+        const { data } = await axios.get(`${URL}dashboard/${sid}`);
+        return data.totalMoviesToday
+    } catch (error) {
+        return("FALLÓ totalMoviesDay:", error);
+    }
 }
 export const userDay = async(sid) => {
     let dataGrap = []
@@ -70,19 +73,21 @@ export const userDay = async(sid) => {
         return result;
 
     } catch (error) {
-        return("FALLA DE DATOS userXday:", error);
+        return("FALLÓ userXday:", error);
     }
 }
-export const totalUsers = async (sid) =>{
-    const { data } = await axios.get(`${URL}users/${sid}`);
-    return data.length
+export const totalUsers = async(sid) => {
+    try {
+        const { data } = await axios.get(`${URL}users/${sid}`);
+        return data.length
+    } catch (error) {
+        return("FALLÓ totalUsers:", error);
+    }
 }
 export const salesDay = async(sid) => {
     try {
         const { data } = await axios.get(`${URL}dashboard/${sid}`);
-        // Objeto para almacenar ventas agrupados por día
         const groupedSales = [];
-        // Iterar sobre cada venta y agruparlo por día
         data.purchasesMonth.forEach(sale => {
             // Obtener la fecha de creación del usuario
             const createdAt = new Date(sale.createdAt);
@@ -93,8 +98,7 @@ export const salesDay = async(sid) => {
             if (!groupedSales[formattedDate]) {
                 // Si no existe, crear una nueva entrada con un arreglo vacío
                 groupedSales[formattedDate] = [];
-            }
-            // Agregar la venta al arreglo correspondiente a esta fecha
+            }// Agregar la venta al arreglo correspondiente a esta fecha
             groupedSales[formattedDate].push(sale);
         });
         const result = [[],[]];
@@ -103,23 +107,24 @@ export const salesDay = async(sid) => {
         for (const date in groupedSales) {
             if (groupedSales.hasOwnProperty(date)) {
                 const sales = groupedSales[date];
-                const salesAmount = sales.reduce((total, sale) => total + parseFloat(sale.amount), 0);          
-                /// Agregar la fecha al arreglo de etiquetas
+                const salesAmount = sales.reduce((total, sale) => total + parseFloat(sale.amount), 0);
                 result[[0]].push(date);
-                
-                // Agregar el saldo de ventas al arreglo de datos
                 result[[1]].push(salesAmount);
             }
         }
         return result;
 
     } catch (error) {
-        return("FALLA DE DATOS salesXday:", error);
+        return("FALLÓ salesXday:", error);
     }
 }
-export const totalSalesMonth = async (sid) =>{
-    const { data } = await axios.get(`${URL}dashboard/${sid}`);
-    return data.totalPurchasesMonth
+export const totalSalesMonth = async(sid) => {
+    try {
+        const { data } = await axios.get(`${URL}dashboard/${sid}`);
+        return data.totalPurchasesMonth
+    } catch (error) {
+        return("FALLÓ totalSalesMonth:", error);
+    }
 }
 export const revrankGenre = async() => {
     let dataGrap;
@@ -129,6 +134,6 @@ export const revrankGenre = async() => {
 
         return dataGrap
     } catch (error) {
-        return("FALLA DE DATOS revrankXgenre:", error);
+        return("FALLÓ revrankXgenre:", error);
     }
 }

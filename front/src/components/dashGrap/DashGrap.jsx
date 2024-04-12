@@ -6,7 +6,7 @@ import style from './DashGrap.module.scss'
 import { Chart as chartJS} from 'chart.js/auto'
 import { movieGenre, userDay, salesDay, revrankGenre, totalSalesMonth, 
     totalMoviesDay, totalUsers, data } from './data.js';
-import TooltipInfoGrap from "../ttInfoGrap/TooltipinfoGrap.jsx";
+import TooltipInfoGrap from "../ttInfoGrap/TooltipInfoGrap";
 
 const DashGrap = ({sid}) => {
     const { admin } = JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
@@ -83,7 +83,7 @@ const DashGrap = ({sid}) => {
 
         //*RANKINGS Y REVIEWS
         revrankGenre().then(response => {
-            //console.log(response);
+            console.log(response);
             // setSalesXday({
             //     ...userXday, labels: response.labels,
             //     datasets:[{
@@ -93,7 +93,7 @@ const DashGrap = ({sid}) => {
             // })
         }).catch(error => {return <p>No se encontraron datos para mostrar</p>})
         //*INTERACTIONS
-        
+
 
         //*USER X DAYS
         userDay(sid).then(response => {
