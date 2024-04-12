@@ -188,7 +188,7 @@ const renderStarSelector = () => {
             {/* {movieData && <AddToCart movie={movieData} />} */}
             {purchase.includes(movieData.id) 
             ? <Button emoji={'✅'} label='Ya tienes esta pelicula'/> 
-            : movieData && <AddToCart movie={movieData} />}
+            : movieData && "button"}
             
           </div>
         </div>
