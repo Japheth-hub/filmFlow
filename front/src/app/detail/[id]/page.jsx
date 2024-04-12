@@ -9,6 +9,7 @@ import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
 import { useUser } from '@auth0/nextjs-auth0/client'; 
+import Swal from "sweetalert2";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -30,11 +31,49 @@ const DetailContent = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [reviewsData, setReviewsData] = useState([]);
   const {user} = useUser();
-  const [review, setReview] = useState({})
+  const [review, setReview] = useState()
+  const [display, setDisplay] = useState('none')
+  const [update, setUpdate] = useState(true)
 
   const goToCategory = (genre) => {
     router.push(`/movies?genre=${genre}`);
   };
+
+  function showModal(valor) {
+    setDisplay(valor);
+  }
+
+  async function deleteReview(id){
+    try {
+      const res = await Swal.fire({
+        icon: "warning",
+        title: "¿Estás seguro?",
+        text: "Estas seguro que deseas eliminar tu comentario",
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (res.isConfirmed) {
+        const {data} = await axios.delete(`${URL}reviews/${id}`)
+        // setReviewsData(reviewsData.filter((item) => item.id !== id))
+        setUpdate(!update)
+        Swal.fire({
+          icon: "success",
+          title: "¡Éxito!",
+          text: data.message,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "¡Error!",
+        text: error || "Ocurrió un error al eliminar la información.",
+      });
+    }
+  }
+
+
 
 
   useEffect(() => {
@@ -45,6 +84,7 @@ const DetailContent = () => {
       try {
         const response = await axios.get(`${URL}movies/${id}`);
         setMovieData(response.data);
+        setReviewsData(response.data.reviews)
       } catch (error) {
         console.error('Error fetching movie data:', error);
         setError(error);
@@ -56,10 +96,16 @@ const DetailContent = () => {
   }, [id]);
 
   useEffect(() => {
-    if (movieData) {
-      setReviewsData(movieData.reviews || []);
+    async function reload(){
+      try {
+        const {data} = await axios.get(`${URL}movies/${id}`);
+        setReviewsData(data.reviews)
+      } catch (error) {
+        console.log(error)
+      }
     }
-  }, [movieData]);
+    reload()
+  }, [update]);
   
   useEffect(()=>{
     if(reviewsData.length > 0  && user){
@@ -146,10 +192,10 @@ const renderStarSelector = () => {
   
 
       await axios.post(`${URL}reviews`, { userSid, movieId, comment, points });
-
-      const newReviewData = { id: reviewsData.length + 1, user: { name: user.name, picture: user.picture }, points, comment };
-      setReviewsData([...reviewsData, newReviewData]);
-      setSuccessMessage('Review submitted successfully.');
+      setUpdate(!update)
+      // const newReviewData = { id: reviewsData.length + 1, user: { name: user.name, picture: user.picture }, points, comment };
+      // setReviewsData([...reviewsData, newReviewData]);
+      // setSuccessMessage('Review submitted successfully.');
       setNewReview({ points: 0, comment: '' });
     } catch (error) {
       console.error('Error submitting review:', error);
@@ -158,7 +204,7 @@ const renderStarSelector = () => {
 
   return (
     <div className={style['detail-content']}>
-     
+    
       <div className={style['poster-description-container']}>
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
@@ -232,8 +278,28 @@ const renderStarSelector = () => {
               </div>
               <p>{review.comment}</p>
             </div>
+            {(review.user?.email ? review.user.email === user?.email : review.user?.name === user?.name) && 
+              <div>
+                <Button emoji={'✏️'} color={'green'} callback={()=>{showModal('block')}}></Button>
+                <Button emoji={'🗑️'} color={'red'} callback={()=>{deleteReview(review.id)}}></Button>
+              </div>
+            }
           </div>
         ))}
+      <div className={style.modal} style={{display : display}}>
+        <h4>Deja un comentario</h4>
+        {successMessage && <div className={style['success-message']}>{successMessage}</div>}
+        <div className={style['review-form']}>
+          <label>Puntuación:</label>
+          <div className={style['star-selector']}>
+            {renderStarSelector()}
+          </div>
+          <label>Comentario:</label>
+          <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
+          <button onClick={handleReviewSubmit}>Actualizar</button>
+          <button onClick={()=>{showModal('none')}}>Cerrar</button>
+        </div>
+      </div>
     </div>
   );
 };
