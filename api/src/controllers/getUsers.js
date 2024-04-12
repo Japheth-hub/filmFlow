@@ -1,10 +1,34 @@
-const { User} = require('../db')
+const { User, Role } = require('../db');
+const { Op } = require('sequelize');
 
-module.exports = async () => {
+module.exports = async (query) => {
+    const {today,limit} = query;
     try {
-        const users = await User.findAll();
-        return users
+        options = {};
+        if(today){
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            options.where = {
+                createdAt: {
+                    [Op.gte]: currentDate
+                  }
+            }
+        }
+        const roles = await Role.findAll({...options});
+
+        const users = await User.findAll({ paranoid : false});
+        for (const user of users) {
+            const userRole = roles.find(role => role.id === user.roleId);
+            if (userRole) {
+                user.roleName = userRole.role;
+            } else {
+                user.roleName = 'Unknown';
+            }
+        }
+
+        return users;
     } catch (error) {
-        return error
+        console.log(error)
+        return error;
     }
 }

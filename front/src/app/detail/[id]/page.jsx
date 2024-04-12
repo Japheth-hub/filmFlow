@@ -1,12 +1,21 @@
 'use client'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import userpic from "@/img/userpic.png";
 import style from '../detail.module.scss';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
+import { useUser } from '@auth0/nextjs-auth0/client'; 
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  WhatsappShareButton,
+  WhatsappIcon
+} from "react-share";
+
 
 const DetailContent = () => {
   const [purchase, setPurchase] = useState([]);
@@ -24,7 +33,7 @@ const DetailContent = () => {
   const [review, setReview] = useState({})
 
   const goToCategory = (genre) => {
-    router.push(`/filters/genero=${genre}`);
+    router.push(`/movies?genre=${genre}`);
   };
 
   function checkUserLogin (){
@@ -62,15 +71,25 @@ const DetailContent = () => {
   }, [movieData]);
   
   useEffect(()=>{
+    if(reviewsData.length > 0  && user){
+      setReview(reviewsData.find((review) => review.user?.email ? review.user.email === user.email : review.user?.name === user.name))
+    }
+  }, [reviewsData]);
+  
+
+  useEffect(() => {
     async function getPurchase(){
-      const user = JSON.parse(localStorage.getItem('FilmFlowUsr'))
-      const {data} = await axios(`${URL}purchases/${user.sid}`)
-      if(typeof data === "object"){
-        const idsMovies = []
-        for(let movie of data){
-          idsMovies.push(movie.id)
+      try {
+        const {data} = await axios(`${URL}purchases/${user.sid}`)
+        if(typeof data === "object"){
+          const idsMovies = []
+          for(let movie of data){
+            idsMovies.push(movie.id)
+          }
+          setPurchase(idsMovies)
         }
-        setPurchase(idsMovies)
+      } catch (error) {
+        console.error('Error fetching purchase data:', error);
       }
     }
     getPurchase()
@@ -103,6 +122,7 @@ const DetailContent = () => {
     duration,
     countries,
     genres,
+    year,
   } = movieData;
 
   const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
@@ -147,11 +167,25 @@ const renderStarSelector = () => {
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
           <div className={style['description-container-info']}>
+          <FacebookShareButton
+            url="https://filmflow.chekogarcia.com.mx/"
+          >
+            <FacebookIcon size={32} round />
+          </FacebookShareButton>
+
+          
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
             <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
-            <p><span className={style['italic-dark']}>País:</span> {country}</p>
+            <div className={style.genres}>
+                      {countries.map((country, index) => (
+              <div key={index}>
+                <p  onClick={() => goToCategory(country.name)}><span className={style['italic-dark']}>Paises:</span> {country.name.replace(/\b\w/g, c => c.toUpperCase())}</p>
+              </div>
+            ))}
+          </div>
             <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
+            <p><span className={style['italic-dark']}>Año:</span> {year}</p>
             <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>
@@ -175,27 +209,27 @@ const renderStarSelector = () => {
       </div>  
       {purchase.includes(movieData.id) && !review 
         ? <div className={style['review-form-container']}>
-            <h4>Leave a Review</h4>
+            <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
-              <label>Rating:</label>
+              <label>Puntuación:</label>
               <div className={style['star-selector']}>
                 {renderStarSelector()}
               </div>
-              <label>Comment:</label>
+              <label>Comentario:</label>
               <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-              <button onClick={handleReviewSubmit}>Submit Review</button>
+              <button onClick={handleReviewSubmit}>Subir comentario</button>
             </div>
           </div>
         : ""
       }
-          <h4>Reviews</h4>
+          <h4>Comentarios</h4>
         {reviewsData.map((review) => (
           <div key={review.id} className={style['review-container']}>
-            <img src={review.user.picture} alt={review.user.name} className={style['user-picture']} />
+            <img src={review.user?.picture ? review.user.picture : userpic.src} alt={review.user?.name ? review.user.name : "Desconocido"} className={style['user-picture']} />
             <div className={style['review-content']}>
               <div className={style['star-rating']} data-rating={review.points}>
-                <span className={style['italic-dark']}><p>{review.user.name}</p></span>
+                <span className={style['italic-dark']}><p>{review.user?.name ? review.user.name : "Desconocido"}</p></span>
                 {[...Array(review.points)].map((_, index) => (
                   <span key={index} className={style['filled']}>&#9733;</span>
                 ))}

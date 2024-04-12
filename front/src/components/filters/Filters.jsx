@@ -1,5 +1,5 @@
 'use client'
-import Genre from "../../components/genre/Genre";
+import Genre from "../genre/Genre";
 import Link from "next/link";
 import style from "./Filters.module.scss"
 import { useState } from "react";
@@ -41,7 +41,7 @@ const FiltersView = ({genres}) => {
                     if(index >= elemIndex.bottom && index <= elemIndex.top){
                         return (<Link 
                             className={style.circle}
-                            href={`/filters/genero=${elem.name}`}
+                            href={`/movies?genre=${elem.name}`}
                             key={elem.id}>     
                                   <>
                                     <Genre genre={elem}/>

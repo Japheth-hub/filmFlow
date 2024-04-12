@@ -49,7 +49,6 @@ const MovieForm = () => {
       axios.get(`${URL}countries`) 
       .then(response => {
         setCountryOptions(response.data); 
-        console.log(response.data)
       })
       .catch(error => {
         console.error('Error fetching country options:', error);
@@ -134,7 +133,6 @@ const MovieForm = () => {
         year: year,
         auth: userSid
       };
-      console.log(data)
       const movieResponse = await axios.post(`${URL}movies`, data);
       if (movieResponse.status === 200) {
         Swal.fire({
@@ -144,7 +142,6 @@ const MovieForm = () => {
         });
         setSuccessMessage('Formulario enviado correctamente');
         setErrorMessage('');
-        console.log('Server response:', movieResponse);
         setMovieName('');
         setDirector('');
         setSelectedGenres([]);

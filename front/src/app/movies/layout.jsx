@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
-import Navbar from '../../../components/navbar/Navbar'
-import Footer from '../../../components/footer/Footer'
+import Navbar from '@/components/navbar/Navbar'
+import Footer from '@/components/footer/Footer'
 import GoBack from '@/components/goBack/GoBack'
 
 export default function layout({children}) {
@@ -9,7 +9,6 @@ export default function layout({children}) {
     <>
       <Navbar />
       <div className="wrapper">  
-        <GoBack />
           {children}
       </div>
       <Footer />

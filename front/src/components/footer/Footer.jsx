@@ -20,22 +20,22 @@ const Footer = () => {
             
             <div className={style.order}>
                 <div>
-                    <h4>Site Map</h4>
+                    <h4>Nuestra web</h4>
                     <ul className={style.noDecoration}>
                         <li>
                             <Link href='/'>
-                                Home
+                                Inicio
                             </Link>
                         </li>
                         <li>
                             <Link href='/filters/search='>
-                                Movies
+                                Peliculas
                             </Link>
                         </li>
                         <li>
                             {user ? (
                                 <Link href="/account">
-                                    Profile
+                                    Perfil
                                 </Link>
                             ) : (
                                 <a href="#">User</a>
@@ -43,20 +43,20 @@ const Footer = () => {
                         </li>
                         <li>
                             <Link href='/cart'>
-                                Shopping cart
+                                Carrito de compras
                             </Link>
                             
                         </li>
                         <li>
                             <Link href='/about'>
-                                About
+                                Sobre nosotros
                             </Link>
                         </li>
                     </ul>
                     <h6>&#169; Todos los derechos reservados</h6>
                 </div>
                 <div>
-                    <h4>Socials</h4>
+                    <h4>Sociales</h4>
                     <Link href="#">
                         <Image src={fb} alt="facebook"/>
                     </Link>
@@ -66,7 +66,7 @@ const Footer = () => {
                     <Link href="#">
                         <Image src={twt} alt="twitter"/>
                     </Link>
-                    <Link href="https://github.com/lukeskip/filmFlow">
+                    <Link href="https://github.com/lukeskip/filmFlow"target="_blank">
                         <Image src={gh} alt="github"/>   
                     </Link>
 

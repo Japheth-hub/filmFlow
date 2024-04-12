@@ -4,6 +4,7 @@ const stripe = require("stripe")(KEY_SECRET);
 const postPurchase = require('../controllers/postPurchase.js');
 
 module.exports = async (request, response) => {
+  console.log("Se hace compra desde stripe");
   const sig = request.headers["stripe-signature"];
   const endpointSecret = ENDPOINT;
   let event;
@@ -21,8 +22,9 @@ module.exports = async (request, response) => {
     case "checkout.session.completed":
       const checkoutSessionCompleted = event.data.object;
       const purchaseInfo = {
-        sid:checkoutSessionCompleted.metadata.sid,
-        amount:checkoutSessionCompleted.amount_total,
+        userId:checkoutSessionCompleted.metadata.userId,
+        code:checkoutSessionCompleted.metadata.code,
+        amount:checkoutSessionCompleted.amount_total/100,
         currency:checkoutSessionCompleted.currency,
         stripeId:checkoutSessionCompleted.id,
         movies:checkoutSessionCompleted.metadata.movies,

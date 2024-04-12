@@ -1,8 +1,9 @@
 const purchases = require('../utils/purchases');
-const { Purchase,Movie } = require('../db');
+const { Purchase, Movie, MoviePurchase } = require('../db');
 const { Op } = require('sequelize');
 
 module.exports = async()=>{
+
     let count = 0
     for (purchase of purchases) {
         const {userId,movieId,amount,stripeId,method,currency,status} =  purchase;
@@ -13,12 +14,21 @@ module.exports = async()=>{
         const moviesDB = await Movie.findAll({
             where: {
                 id: {
-                [Op.in]: movieId,
+                    [Op.in]: movieId,
                 },
             },
         });
 
-        newPurchase.setMovies(moviesDB);
+
+
+        moviesDB.map(async (movie)=>{
+            const newMoviePurchase = await MoviePurchase.create({
+                purchaseId: newPurchase.id,
+                movieId: movie.id,
+                price: movie.price,
+            });
+       })
+
 
         if (created) {
             count++

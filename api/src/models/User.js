@@ -26,9 +26,25 @@ module.exports = (sequelize) => {
     picture: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: true,
+    },
+    payment_account: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    payment_method: {
+      type: DataTypes.ENUM("zelle", "paypal", "binance"),
+      allowNull: true,
+    },
+    payment_amount: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
     }
   },
   {paranoid : true});
-
 };
 

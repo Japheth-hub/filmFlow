@@ -27,13 +27,20 @@ fs.readdirSync(path.join(__dirname, "/models"))
 
 modelDefiners.forEach((model) => model(sequelize));
 let entries = Object.entries(sequelize.models);
-let capsEntries = entries.map((entry) => [
-  entry[0][0].toUpperCase() + entry[0].slice(1),
-  entry[1],
-]);
+let capsEntries = entries.map((entry) => {
+  entry[0] = entry[0].split("_");
+  entry[0] = entry[0].map((item)=>{
+    return item[0].toUpperCase() + item.slice(1);
+  });
+  entry[0] = entry[0].join("");
+  return [
+    entry[0],
+    entry[1],
+  ]
+});
 
 sequelize.models = Object.fromEntries(capsEntries);
-const { User, Movie, Genre, Review, Role, Cart, Purchase, Country } = sequelize.models;
+const { User, Movie, Genre, Review, Role, Cart, Purchase,Country,Report, Discount } = sequelize.models;
 
 Movie.belongsToMany(Genre, { through: "movie_genre" });
 Genre.belongsToMany(Movie, { through: "movie_genre" });
@@ -41,6 +48,7 @@ Genre.belongsToMany(Movie, { through: "movie_genre" });
 Movie.hasMany(Review)
 Review.belongsTo(Movie)
 Movie.belongsTo(User)
+Report.belongsTo(User);
 
 User.hasMany(Review)
 User.hasMany(Movie)
@@ -58,6 +66,12 @@ Movie.belongsToMany(User, { through: Cart });
 
 Movie.belongsToMany(Country, { through: "movie_country" })
 Country.belongsToMany(Movie, { through: "movie_country" })
+
+Discount.belongsToMany(Movie, { through: "discount_movie" });
+Movie.belongsToMany(Discount, { through: "discount_movie" });
+
+Discount.belongsToMany(Genre, { through: "discount_genre" });
+Genre.belongsToMany(Discount, { through: "discount_genre" });
 
 module.exports = {
   ...sequelize.models,
