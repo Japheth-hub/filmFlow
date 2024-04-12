@@ -18,7 +18,7 @@ const About = ()=>{
         <div className={style.about}>
         
             <div>
-                <h4>Institutional</h4>
+                <h1>FilmFlow</h1>
                 <p className={style.institutional}>
                     Nuestra plataforma de películas independientes ofrece una experiencia 
                     única, combinando lo mejor del cine con la última 
