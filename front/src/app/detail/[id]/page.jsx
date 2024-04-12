@@ -62,7 +62,6 @@ const DetailContent = () => {
 
       if (res.isConfirmed) {
         const {data} = await axios.delete(`${URL}reviews/${id}`)
-        // setReviewsData(reviewsData.filter((item) => item.id !== id))
         setUpdate(!update)
         Swal.fire({
           icon: "success",
@@ -202,9 +201,6 @@ const renderStarSelector = () => {
         setNewReview({ points: 0, comment: '' });
       }
       setAlerts({ points: data.points, comment: data.comment });
-      // const newReviewData = { id: reviewsData.length + 1, user: { name: user.name, picture: user.picture }, points, comment };
-      // setReviewsData([...reviewsData, newReviewData]);
-      // setSuccessMessage('Review submitted successfully.');
     } catch (error) {
       console.error('Error submitting review:', error);
     }
@@ -334,8 +330,6 @@ const renderStarSelector = () => {
             </div>
             <div className={style.reviewBtn}>
               <Button label={'Actualizar'} color={'green'} callback={()=>{handleUpdate(idReview)}}/>
-              {/* <button onClick={()=>{handleUpdate(idReview)}}>Actualizar</button> */}
-              {/* <button onClick={()=>{showModal('none')}}>Cerrar</button> */}
               <Button label={'Cerrar'} color={'red'} callback={()=>{showModal('none')}} />
             </div>
           </div>
