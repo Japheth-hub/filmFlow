@@ -78,9 +78,6 @@ const DetailContent = () => {
     }
   }
 
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
