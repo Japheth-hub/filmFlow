@@ -1,4 +1,4 @@
-const { Purchase,Movie } = require('../db');
+const { Purchase,Movie,PurchaseMovie } = require('../db');
 const { Op } = require('sequelize');
 
 module.exports = async function getPurchases(query){
@@ -15,7 +15,11 @@ module.exports = async function getPurchases(query){
         options.include =  [
             {
               model: Movie,
-              where: { userId: user }
+              where: { userId: user },
+              through: {
+                model: PurchaseMovie,
+                attributes: ['price'], 
+              },
             }
           ]
     }

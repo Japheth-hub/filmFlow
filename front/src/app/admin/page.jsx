@@ -6,6 +6,7 @@ import style from './admin.module.scss'
 import Image from 'next/image'
 import burgerMenu from '@/img/burger-menu.png'
 import DashGrap from '@/components/dashGrap/DashGrap'
+import DashPayments from '@/components/dashPayments/DashPayments'
 import Loading from "@/components/loading/loading";
 
 function Admin() {
@@ -23,6 +24,10 @@ function Admin() {
   
   const showReviews = async () => {
       setComponent(4)
+  }
+
+  const showPayments = async () => {
+      setComponent(6)
   }
 
   if(error){
@@ -43,6 +48,10 @@ function Admin() {
         return <Dashboard title={'Users'} link={`${URL}users/`} sid={user.sid}/>;
       case 4:
         return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
+      case 5:
+        return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
+      case 6:
+        return <DashPayments title={`Pagos`} link={`${URL}users/`} sid={user.sid}/>;
       default:
           return <p>Selecciona una opción del menú</p>
     }
@@ -69,6 +78,7 @@ function Admin() {
             <div onClick={() => showUsers()}><a role="img" aria-label="Usuarios">👤</a><span>Usuarios</span></div>
             <div onClick={() => showReviews()}><a role="img" aria-label="Reviews">⭐</a><span>Reviews</span></div>
             <div onClick={() => setComponent()}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
+            <div onClick={() => showPayments()}><a role="img" aria-label="Pagos">💸</a><span>Pagos</span></div>
             <div onClick={() => setComponent()}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
           </div>
         </div>
