@@ -1,0 +1,46 @@
+@import '../../scss/variables.scss';
+.discountContainer {
+    max-width: 800px; 
+    margin: 0 auto;
+    padding: 20px;
+    font-family: $mainFont;
+
+    .columnContainer {
+        display: flex;
+        justify-content: space-between;
+
+        .column {
+            width: calc(50% - 10px); 
+        }
+    }
+
+    .infoContainer {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px; 
+
+        .info {
+        margin-bottom: 10px; 
+        }
+        .input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+    }
+        
+    .buttonContainer {
+        margin-top: 20px; 
+    }
+
+    .errorMessage{
+        margin-top: 10px;
+        color: $cancelColor;
+    }
+
+}
+
+
+
+
