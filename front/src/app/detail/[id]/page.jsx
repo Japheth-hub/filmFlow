@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import userpic from "@/img/userpic.png";
 import style from '../detail.module.scss';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
@@ -62,20 +63,24 @@ const DetailContent = () => {
   
   useEffect(()=>{
     if(reviewsData.length > 0  && user){
-      setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.name))
+      setReview(reviewsData.find((review) => review.user?.email ? review.user.email === user.email : review.user?.name === user.name))
     }
   }, [reviewsData]);
   
 
   useEffect(() => {
     async function getPurchase(){
-      const {data} = await axios(`${URL}purchases/${user.sid}`)
-      if(typeof data === "object"){
-        const idsMovies = []
-        for(let movie of data){
-          idsMovies.push(movie.id)
+      try {
+        const {data} = await axios(`${URL}purchases/${user.sid}`)
+        if(typeof data === "object"){
+          const idsMovies = []
+          for(let movie of data){
+            idsMovies.push(movie.id)
+          }
+          setPurchase(idsMovies)
         }
-        setPurchase(idsMovies)
+      } catch (error) {
+        console.error('Error fetching purchase data:', error);
       }
     }
 
@@ -200,27 +205,27 @@ const renderStarSelector = () => {
       </div>  
       {purchase.includes(movieData.id) && !review || purchase.includes(movieData.id) && reviewsData.length === 0
         ? <div className={style['review-form-container']}>
-            <h4>Leave a Review</h4>
+            <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
-              <label>Rating:</label>
+              <label>Puntuación:</label>
               <div className={style['star-selector']}>
                 {renderStarSelector()}
               </div>
-              <label>Comment:</label>
+              <label>Comentario:</label>
               <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-              <button onClick={handleReviewSubmit}>Submit Review</button>
+              <button onClick={handleReviewSubmit}>Subir comentario</button>
             </div>
           </div>
         : ""
       }
-          <h4>Reviews</h4>
+          <h4>Comentarios</h4>
         {reviewsData.map((review) => (
           <div key={review.id} className={style['review-container']}>
-            <img src={review.user.picture} alt={review.user.name} className={style['user-picture']} />
+            <img src={review.user?.picture ? review.user.picture : userpic.src} alt={review.user?.name ? review.user.name : "Desconocido"} className={style['user-picture']} />
             <div className={style['review-content']}>
               <div className={style['star-rating']} data-rating={review.points}>
-                <span className={style['italic-dark']}><p>{review.user.name}</p></span>
+                <span className={style['italic-dark']}><p>{review.user?.name ? review.user.name : "Desconocido"}</p></span>
                 {[...Array(review.points)].map((_, index) => (
                   <span key={index} className={style['filled']}>&#9733;</span>
                 ))}
