@@ -16,7 +16,7 @@ module.exports = async(query) =>{
                         [Op.in]: moviesIds
                     }
                 },
-                attributes:['id',"name","price","poster"],
+                attributes:['id',"name","price","poster","userId"],
                 include:{
                     model:Genre,
                     attributes:['name'],

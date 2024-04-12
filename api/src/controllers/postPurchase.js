@@ -37,8 +37,15 @@ module.exports = async (purchaseInfo) => {
             }
             console.log(moviesDB);
         }
- 
-        //Pago a los producers involucrados en la compra:
+        
+        moviesDB.map(async (movie)=>{
+            const newMoviePurchase = await MoviePurchase.create({
+                purchaseId: purchase.id,
+                movieId: movie.id,
+                price: movie.price,
+            });
+        })
+
         for (const movie of moviesDB) {
             if (!movie.userId) {
                 continue;
@@ -55,15 +62,6 @@ module.exports = async (purchaseInfo) => {
             await producer.save();
         }
         //
-
-        moviesDB.map(async (movie)=>{
-            const newMoviePurchase = await MoviePurchase.create({
-                purchaseId: purchase.id,
-                movieId: movie.id,
-                price: movie.price,
-            });
-       })
-
 
         const rows = await Cart.destroy({
             where: {

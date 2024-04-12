@@ -16,7 +16,7 @@ module.exports = async () => {
                     poster,
                     trailer,
                     movie,
-                    status: "pending", 
+                    status: "approved", 
                     userId:userId || null,
                     price: 25,
                     year: 2020

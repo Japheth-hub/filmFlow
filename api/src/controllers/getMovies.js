@@ -1,11 +1,9 @@
 const { Movie, Genre,Country,Purchase, User, Review } = require('../db');
 const { Op } = require("sequelize");
 
-
-
 module.exports = async function getMovies(query){
 
-    let {search, genre, orderType, order,limit,user,country,purchases, paranoid,today} = query;
+    let {search, genre, orderType, order,limit,user,country,purchases, paranoid,today, admin } = query;
    
     try {
         let data = {}
@@ -113,6 +111,12 @@ module.exports = async function getMovies(query){
             options = {
                 ...options,
                 paranoid: false
+            }
+        }
+
+        if(!admin){
+            options.where = {
+                status: "approved"
             }
         }
         
