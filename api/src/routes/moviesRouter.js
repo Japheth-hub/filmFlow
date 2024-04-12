@@ -11,7 +11,7 @@ const getAuth = require('../middlewares/getAuth')
 const moviesRouter = Router();
 
 moviesRouter.get('/',getAuth, getMoviesHandler);
-moviesRouter.get('/:id', getMoviesIdHandler);
+moviesRouter.get('/:id',getAuth, getMoviesIdHandler);
 moviesRouter.get("/restore/:id", restoredMoviesHandler);
 moviesRouter.post('/',checkAuth, postMoviesHandler);
 moviesRouter.put('/:id', putMoviesHandler);

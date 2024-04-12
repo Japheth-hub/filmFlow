@@ -1,8 +1,9 @@
 const { Movie, Genre, User, Review, Country } = require('../db');
-
-module.exports = async (id)=>{
+const checkUserMoviePurchase = require('../services/checkUserMoviePurchase')
+module.exports = async (query)=>{
     try {
-        const data = {};
+        const data = {}
+        const {id,user} = query;
         const movie = await Movie.findByPk(id, {
             include:[
                 {
@@ -29,7 +30,12 @@ module.exports = async (id)=>{
         })
 
         if(movie){
-            return data.content = movie
+            if(user){
+                if(await checkUserMoviePurchase(user.id,movie.id)){
+                    movie.dataValues.reviewPermission = true;
+                }
+            }
+            return movie;
         }
         return data.message = 'No existe pelicula con ese Id'
     } catch (error) {
