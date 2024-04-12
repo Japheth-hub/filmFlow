@@ -9,6 +9,10 @@ module.exports = async(type,result,user)=>{
             },
             defaults: { type, result }
         });
+        if(!created){
+            report.result = result;
+            report.save();
+        }
         return report;
     } catch (error) {
         console.log(error);

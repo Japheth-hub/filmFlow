@@ -30,7 +30,7 @@ conn.sync({ force: TEST === "TRUE" ?true : false }).then(() => {
         await saveGenres();
         await saveUsers();
         await saveMovies();
-        await savePurchases();
+        // await savePurchases();
         await saveReviews();
         await saveCart();
         await postProducerReportCron.dailyJob(); 

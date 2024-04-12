@@ -36,7 +36,5 @@ module.exports = async function getPurchases(query){
 
     const purchases = await Purchase.findAll({...options});
 
-
-
     return purchases;
 }
