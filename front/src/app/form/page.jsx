@@ -218,16 +218,21 @@ const MovieForm = () => {
       genres: selectedGenres,
       description: description,
       trailer:window.URL.createObjectURL(trailer),
-      // movie: window.URL.createObjectURL(movie),
+      movie: window.URL.createObjectURL(movie),
+      isLoading: isLoading
 
       // Agrega otros campos de película según tus necesidades
     });
-    console.log(previewModalOpen)
-  };
+  }
 
   const closePreviewModal = () => {
     setPreviewModalOpen(false);
   };
+
+  const modalSend = () => {
+   handleSubmit()
+   setPreviewModalOpen(false)
+  }
   return (
     <div className={style["movie-form-container"]}>
       <div className={style["form-wrapper"]}>
@@ -391,21 +396,17 @@ const MovieForm = () => {
               {errors.movieFile && <p className={style["error-message"]}>{errors.movieFile}</p>}
             </div>
           </div>
+          
           <div className={style["submit-button-container"]}>
             <button type="submit" className={style["submit-button"]} disabled={isLoading}>
               {isLoading ? 'Enviando...' : 'Enviar'}
             </button>
           </div>
-
-          
-
-      {/* Botón para abrir el modal de vista previa */}
-      <button onClick={openPreviewModal}>Vista previa</button>
-
-{/* Modal de vista previa */}
-<Modal isOpen={previewModalOpen} onClose={closePreviewModal} movieData={previewMovieData} />
-          
         </form>
+        <div>
+        <button onClick={openPreviewModal}>Vista previa</button>
+        <Modal isOpen={previewModalOpen} onClose={closePreviewModal} movieData={previewMovieData} modalSend={modalSend} />
+        </div>
       </div>
     </div>
   );

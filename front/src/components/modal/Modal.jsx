@@ -1,13 +1,12 @@
 import style from './Modal.module.scss'
 
 
+const Modal = ({ isOpen, onClose, movieData, modalSend }) => {
 
-
-const Modal = ({ isOpen, onClose, movieData }) => {
-  console.log(movieData )
     if (!isOpen || !movieData) return null;
-    const modalClassName = isOpen ? style.modalUp : style.modal;  
-  
+    const modalClassName = isOpen ? style.modalUp : style.modal; 
+    
+    
   
     return (
       <div className={modalClassName}>
@@ -23,7 +22,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
               <p><span className={style['italic-dark']}>Dirigida por: {movieData.director}</span></p>
               <p><span className={style['italic-dark']}>País:<ul className={style['italic-dark']}>
                 {movieData.countries.map((country, index) => (
-                  <li className={style['italic-dark']} key={index}>{country}</li>
+                  <li className={style['italic-dark']} key={index}>{country.replace(/\b\w/g, c => c.toUpperCase())}</li>
                   ))}
                   </ul></span></p>
               <p><span className={style['italic-dark']}>Descripción: {movieData.description}</span></p>
@@ -37,7 +36,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
           </div>
         </div>
         <div className={style['media-container']}>
-                  <video src={movieData.trailer} className={style["poster-image"]}/>
+                  <video src={movieData.trailer} className={style["video-image"]}/>
         </div>
         </div>
       <span className={style.close} onClick={onClose}>&times;</span>
