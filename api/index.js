@@ -13,6 +13,11 @@ const { TEST } = process.env;
 const router = require('./src/routes/index.js');
 const expressListRoutes = require('express-list-routes');
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
+const postProducerReportCron = require('./src/controllers/postProducerReportCron.js')
+
+const dailyCronJob = require('./src/cronJobs/dailyCronJob.js');
+dailyCronJob();
+
 
 conn.sync({ force: TEST === "TRUE" ?true : false }).then(() => {
   
@@ -25,9 +30,10 @@ conn.sync({ force: TEST === "TRUE" ?true : false }).then(() => {
         await saveGenres();
         await saveUsers();
         await saveMovies();
-        await savePurchases();
+        // await savePurchases();
         await saveReviews();
         await saveCart();
+        await postProducerReportCron.dailyJob(); 
       }
     } catch (error) {
       console.log(error);

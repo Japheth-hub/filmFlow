@@ -4,8 +4,10 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
+import Modal from '@/components/modal/Modal'
 import { validateMovieForm, validateSelectForm } from './validateMovieForm '
 import Swal from 'sweetalert2'
+
 
 const MovieForm = () => {
 
@@ -27,7 +29,14 @@ const MovieForm = () => {
   const [isLoading, setIsLoading] = useState(false); 
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
+  const [previewModalOpen, setPreviewModalOpen] = useState(false); 
+  const [previewMovieData, setPreviewMovieData] = useState(null);
   
+  
+
+
+
+
   useEffect(() => {
     axios.get(`${URL}genres`)
       .then(response => {
@@ -195,6 +204,32 @@ const MovieForm = () => {
       setSelectedCountries([...selectedCountries, country]);
     }
   };
+  const openPreviewModal = () => {
+    setPreviewModalOpen(true);
+    // Aquí estableces los datos de la película para mostrar en la vista previa
+    setPreviewMovieData({
+      poster: window.URL.createObjectURL(poster),
+      name: movieName,
+      director: director,
+      countries: selectedCountries,
+      genres: selectedGenres,
+      description: description,
+      trailer:window.URL.createObjectURL(trailer),
+      movie: window.URL.createObjectURL(movie),
+      isLoading: isLoading
+
+      // Agrega otros campos de película según tus necesidades
+    });
+  }
+
+  const closePreviewModal = () => {
+    setPreviewModalOpen(false);
+  };
+
+  const modalSend = () => {
+   handleSubmit()
+   setPreviewModalOpen(false)
+  }
   return (
     <div className={style["movie-form-container"]}>
       <div className={style["form-wrapper"]}>
@@ -348,12 +383,17 @@ const MovieForm = () => {
               {errors.movieFile && <p className={style["error-message"]}>{errors.movieFile}</p>}
             </div>
           </div>
+          
           <div className={style["submit-button-container"]}>
             <button type="submit" className={style["submit-button"]} disabled={isLoading}>
               {isLoading ? 'Enviando...' : 'Enviar'}
             </button>
           </div>
         </form>
+        <div>
+        <button onClick={openPreviewModal}>Vista previa</button>
+        <Modal isOpen={previewModalOpen} onClose={closePreviewModal} movieData={previewMovieData} modalSend={modalSend} />
+        </div>
       </div>
     </div>
   );

@@ -328,12 +328,12 @@ export default function Dashboard({link, title, sid}) {
                                                 <td className={style.td}>
                                                     <div className={style['btn-actions']}>
                                                         {item.deleted === "Active"
-                                                            ? <div className={style['btn']}><Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button></div>
-                                                            : <div className={style['btn']}><Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button></div>
+                                                            ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                            : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                         }
-                                                        <div className={style['btn']}><Button emoji={'✏️'} label={''} color={'blue'}></Button></div>
-                                                        {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <div className={style['btn']}><Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button></div> )}
-                                                        {title === "Users" && item.role !== "admin" && ( <div className={style['btn']}><Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button></div> )}
+                                                        {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
+                                                        {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )}
+                                                        {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
                                                     </div>
                                                 </td>
                                         </tr>       
