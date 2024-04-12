@@ -38,6 +38,7 @@ const DetailContent = () => {
   const [idReview, setIdReview] = useState()
   const [alerts, setAlerts] = useState({points: true, comment: true})
 
+
   const goToCategory = (genre) => {
     router.push(`/movies?genre=${genre}`);
   };
@@ -94,6 +95,7 @@ const DetailContent = () => {
         setIsLoading(false);
       }
     };
+
     fetchData();
   }, [id]);
 
@@ -131,13 +133,9 @@ const DetailContent = () => {
         console.error('Error fetching purchase data:', error);
       }
     }
-
-    if(user){
-      getPurchase()
-    }
-  }, [user])
-  
-
+    getPurchase()
+    setReview(reviewsData.find((review) => review.user.email ? review.user.email === user.email : review.user.name === user.email))
+    }, [reviewsData])
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
@@ -168,9 +166,8 @@ const DetailContent = () => {
     year,
   } = movieData;
 
-  // const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+  const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
 
-  const country = ""; 
   const handleRatingChange = (rating) => {
     setNewReview({ ...newReview, points: rating });
   };
@@ -269,7 +266,7 @@ const renderStarSelector = () => {
           <iframe src={movie} width="800" height="500" title="Movie" allowFullScreen />
         )}
       </div>  
-      {purchase.includes(movieData.id) && !review || purchase.includes(movieData.id) && reviewsData.length === 0
+      {purchase.includes(movieData.id) && !review 
         ? <div className={style['review-form-container']}>
             <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
