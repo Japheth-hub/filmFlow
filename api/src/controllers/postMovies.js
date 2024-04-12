@@ -139,10 +139,9 @@ module.exports = async (req) => {
         };
         
         try {
-            const emailResponse = await sendEmail(mailInfo);
-            console.log(emailResponse.message)
+            await sendEmail(mailInfo);
         } catch (error) {
-            console.log('Error sending email:', error);
+            console.error('Error sending email:', error);
         }
         
 
