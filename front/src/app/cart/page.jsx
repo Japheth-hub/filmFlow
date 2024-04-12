@@ -164,11 +164,11 @@ const Cart = () => {
                 type="text"
                 value={userDiscountCode}
                 onChange={(e) => setUserDiscountCode(e.target.value)}
-                placeholder="Enter discount code"
+                placeholder="Escriba el código de descuento"
                 className={style.input}
             />
-            <Button label="Apply Discount" color="primary" callback={handleSubmit}/>
-            {userDiscountCode && discountApplied && <p className={style.successMessage}>Discount applied successfully!</p>}            
+            <Button label="Aplicar descuento" color="primary" callback={handleSubmit}/>
+            {userDiscountCode && discountApplied && <p className={style.successMessage}>Descuento aplicado!</p>}            
             </form>
 
         </div>
