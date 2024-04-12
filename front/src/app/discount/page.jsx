@@ -16,8 +16,6 @@ const Discount = () =>{
     const [genres, setGenres] = useState([]);
     const [percentage, setPercentage] = useState(0);
     const [discounts, setDiscounts] = useState([]);
-    const [movieError, setMovieError] = useState('');
-    const [percentageError, setPercentageError] = useState('');
     
 
     useEffect(() => {
@@ -56,7 +54,7 @@ const Discount = () =>{
             
             const allMoviesIds = movies.map((movie) => movie.id);
             setSelectedMovies(allMoviesIds);
-            
+
         } else if (selectedMovies.length > 0 && selectedGenres.length > 0) {
             Swal.fire({
                 icon: 'error',
@@ -70,7 +68,7 @@ const Discount = () =>{
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'El porcentaje tiene que ser un numero entero (ej: 5, 10, 15).',
+                text: 'El porcentaje tiene que ser un numero entero entre 1 y 100 (ej: 5, 10, 15).',
             });
             return;
         }
@@ -152,7 +150,6 @@ const Discount = () =>{
                             <label>{movie.name}</label>
                         </div>
                     ))}
-                    {movieError && <p className={style.errorMessage}>{movieError}</p>}
                 </div>
 
                 <div className={style.column}>
@@ -180,7 +177,6 @@ const Discount = () =>{
                         value={percentage}
                         onChange={(e) => setPercentage(parseInt(e.target.value))}
                     />
-                    {percentageError && <p className={style.errorMessage}>{percentageError}</p>}
                 </div>
                 
                 <div className={style.info}>
