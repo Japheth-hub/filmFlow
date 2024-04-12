@@ -9,12 +9,14 @@ import Pill from '@/components/pill/Pill';
 import Button from "../../../components/button/Button";
 import AddToCart from '../../../components/addToCart/AddToCart';
 import { useUser } from '@auth0/nextjs-auth0/client'; 
+import Swal from "sweetalert2";
 import {
   FacebookShareButton,
   FacebookIcon,
   WhatsappShareButton,
   WhatsappIcon
 } from "react-share";
+import validateReview from "@/helpers/validateReview";
 
 
 const DetailContent = () => {
@@ -29,21 +31,53 @@ const DetailContent = () => {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState('');
   const [reviewsData, setReviewsData] = useState([]);
-  const user = checkUserLogin();
-  const [review, setReview] = useState({})
+  const {user} = useUser();
+  const [review, setReview] = useState()
+  const [display, setDisplay] = useState('none')
+  const [update, setUpdate] = useState(true)
+  const [idReview, setIdReview] = useState()
+  const [alerts, setAlerts] = useState({points: true, comment: true})
+
 
   const goToCategory = (genre) => {
     router.push(`/movies?genre=${genre}`);
   };
 
-  function checkUserLogin (){
-    const user = window.localStorage.getItem('FilmFlowUsr');
-    if(user){
-        return JSON.parse(user);
-    }else{
-        return false
+  function showModal(valor, id) {
+    setDisplay(valor);
+    setIdReview(id)
+    setAlerts({ points: true, comment: true });
+
+  }
+
+  async function deleteReview(id){
+    try {
+      const res = await Swal.fire({
+        icon: "warning",
+        title: "¿Estás seguro?",
+        text: "Estas seguro que deseas eliminar tu comentario",
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (res.isConfirmed) {
+        const {data} = await axios.delete(`${URL}reviews/${id}`)
+        setUpdate(!update)
+        Swal.fire({
+          icon: "success",
+          title: "¡Éxito!",
+          text: data.message,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "¡Error!",
+        text: error || "Ocurrió un error al eliminar la información.",
+      });
     }
-}
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +87,7 @@ const DetailContent = () => {
       try {
         const response = await axios.get(`${URL}movies/${id}`);
         setMovieData(response.data);
+        setReviewsData(response.data.reviews)
       } catch (error) {
         console.error('Error fetching movie data:', error);
         setError(error);
@@ -65,10 +100,16 @@ const DetailContent = () => {
   }, [id]);
 
   useEffect(() => {
-    if (movieData) {
-      setReviewsData(movieData.reviews || []);
+    async function reload(){
+      try {
+        const {data} = await axios.get(`${URL}movies/${id}`);
+        setReviewsData(data.reviews)
+      } catch (error) {
+        console.log(error)
+      }
     }
-  }, [movieData]);
+    reload()
+  }, [update]);
   
   useEffect(()=>{
     if(reviewsData.length > 0  && user){
@@ -147,22 +188,40 @@ const renderStarSelector = () => {
       const userSid = user.sid;
       const movieId = id; 
       const { comment, points } = newReview; 
-  
-
-      await axios.post(`${URL}reviews`, { userSid, movieId, comment, points });
-
-      const newReviewData = { id: reviewsData.length + 1, user: { name: user.name, picture: user.picture }, points, comment };
-      setReviewsData([...reviewsData, newReviewData]);
-      setSuccessMessage('Review submitted successfully.');
-      setNewReview({ points: 0, comment: '' });
+      const data = await validateReview(points, comment)
+      if(data.points === true && data.comment === true){
+        await axios.post(`${URL}reviews`, { userSid, movieId, comment, points });
+        setUpdate(!update)
+        setNewReview({ points: 0, comment: '' });
+      }
+      setAlerts({ points: data.points, comment: data.comment });
     } catch (error) {
       console.error('Error submitting review:', error);
     }
   };
 
+  async function handleUpdate(id){
+    try {
+      const { comment, points } = newReview; 
+      const data = await validateReview(points, comment)
+      if(data.points === true && data.comment === true){
+        await axios.put(`${URL}reviews/${id}`, { comment, points });
+          setAlerts({ points: true, comment: true });
+          setUpdate(!update)
+          setDisplay('none')
+          setNewReview({ points: 0, comment: "" });
+        }
+        setAlerts({ points: data.points, comment: data.comment });
+    } catch (error) {
+      console.log("Error al actualizar",error)
+    }
+  }
+
+  // console.log(alerts)
+
   return (
     <div className={style['detail-content']}>
-     
+    
       <div className={style['poster-description-container']}>
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
@@ -213,10 +272,12 @@ const renderStarSelector = () => {
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
               <label>Puntuación:</label>
+              {alerts.points !== true && <span>{alerts.points}</span>}
               <div className={style['star-selector']}>
                 {renderStarSelector()}
               </div>
               <label>Comentario:</label>
+              {alerts.comment !== true && <span>{alerts.comment}</span>}
               <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
               <button onClick={handleReviewSubmit}>Subir comentario</button>
             </div>
@@ -236,8 +297,38 @@ const renderStarSelector = () => {
               </div>
               <p>{review.comment}</p>
             </div>
+            {(review.user?.email ? review.user.email === user?.email : review.user?.name === user?.name) && 
+              <div>
+                <Button emoji={'✏️'} color={'green'} callback={()=>{showModal('block', review.id)}}></Button>
+                <Button emoji={'🗑️'} color={'red'} callback={()=>{deleteReview(review.id)}}></Button>
+              </div>
+            }
           </div>
         ))}
+      <div className={style.modalContainer} style={{display : display}}>
+        <div className={style.modal}>
+          <h4>Actualizar Comentario</h4>
+          {successMessage && <div className={style['success-message']}>{successMessage}</div>}
+          <div className={style['review-form']}>
+            <div className={style['star-selector']}>
+              {alerts.points !== true && <span className={style.alerts}>{alerts.points}</span>}
+              <div className={style.reviewPoints}>
+                <label>Puntuación:</label>
+                {renderStarSelector()}
+              </div>
+            </div>
+            <div className={style.reviewComment}>
+              {alerts.comment !== true && <span className={style.alerts}>{alerts.comment}</span>}
+              <label>Comentario:</label>
+              <textarea rows='10' cols='40' value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
+            </div>
+            <div className={style.reviewBtn}>
+              <Button label={'Actualizar'} color={'green'} callback={()=>{handleUpdate(idReview)}}/>
+              <Button label={'Cerrar'} color={'red'} callback={()=>{showModal('none')}} />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

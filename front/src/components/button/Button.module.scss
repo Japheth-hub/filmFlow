@@ -8,6 +8,8 @@
   font-size: 1.3em;
   border-radius: 5px;
   margin-top: 10px;
+  transition: all 0.4s;
+  cursor: pointer;
   &.green {
     background-color: $successColor;
   }
@@ -19,4 +21,8 @@
     max-height: 20px;
     display: inline;
   }
+}
+
+.button:hover{
+  transform: scale(1.1);
 }
