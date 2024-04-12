@@ -1,22 +1,12 @@
 import React from "react";
-import style from '../DashGrap.module.scss';
-import Image from 'next/image'
-import info from '@/img/tooltip-info.svg'
 import {Bar} from "react-chartjs-2";
+import style from "../DashGrap.module.scss"
 
-export default function DashArea({chartData, title}) {
+export default function DashArea({chartData}) {
+    const options = {
+        responsive: true
+    }
     return (
-        <div className={style.content}>
-            <h3>{title}</h3>
-            <div className={style.tooltip}>
-                <span className={style.tooltiptext}>Esto es un tooltip</span>
-            <Image
-                src={info}
-                width={25}
-                height={25}
-                alt="info"/>
-            </div>
-            <div className={style.card}><Bar data={chartData}/></div>
-        </div>
+        <div className={style.grap}><Bar options={options} data={chartData}/></div>
     );
 }

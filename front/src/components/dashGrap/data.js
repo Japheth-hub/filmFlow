@@ -2,28 +2,35 @@ import axios from 'axios';
 
 const URL = process.env.NEXT_PUBLIC_URL
 
-export const movieGenre = async() => {
-    let listGenres
+export const data = {
+    purchaseDay: 'Volúmen de ventas por día',
+    purchaseMonth: 'Total de ventas en el mes',
+    moviesToday: 'Total de películas agregadas hoy',
+    moviesByGenre: 'Cantidad de películas por cada género',
+    interactions: 'Cantidad total de votos y comentarios en las películas',
+    rankingAndReviews: 'Géneros por votos y comentarios',
+    usersByDay: 'Nuevos usuarios crados por día',
+    totalUsers: 'Usuarios totales de la aplicación',
+}
+
+export const movieGenre = async(sid) => {
+    let listMoviesGenres = [[],[]]
     try {
-        const genres = await axios.get(`${URL}genres`);
-            listGenres = genres.data.map(genre => {
-            return{
-            name: genre.name,
-            cant: 0
-        }})
-        const movies = await axios.get(`${URL}movies`);
-        listGenres.forEach(genre => {
-            movies.data.forEach(movies => {
-                let containsGenre = movies.genres.some(elem => genre.name === elem.name)
-                if(containsGenre) genre.cant++
-            })
-        });        
+        const { data } = await axios.get(`${URL}dashboard/${sid}`);
+        data.totalMoviesByGenre.map(elem =>{
+            listMoviesGenres[[0]].push(elem.name)
+            listMoviesGenres[[1]].push(elem.movies)
+        })
+        return listMoviesGenres;
+        
     } catch (error) {
         return("FALLA DE DATOS movies:", error);
     }
-    return listGenres
 }
-
+export const totalMoviesDay = async (sid) =>{
+    const { data } = await axios.get(`${URL}dashboard/${sid}`);
+    return data.totalMoviesToday
+}
 export const userDay = async(sid) => {
     let dataGrap = []
     try {
@@ -66,14 +73,17 @@ export const userDay = async(sid) => {
         return("FALLA DE DATOS userXday:", error);
     }
 }
-
+export const totalUsers = async (sid) =>{
+    const { data } = await axios.get(`${URL}users/${sid}`);
+    return data.length
+}
 export const salesDay = async(sid) => {
     try {
-        const { data } = await axios.get(`${URL}purchases/${sid}`);
+        const { data } = await axios.get(`${URL}dashboard/${sid}`);
         // Objeto para almacenar ventas agrupados por día
         const groupedSales = [];
         // Iterar sobre cada venta y agruparlo por día
-        data.forEach(sale => {
+        data.purchasesMonth.forEach(sale => {
             // Obtener la fecha de creación del usuario
             const createdAt = new Date(sale.createdAt);
             // Formatear la fecha en formato YYYY-MM-DD
@@ -87,10 +97,7 @@ export const salesDay = async(sid) => {
             // Agregar la venta al arreglo correspondiente a esta fecha
             groupedSales[formattedDate].push(sale);
         });
-        const result = {
-            labels: [],
-            data: []
-        };
+        const result = [[],[]];
         // Iterar sobre las claves del objeto groupedSales para extraer las fechas y la cantidad de ventas
         let maxSales = 0;
         for (const date in groupedSales) {
@@ -98,10 +105,10 @@ export const salesDay = async(sid) => {
                 const sales = groupedSales[date];
                 const salesAmount = sales.reduce((total, sale) => total + parseFloat(sale.amount), 0);          
                 /// Agregar la fecha al arreglo de etiquetas
-                result.labels.push(date);
+                result[[0]].push(date);
                 
                 // Agregar el saldo de ventas al arreglo de datos
-                result.data.push(salesAmount);
+                result[[1]].push(salesAmount);
             }
         }
         return result;
@@ -110,7 +117,10 @@ export const salesDay = async(sid) => {
         return("FALLA DE DATOS salesXday:", error);
     }
 }
-
+export const totalSalesMonth = async (sid) =>{
+    const { data } = await axios.get(`${URL}dashboard/${sid}`);
+    return data.totalPurchasesMonth
+}
 export const revrankGenre = async() => {
     let dataGrap;
     try {
