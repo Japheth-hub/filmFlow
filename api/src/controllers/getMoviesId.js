@@ -32,6 +32,7 @@ module.exports = async (query)=>{
         if(movie){
             if(user){
                 if(await checkUserMoviePurchase(user.id,movie.id)){
+                    console.log("puede comentar");
                     movie.dataValues.reviewPermission = true;
                 }
             }
