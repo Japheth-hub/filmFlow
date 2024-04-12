@@ -4,16 +4,21 @@
   font-family: $mainFont;
   font-size: 14px;
 
+  .institutional {
+    font-size: 1.5em;
+  }
+
   .profiles {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 50px;
     padding: 20px 0 0 0;
+    margin-bottom: 50px;
 
     .profile {
-      width: 200px;
+      width: 250px;
       border-radius: 5px;
       border: $neutralDark solid 2px;
 
@@ -26,6 +31,7 @@
       .info {
         min-height: 200px;
         padding: 0 10px 10px 10px;
+        font-size: 1em;
       }
       .social {
         background-color: $mainColor;
