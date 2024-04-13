@@ -1,3 +1,4 @@
+@import '../../scss/variables.scss';
 .pageContainer {
   display: flex;
   justify-content: center; 
@@ -74,4 +75,27 @@
   margin-left: auto;
   margin-right: 20px;
   flex-direction: row-reverse;
+}
+
+.formContainer {
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  font-family: $mainFont;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+
+.successMessage {
+  color: green;
+  margin-top: 10px;
 }
