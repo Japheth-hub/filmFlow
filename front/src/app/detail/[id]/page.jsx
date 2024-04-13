@@ -84,9 +84,14 @@ const DetailContent = () => {
       setError(null);
 
       try {
-        const response = await axios.get(`${URL}movies/${id}`);
+        let query = "";
+        if(user){
+          console.log(user);
+          query =`?auth=${user.sid}`;
+        }
+        const response = await axios.get(`${URL}movies/${id}${query}`);
+        console.log(response.data);
         setMovieData(response.data);
-        setReviewsData(response.data.reviews)
       } catch (error) {
         console.error('Error fetching movie data:', error);
         setError(error);
@@ -95,13 +100,13 @@ const DetailContent = () => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [id,user]);
 
   useEffect(() => {
     async function reload(){
       try {
         const {data} = await axios.get(`${URL}movies/${id}`);
-        setReviewsData(data.reviews)
+        setMovieData(data)
       } catch (error) {
         console.log(error)
       }
@@ -109,12 +114,7 @@ const DetailContent = () => {
     reload()
   }, [update]);
   
-  useEffect(()=>{
-    if(reviewsData.length > 0  && user){
-      setReview(reviewsData.find((review) => review.user?.email ? review.user.email === user.email : review.user?.name === user.name))
-    }
-  }, [reviewsData]);
-  
+
 
   useEffect(() => {
     async function getPurchase(){
@@ -131,12 +131,11 @@ const DetailContent = () => {
         console.error('Error fetching purchase data:', error);
       }
     }
-
     if(user){
       getPurchase()
     }
-  }, [user])
-  
+    
+    }, [reviewsData])
 
 
   const toggleMediaType = () => {
@@ -268,9 +267,10 @@ const renderStarSelector = () => {
         ) : (
           <iframe src={movie} width="800" height="500" title="Movie" allowFullScreen />
         )}
-      </div>  
-      {purchase.includes(movieData.id) && !review || purchase.includes(movieData.id) && reviewsData.length === 0
-        ? <div className={style['review-form-container']}>
+      </div> 
+
+      {movieData.reviewPermission && 
+          <div className={style['review-form-container']}>
             <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
@@ -285,10 +285,12 @@ const renderStarSelector = () => {
               <button onClick={handleReviewSubmit}>Subir comentario</button>
             </div>
           </div>
-        : ""
-      }
+        }
+        
+     
           <h4>Comentarios</h4>
-        {reviewsData.map((review) => (
+
+        {movieData.reviews && movieData.reviews.map((review) => (
           <div key={review.id} className={style['review-container']}>
             <img src={review.user?.picture ? review.user.picture : userpic.src} alt={review.user?.name ? review.user.name : "Desconocido"} className={style['user-picture']} />
             <div className={style['review-content']}>
@@ -300,12 +302,13 @@ const renderStarSelector = () => {
               </div>
               <p>{review.comment}</p>
             </div>
-            {(review.user?.email ? review.user.email === user?.email : review.user?.name === user?.name) && 
-              <div>
-                <Button emoji={'✏️'} color={'green'} callback={()=>{showModal('block', review.id)}}></Button>
-                <Button emoji={'🗑️'} color={'red'} callback={()=>{deleteReview(review.id)}}></Button>
-              </div>
-            }
+                {user && user.email === review.user.email  && 
+                    <div>
+                      <Button emoji={'✏️'} color={'green'} callback={()=>{showModal('block', review.id)}}></Button>
+                      <Button emoji={'🗑️'} color={'red'} callback={()=>{deleteReview(review.id)}}></Button>
+                    </div>
+                }
+            
           </div>
         ))}
       <div className={style.modalContainer} style={{display : display}}>

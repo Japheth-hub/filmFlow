@@ -246,7 +246,6 @@ const MovieForm = () => {
               value={movieName}
               onChange={(e) => setMovieName(e.target.value)}
               className={style["form-input"]}
-              // required
             />
             {errors.movieName && <p className={style["error-message"]}>{errors.movieName}</p>}
           </div>
@@ -258,8 +257,6 @@ const MovieForm = () => {
               value={director}
               onChange={(e) => setDirector(e.target.value.replace(/\d/g, ''))}
               className={style["form-input"]}
-              
-              // required
             />
             {errors.director && <p className={style["error-message"]}>{errors.director}</p>}
           </div>
@@ -271,7 +268,6 @@ const MovieForm = () => {
               value={year}
               onChange={(e) => setYear(e.target.value)}
               className={style["form-input"]}
-              
             />
             {errors.year && <p className={style["error-message"]}>{errors.year}</p>}
           </div>
@@ -307,9 +303,7 @@ const MovieForm = () => {
               value={selectedCountries}
               onChange={(e) => toggleCountry(e.target.value)}
               className={style["form-input"]}
-              
             >
-              {/* Renderizar opciones de países */}
               <option value="">Selecciona país</option>
               {countryOptions.map(country => (
                 <option key={country.name} value={country.name}>{country.name.replace(/\b\w/g, c => c.toUpperCase())}</option>
@@ -334,7 +328,6 @@ const MovieForm = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={style["form-input"]}
-              // required
             ></textarea>
             {errors.description && <p className={style["error-message"]}>{errors.description}</p>}
           </div>
@@ -348,7 +341,6 @@ const MovieForm = () => {
                 onChange={handlePosterChange}
                 className={style["form-input"]}
                 accept="image/*"
-                // required
               />
               </div>
               {poster && (
@@ -366,7 +358,6 @@ const MovieForm = () => {
                 onChange={handleTrailerChange}
                 className={style["form-input"]}
                 accept="video/*"
-                // required
               />
               {trailer && (
                 <div className={style["image-preview-container"]}>
@@ -383,7 +374,6 @@ const MovieForm = () => {
                 onChange={handleMovieChange}
                 className={style["form-input"]}
                 accept="video/*"
-                // required
               />
               {movie && (
                 <div className={style["image-preview-container"]}>
