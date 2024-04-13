@@ -191,3 +191,24 @@
 .btn:hover{
     transform: scale(1.1);
 }
+
+.approved,
+.pending,
+.declined{
+    padding: 2px 5px;
+    color: $neutralLight;
+    border: 0;
+    font-family: $mainFont;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.approved{
+    background-color: green;
+}
+.pending{
+    background-color: $mainColor;
+}
+.declined{
+    background-color: red;
+}
