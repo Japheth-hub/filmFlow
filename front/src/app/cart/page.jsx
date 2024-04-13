@@ -15,7 +15,46 @@ const Cart = () => {
     const [cartData, setCartData] = useState([]);
     const [localStorageData, setLocalStorageData] = useState(null);
     const [totalPrice,setTotalPrice] = useState(null);
+    const [userDiscountCode, setUserDiscountCode] = useState('');
+    const [discountApplied, setDiscountApplied] = useState(false);
+    const event = new Event('localChanged');
 
+    const fetchMoviePercentage = async (movieId) => {
+        try {
+            const response = await axios.get(`${URL}discount/movie/${movieId}`);
+
+            const discounts = response.data.discounts;
+
+            if (discounts.length > 0) {
+                return discounts[0];
+            } else {
+                return null; 
+            }
+        } catch (error) {
+            console.error('Error fetching movie discount percentage:', error);
+            return null;
+        }
+    };
+    
+
+    const fetchGenrePercentage = async (genreCode) => {
+        try {
+            const response = await axios.get(`${URL}discount/genre/${genreCode}`);
+            const discounts = response.data.discounts;
+            if (discounts.length > 0) {
+                return discounts[0].percentage;
+            } else {
+                return null; 
+            }
+        } catch (error) {
+            console.error('Error fetching genre discount percentage:', error);
+            return null;
+        }
+    
+    };
+    
+    
+    
 
     const fetchData = async () => {
         try {
@@ -59,8 +98,39 @@ const Cart = () => {
         }
     }
 
+    const applyDiscountToCart = (movie, discounts) => {
+        if (discounts && discounts.code && discounts.percentage !== undefined) {
+            if (discounts.code === userDiscountCode) {
+                const discountedPrice = movie.price * (1 - discounts.percentage / 100);
+                return { ...movie, price: discountedPrice };
+            }
+        }
+        return movie;
+    };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const {data} = await axios.post(`${URL}discount/apply`,{
+                code:userDiscountCode,
+                movies:cartData
+            });
+            setCartData(data.movies);
+            setDiscountApplied(true);
+        } catch (error) {
+            console.error('Error applying discounts:', error);
+        }
+    };
+    
+
+    
+    
+    
+    
+        
     useEffect(() => {
         fetchData();
+        
         const handleStorageChange = (event) => {
             fetchData();
         };
@@ -80,6 +150,7 @@ const Cart = () => {
       }, [user]);
 
       useEffect(() => {
+        console.log("se actualiza CartData");
         setTotalPrice(cartData.reduce((total, movie) => total + movie.price, 0));
       }, [cartData])
       
@@ -120,9 +191,20 @@ const Cart = () => {
             </div>
             </div>
             <div className={style.buy}> 
-            {user ? <Buy sid = {user.sid}/>: <Link href="/api/auth/login"><Button label="loggeate"/></Link>}
+            {user ? <Buy cart={cartData} code={userDiscountCode} sid = {user.sid}/>: <Link href="/api/auth/login"><Button label="loggeate"/></Link>}
             
             </div>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    value={userDiscountCode}
+                    onChange={(e) => setUserDiscountCode(e.target.value)}
+                    placeholder="Enter discount code"
+                />
+                <button type="submit">Apply Discount</button>
+            </form>
+            {discountApplied && <p>Discount applied successfully!</p>}
+
         </div>
     </div>
     );
