@@ -85,7 +85,7 @@ if (data.selectedCountries.length === 0) {
   validFields.selectedCountries = data.selectedCountries;
 }
 
-  // Validate genre
+  // Genre
   if (data.selectedGenres.length === 0) {
     errors.genre = 'Debes seleccionar al menos un genero.';
   } else {

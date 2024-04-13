@@ -59,12 +59,7 @@ const Cart = () => {
   
     const handleDelete = async (id) => {
         try {
-            //Usuario de auth0
             const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
-
-            //Hardcodeado
-            // const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: userId}});
-
             setCartData(cartData.filter(movie => movie.id !== id));
         } catch (error) {
             console.error('Error deleting movie from cart:', error);
