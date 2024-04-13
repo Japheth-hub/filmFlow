@@ -38,7 +38,6 @@ const DetailContent = () => {
   const [idReview, setIdReview] = useState()
   const [alerts, setAlerts] = useState({points: true, comment: true})
 
-
   const goToCategory = (genre) => {
     router.push(`/movies?genre=${genre}`);
   };
@@ -100,7 +99,6 @@ const DetailContent = () => {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [id,user]);
 
@@ -139,6 +137,7 @@ const DetailContent = () => {
     
     }, [reviewsData])
 
+
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
   };
@@ -168,8 +167,9 @@ const DetailContent = () => {
     year,
   } = movieData;
 
-  const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+  // const country = countries.map(country => country.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
 
+  const country = ""; 
   const handleRatingChange = (rating) => {
     setNewReview({ ...newReview, points: rating });
   };
@@ -340,5 +340,3 @@ const renderStarSelector = () => {
 };
 
 export default DetailContent;
-
-
