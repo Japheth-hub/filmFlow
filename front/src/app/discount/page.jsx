@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import style from './discount.module.scss'
 import Button from '../../components/button/Button'
+import Swal from 'sweetalert2'
 
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL
@@ -15,8 +16,6 @@ const Discount = () =>{
     const [genres, setGenres] = useState([]);
     const [percentage, setPercentage] = useState(0);
     const [discounts, setDiscounts] = useState([]);
-    const [movieError, setMovieError] = useState('');
-    const [percentageError, setPercentageError] = useState('');
     
 
     useEffect(() => {
@@ -52,17 +51,46 @@ const Discount = () =>{
 
     const generateDiscountCode = async () => {
         if (selectedMovies.length === 0 && selectedGenres.length === 0) {
-            setMovieError('Selecciona al menos una película o un género.');
+            
+            const allMoviesIds = movies.map((movie) => movie.id);
+            setSelectedMovies(allMoviesIds);
+
+        } else if (selectedMovies.length > 0 && selectedGenres.length > 0) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'No puede seleccionar una película y un género a la vez.',
+            });
             return;
-        } else {
-            setMovieError('');
         }
         
         if (!percentage || percentage <= 0 || percentage > 100) {
-            setPercentageError('Ingresa un porcentaje válido.');
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'El porcentaje tiene que ser un numero entero entre 1 y 100 (ej: 5, 10, 15).',
+            });
             return;
-        } else {
-            setPercentageError('');
+        }
+
+        const currentDate = new Date().toISOString().split('T')[0]; 
+        
+        if (starts.substr(0, 10) <= currentDate) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'La fecha de inicio deber ser diferente a la fecha actual.',
+            });
+            return;
+        }
+
+        if (ends.substr(0, 10) <= starts.substr(0, 10)) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'La fecha de caducidad deber ser diferente a la fecha de inicio.',
+            });
+            return;
         }
         
         try {
@@ -76,6 +104,11 @@ const Discount = () =>{
 
             setCode(response.data.code.code);
             setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+            });
         } catch (error) {
             console.error('Error generating discount code:', error);
         }
@@ -117,7 +150,6 @@ const Discount = () =>{
                             <label>{movie.name}</label>
                         </div>
                     ))}
-                    {movieError && <p className={style.errorMessage}>{movieError}</p>}
                 </div>
 
                 <div className={style.column}>
@@ -145,7 +177,6 @@ const Discount = () =>{
                         value={percentage}
                         onChange={(e) => setPercentage(parseInt(e.target.value))}
                     />
-                    {percentageError && <p className={style.errorMessage}>{percentageError}</p>}
                 </div>
                 
                 <div className={style.info}>
@@ -186,28 +217,7 @@ const Discount = () =>{
 
             <div className={style.buttonContainer}>
                 <Button label="Crea tu codigo!" color="primary" callback={generateDiscountCode} />
-                
             </div>
-
-            {code && (
-                <div>
-                    <h3>Nuevo código:</h3>
-                    <p>{code}</p>
-                </div>
-            )}
-
-            <h2>Códigos de descuento</h2>
-            
-            {discounts.map((discount,index)=>      
-                <div key={discount.id}>
-                    <p>Código: {discount.code ? discount.code : discount.id}</p>
-                    <p>Porcentaje: {discount.percentage}%</p>
-                    <p>Fecha de inicio: {discount.starts}</p>
-                    <p>Fecha de caducidad: {discount.ends}</p>
-                    <p>-----------</p>
-                </div>
-            )}
-
 
         </div>
     )
