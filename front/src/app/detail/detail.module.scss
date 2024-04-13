@@ -33,9 +33,9 @@
     max-width: calc(100% - 320px);
     overflow-x: hidden;
     margin-top: 20px;
-    border: 1px solid #ddd; /* Añade el borde al info-container */
-    border-radius: 5px; /* Añade el borde redondeado */
-    padding: 20px; /* Agrega espacio alrededor del contenido */
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    padding: 20px; 
   }
 
   .description-container-info h3 {
@@ -145,6 +145,79 @@
 
 .filled {
   color: gold;
+}
+
+.modalContainer{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal{
+  width: 40%;
+  margin: 5% auto;
+  border-radius: 10px;
+  border: 1px solid $mainColor;
+  box-shadow: 0px 0px 20px $mainColor;
+  background-color: white;
+  padding-bottom: 20px;
+
+  h4{
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  .review-form{
+    margin: auto;
+    width: 80%;
+
+    .alerts{
+      background-color: rgba(255, 0, 0, 0.5);
+      border-radius: 5px;
+      border: solid 1.5px red;
+      box-shadow: 0px 0px 10px red;
+      width: 90%;
+      margin: auto;
+      text-align: center;
+      margin: 10px 0px;
+    }
+
+    .star-selector,
+    .reviewComment{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 5px;
+
+      label{
+        text-align: center;
+        width: 50%;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      textarea{
+        width: 90%;
+        border-radius: 10px;
+        margin: 5px auto;
+        padding: 5px;
+      }
+    }
+
+    .reviewBtn{
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+  }
 }
 
 

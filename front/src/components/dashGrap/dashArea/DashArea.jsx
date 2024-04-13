@@ -1,12 +1,12 @@
 import React from "react";
-import style from '../DashGrap.module.scss';
 import {Line} from "react-chartjs-2";
+import style from "../DashGrap.module.scss"
 
-export default function DashArea({chartData, title}) {
-    return (   
-            <div>
-                <h3>{title}</h3>
-                <div className={style.content}><Line data={chartData} /></div>
-            </div>
+export default function DashArea({chartData}) {
+    const options = {
+        responsive: true
+    }
+    return ( 
+        <div className={style.grap}><Line options={options} data={chartData} /></div>
     );
 }

@@ -48,6 +48,7 @@
 .th{
     font-size: 1.2rem;
     padding: 5px 10px;
+    max-width: 150px;
 }
 .td{
     text-align: center;
@@ -86,7 +87,7 @@
 }
 
 .menu:hover {
-  width: 15%;
+  width: 20%;
 }
 
 .menuText span:nth-child(2) {
@@ -177,6 +178,11 @@
 
 .btn-actions{
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    margin: 0px auto;
 }
 
 .btn{
@@ -184,4 +190,25 @@
 }
 .btn:hover{
     transform: scale(1.1);
+}
+
+.approved,
+.pending,
+.declined{
+    padding: 2px 5px;
+    color: $neutralLight;
+    border: 0;
+    font-family: $mainFont;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.approved{
+    background-color: green;
+}
+.pending{
+    background-color: $mainColor;
+}
+.declined{
+    background-color: red;
 }

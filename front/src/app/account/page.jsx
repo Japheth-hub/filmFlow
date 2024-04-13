@@ -62,17 +62,8 @@ export default function Account() {
           </div>
           <ul>
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-          <button onClick={openModal}>Formulario de Producer</button>
-            {/* <li>
-              Direccion : <i>Tehuacan Puebla Mexico</i>
-            </li>
-            <li>
-              Numero de Cuenta : <i>216535546</i>
-            </li>
-            <li>
-              Mas detalles : <i>231587556</i>
-            </li> */}
-          </ul>
+          <button className="custom-button" onClick={openModal}>Formulario de Producer</button>
+        </ul>
         </div>
         <div className={style["movies"]}>
           <h3>Tus Peliculas</h3>

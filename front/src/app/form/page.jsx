@@ -4,8 +4,10 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
+import Modal from '@/components/modal/Modal'
 import { validateMovieForm, validateSelectForm } from './validateMovieForm '
 import Swal from 'sweetalert2'
+
 
 const MovieForm = () => {
 
@@ -27,7 +29,14 @@ const MovieForm = () => {
   const [isLoading, setIsLoading] = useState(false); 
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
+  const [previewModalOpen, setPreviewModalOpen] = useState(false); 
+  const [previewMovieData, setPreviewMovieData] = useState(null);
   
+  
+
+
+
+
   useEffect(() => {
     axios.get(`${URL}genres`)
       .then(response => {
@@ -195,6 +204,32 @@ const MovieForm = () => {
       setSelectedCountries([...selectedCountries, country]);
     }
   };
+  const openPreviewModal = () => {
+    setPreviewModalOpen(true);
+    // Aquí estableces los datos de la película para mostrar en la vista previa
+    setPreviewMovieData({
+      poster: window.URL.createObjectURL(poster),
+      name: movieName,
+      director: director,
+      countries: selectedCountries,
+      genres: selectedGenres,
+      description: description,
+      trailer:window.URL.createObjectURL(trailer),
+      movie: window.URL.createObjectURL(movie),
+      isLoading: isLoading
+
+      // Agrega otros campos de película según tus necesidades
+    });
+  }
+
+  const closePreviewModal = () => {
+    setPreviewModalOpen(false);
+  };
+
+  const modalSend = () => {
+   handleSubmit()
+   setPreviewModalOpen(false)
+  }
   return (
     <div className={style["movie-form-container"]}>
       <div className={style["form-wrapper"]}>
@@ -211,7 +246,6 @@ const MovieForm = () => {
               value={movieName}
               onChange={(e) => setMovieName(e.target.value)}
               className={style["form-input"]}
-              // required
             />
             {errors.movieName && <p className={style["error-message"]}>{errors.movieName}</p>}
           </div>
@@ -223,8 +257,6 @@ const MovieForm = () => {
               value={director}
               onChange={(e) => setDirector(e.target.value.replace(/\d/g, ''))}
               className={style["form-input"]}
-              
-              // required
             />
             {errors.director && <p className={style["error-message"]}>{errors.director}</p>}
           </div>
@@ -236,7 +268,6 @@ const MovieForm = () => {
               value={year}
               onChange={(e) => setYear(e.target.value)}
               className={style["form-input"]}
-              
             />
             {errors.year && <p className={style["error-message"]}>{errors.year}</p>}
           </div>
@@ -272,9 +303,7 @@ const MovieForm = () => {
               value={selectedCountries}
               onChange={(e) => toggleCountry(e.target.value)}
               className={style["form-input"]}
-              
             >
-              {/* Renderizar opciones de países */}
               <option value="">Selecciona país</option>
               {countryOptions.map(country => (
                 <option key={country.name} value={country.name}>{country.name.replace(/\b\w/g, c => c.toUpperCase())}</option>
@@ -299,7 +328,6 @@ const MovieForm = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={style["form-input"]}
-              // required
             ></textarea>
             {errors.description && <p className={style["error-message"]}>{errors.description}</p>}
           </div>
@@ -313,7 +341,6 @@ const MovieForm = () => {
                 onChange={handlePosterChange}
                 className={style["form-input"]}
                 accept="image/*"
-                // required
               />
               </div>
               {poster && (
@@ -331,7 +358,6 @@ const MovieForm = () => {
                 onChange={handleTrailerChange}
                 className={style["form-input"]}
                 accept="video/*"
-                // required
               />
               {trailer && (
                 <div className={style["image-preview-container"]}>
@@ -348,7 +374,6 @@ const MovieForm = () => {
                 onChange={handleMovieChange}
                 className={style["form-input"]}
                 accept="video/*"
-                // required
               />
               {movie && (
                 <div className={style["image-preview-container"]}>
@@ -358,12 +383,17 @@ const MovieForm = () => {
               {errors.movieFile && <p className={style["error-message"]}>{errors.movieFile}</p>}
             </div>
           </div>
+          
           <div className={style["submit-button-container"]}>
             <button type="submit" className={style["submit-button"]} disabled={isLoading}>
               {isLoading ? 'Enviando...' : 'Enviar'}
             </button>
           </div>
         </form>
+        <div>
+        <button onClick={openPreviewModal}>Vista previa</button>
+        <Modal isOpen={previewModalOpen} onClose={closePreviewModal} movieData={previewMovieData} modalSend={modalSend} />
+        </div>
       </div>
     </div>
   );

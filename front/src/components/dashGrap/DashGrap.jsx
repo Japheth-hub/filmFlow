@@ -4,44 +4,40 @@ import DashArea from "./dashArea/DashArea";
 import DashBar from "./dashBar/DashBar"
 import style from './DashGrap.module.scss'
 import { Chart as chartJS} from 'chart.js/auto'
-import { movieGenre, userDay, salesDay, revrankGenre } from './data.js';
+import { movieGenre, userDay, salesDay, revrankGenre, totalSalesMonth, 
+    totalMoviesDay, totalUsers, data } from './data.js';
+import TooltipInfoGrap from "../ttInfoGrap/TooltipInfoGrap";
 
 const DashGrap = ({sid}) => {
-    console.log(sid);
-    const [movieXgenre, setMovieXgenre] = useState({
-        labels: 'Cargando..',
-        datasets: [{
-            fill: true,
-            label: "Peliculas por género",
-            data: 'Cargando..',
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)'
-        }]
-    })
-    const [userXday, setUserXday] = useState({
-        labels: 'Cargando..',
-        datasets: [{
-            fill: true,
-            label: "Nuevos usuarios",
-            data: 'Cargando..',
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)'
-        }]
-    })
+    const { admin } = JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+    const [totalMonth, setTotalMonth] = useState('')
+    const [moviesDays, setMoviesDays] = useState('')
+    const [totalUser, setTotalUser] = useState('')
+
     const [salesXday, setSalesXday] = useState({
         labels: 'Cargando..',
         datasets: [{
             fill: true,
             label: "Ventas diarias",
             data: 'Cargando..',
+            borderColor: 'rgb(150, 162, 235)',
+            backgroundColor: 'rgba(53, 162, 235, 0.5)'
+        }]
+    })
+
+    const [movieXgenre, setMovieXgenre] = useState({
+        labels: 'Cargando..',
+        datasets: [{
+            label: "Cantidad de películas",
+            data: 'Cargando..',
             borderColor: 'rgb(53, 162, 235)',
             backgroundColor: 'rgba(53, 162, 235, 0.5)'
         }]
     })
+    
     const [revrankXgenre, setRevrankXgenre] = useState({
         labels: 'Cargando..',
         datasets: [{
-            fill: true,
             label: "Ranking y revies por género",
             data: 'Cargando..',
             borderColor: 'rgb(53, 162, 235)',
@@ -49,43 +45,43 @@ const DashGrap = ({sid}) => {
         }]
     })
 
+    const [userXday, setUserXday] = useState({
+        labels: 'Cargando..',
+        datasets: [{
+            label: "Nuevos usuarios",
+            data: 'Cargando..',
+            borderColor: 'rgb(53, 162, 235)',
+            backgroundColor: 'rgba(53, 162, 235, 0.5)'
+        }]
+    })
+
     useEffect(() => {
-        movieGenre().then(response => {
+        //*VENTAS DIARIAS
+        salesDay(sid).then(response => {
+            setSalesXday({
+                ...userXday, labels: response[[0]],
+                datasets:[{
+                    ...userXday.datasets[0],
+                    data: response[[1]]
+                }]
+            })
+        }).catch(error => {return <p>No se encontraron datos para mostrar</p>})
+        //*TOTAL VENTAS DIARIAS
+        setTotalMonth(totalSalesMonth(sid))
+
+        //*MOVIES X GENRES
+        movieGenre(sid).then(response => {
             setMovieXgenre({
                 ...movieXgenre, 
-                labels:response.map(elem => elem.name), 
+                labels:response[[0]],
                 datasets:[{
                     ...movieXgenre.datasets[0],
-                    data: response.map(elem => elem.cant)}]})
-        }).catch(error => {
-            return <p>No se encontraron datos para mostrar</p>
-        })
+                    data: response[[1]]}]})
+        }).catch(error => {return <p>No se encontraron datos para mostrar</p>})
+        //*TOTAL MOVIES DIARIAS
+        setMoviesDays(totalMoviesDay(sid))
 
-        userDay(sid).then(response => {
-            console.log(response);
-            setUserXday({
-                ...userXday, labels: response.labels,
-                datasets:[{
-                    ...userXday.datasets[0],
-                    data: response.data
-                }]
-            })
-        }).catch(error => {
-            return <p>No se encontraron datos para mostrar</p>
-        })
-
-        salesDay(sid).then(response => {
-            console.log(response);
-            setSalesXday({
-                ...userXday, labels: response.labels,
-                datasets:[{
-                    ...userXday.datasets[0],
-                    data: response.data
-                }]
-            })
-        }).catch(error => {
-            return <p>No se encontraron datos para mostrar</p>
-        })
+        //*RANKINGS Y REVIEWS
         revrankGenre().then(response => {
             console.log(response);
             // setSalesXday({
@@ -95,26 +91,95 @@ const DashGrap = ({sid}) => {
             //         data: response.data + 1
             //     }]
             // })
-        }).catch(error => {
-            return <p>No se encontraron datos para mostrar</p>
-        })
+        }).catch(error => {return <p>No se encontraron datos para mostrar</p>})
+        //*INTERACTIONS
+
+
+        //*USER X DAYS
+        userDay(sid).then(response => {
+            setUserXday({
+                ...userXday, labels: response.labels,
+                datasets:[{
+                    ...userXday.datasets[0],
+                    data: response.data
+                }]
+            })
+        }).catch(error => {return <p>No se encontraron datos para mostrar</p>})
+        //*TOTAL USERS
+        setTotalUser(totalUsers(sid))
+        
+        
     },[])
 
     return(
-        <div className={style.contentGrap}>
-            <DashArea chartData={salesXday} title={'Ventas diarias'} className={style.content}/>
-            <DashBar chartData={movieXgenre} title={'Películas por género'} className={style.content}/>
-            <DashArea chartData={salesXday} title={'Ranking y reviews por género'} className={style.content}/>
-            <DashBar chartData={userXday} title={'Usuarios Creados por día'} className={style.content}/>
+        <div>
+            {
+                admin 
+                ?(<div className={style.contentGrap}>
+        {/* GRAPHIC */}
+                    <div className={style.card}>
+                        <h3>Ventas diarias</h3>
+                        <TooltipInfoGrap content={data.purchaseDay}/>
+                        <DashArea chartData={salesXday}/>
+                    </div>
+                    <div className={style.card}>
+                        <h5>Ventas mensuales</h5>
+                        <TooltipInfoGrap content={data.purchaseMonth}/>
+                        <h2>${totalMonth}</h2>
+                    </div>
+                    <div className={style.label}>
+                        <h3>Ventas</h3>
+                    </div>
+                    <div className={style.label}>
+                        <h3>Películas</h3>
+                    </div>
+                    <div className={style.card}>
+                        <h5>Peliculas agregadas hoy</h5>
+                        <TooltipInfoGrap content={data.moviesToday}/>
+                        <h2>{moviesDays}</h2>
+                    </div>
+        {/* GRAPHIC */}
+                    <div className={style.card}>
+                        <h3>Películas por género</h3>
+                        <TooltipInfoGrap content={data.moviesByGenre}/>
+                        <DashBar chartData={movieXgenre}/>
+                    </div>
+                    <div className={style.card}>
+                        <h5>Cantidad de interacciones</h5>
+                        <TooltipInfoGrap content={data.interactions}/>
+                        <h2>{totalUser}</h2>
+                    </div>
+        {/* GRAPHIC */}
+                    <div className={style.card}>
+                        <h3>Ranking y reviews por género</h3>
+                        <TooltipInfoGrap content={data.rankingAndReviews}/>
+                        <DashArea chartData={salesXday}/>
+                    </div>
+                    <div className={style.label}>
+                        <h3>Rankings y comentarios</h3>
+                    </div>
+                    <div className={style.label}>
+                        <h3>Usuarios</h3>
+                    </div>
+        {/* GRAPHIC */}
+                    <div className={style.card}>
+                        <h3>Usuarios Creados por día</h3>
+                        <TooltipInfoGrap content={data.usersByDay}/>
+                        <DashBar chartData={userXday}/>
+                    </div>
+                    <div className={style.card}>
+                        <h5>Usuarios totales</h5>
+                        <TooltipInfoGrap content={data.totalUsers}/>
+                        <h2>{totalUser}</h2>
+                    </div>
+                </div>)
+                :(<div className={style.contentGrap}>
+                    <DashArea chartData={salesXday}/>
+                    <DashBar chartData={movieXgenre}/>
+                </div>)
+            }
         </div>
     )
 }
 
 export default DashGrap;
-
-/*
-(OK) : Cantidad de usuarios por dia -> LineChart (Labels:fechas - data:CantUsers)ArrayEntri(user-CreateAt)
-(OK) : Cantidad de peliculas por genero -> BarChart (Labels:genres - dat:CantMovies)
-Ventas contra usuarios -> MultiAxisChart
-Ventas por usuarios -> MultiAxisChart
-*/

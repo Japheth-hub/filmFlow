@@ -17,7 +17,7 @@ module.exports = async(query)=>{
         
         const usersToday = await getUsers({today:true});
         const totalUsersToday = usersToday.length;
-        const moviesToday = await getMovies({today:true,orderType:"id",order:'desc'});
+        const moviesToday = await getMovies({today:true,orderType:"id",order:'desc',admin:true});
         const totalMoviesToday = moviesToday.length;
         const moviesByGenre = await getGenres({movies:true});
         const totalMoviesByGenre = moviesByGenre.map((genre)=>{

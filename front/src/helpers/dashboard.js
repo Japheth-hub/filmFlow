@@ -4,7 +4,7 @@ const URL = process.env.NEXT_PUBLIC_URL;
 
 export const showMovies = async () => {
   try {
-    const { data } = await axios(`${URL}movies?paranoid=false`);
+    const { data } = await axios(`${URL}movies?paranoid=false&admin=true`);
     const clearData = data.map((movie) => {
       return {
         id: movie.id,
