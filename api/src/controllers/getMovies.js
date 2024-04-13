@@ -6,7 +6,6 @@ module.exports = async function getMovies(query){
     let {search, genre, orderType, order,limit,user,country,purchases, paranoid,today, admin } = query;
    
     try {
-        let data = {}
         let options = {
             include: [
                 {
@@ -122,10 +121,8 @@ module.exports = async function getMovies(query){
         
         const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price", "deletedAt"]})
 
-        if(movies.length === 0){
-            return data.message = 'No hay Peliculas'
-        }
 
+        console.log(options);
         return movies
     } catch (error) {
         console.log(error)

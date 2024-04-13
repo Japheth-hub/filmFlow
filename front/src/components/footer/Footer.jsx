@@ -28,7 +28,7 @@ const Footer = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href='/filters/search='>
+                            <Link href='/movies'>
                                 Peliculas
                             </Link>
                         </li>

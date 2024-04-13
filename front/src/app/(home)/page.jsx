@@ -12,19 +12,8 @@ import Loading from "@/components/loading/loading";
 const Home = () => {
   const {error, isLoading, user} = useUser()
   const URL = process.env.NEXT_PUBLIC_URL
-  const [results, setResults] = useState([])
-  const [movie, setMovie] = useState(
-    [{
-      id: 'cargando',
-      title: 'cargando'
-    }]
-  )
-  const [genres, setGenres] = useState(
-    [{
-      id: 'cargando',
-      name: 'cargando'
-    }]
-  )
+  const [movie, setMovie] = useState()
+  const [genres, setGenres] = useState()
 
   useEffect(() => {
     const getMovies = async() => {
@@ -82,14 +71,15 @@ const Home = () => {
 
   return (
   <div>
-    <Carousel movie={movie} dim={['900px', '400px']} autoplay={5}/>
+
+    {movie && <Carousel movie={movie} dim={['900px', '400px']} autoplay={5}/>}
     <div>
-      <Filters genres={genres}/>
+     {genres && <Filters genres={genres}/>}
     </div>
     <div>
       <h3>Novedades</h3>
-      <Movies movie={movie} />
-      <Link href={`/filters/search=`}><h3>Ver más..</h3></Link>
+      {movie && <Movies movie={movie} />}
+      <Link href={`/movies`}><h3>Ver más..</h3></Link>
     </div>
   </div>
   );
