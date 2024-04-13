@@ -1,7 +1,7 @@
 'use client'
 import React,  {useState} from 'react'
 import Dashboard from '@/components/dashboard/dashboard'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client'
 import style from './admin.module.scss'
 import Image from 'next/image'
 import burgerMenu from '@/img/burger-menu.png'
@@ -9,7 +9,7 @@ import DashGrap from '@/components/dashGrap/DashGrap'
 import DashPayments from '@/components/dashPayments/DashPayments'
 import Loading from "@/components/loading/loading";
 
-function Admin() {
+const Admin = () => {
   const URL = process.env.NEXT_PUBLIC_URL
   const {user, isLoading, error} = useUser()
   const [component, setComponent] = useState(0)
@@ -95,4 +95,4 @@ function Admin() {
   }
 }
 
-export default Admin
+export default withPageAuthRequired(Admin)

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import style from './account.module.scss'
 import Button from "@/components/button/Button";
@@ -13,7 +13,7 @@ import Loading from '@/components/loading/loading'
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 
 
-export default function Account() {
+const Account = () =>  {
   const { error, isLoading, user } = useUser();
   const [movies, setMovies] = useState([])
   
@@ -84,3 +84,5 @@ export default function Account() {
     </div>
   );
 }
+
+export default withPageAuthRequired(Account) 

@@ -89,7 +89,7 @@ const Home = () => {
     <div>
       <h3>Novedades</h3>
       <Movies movie={movie} />
-      <Link href={`/filters/search=`}><h3>Ver más..</h3></Link>
+      <Link href={`/movies`}><h3>Ver más..</h3></Link>
     </div>
   </div>
   );

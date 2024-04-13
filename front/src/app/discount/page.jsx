@@ -4,6 +4,8 @@ import axios from 'axios'
 import style from './discount.module.scss'
 import Button from '../../components/button/Button'
 import Swal from 'sweetalert2'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+
 
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL
@@ -16,7 +18,6 @@ const Discount = () =>{
     const [genres, setGenres] = useState([]);
     const [percentage, setPercentage] = useState(0);
     const [discounts, setDiscounts] = useState([]);
-    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -120,7 +121,6 @@ const Discount = () =>{
                 ? prev.filter((m) => m !== movieId)
                 : [...prev, movieId]
         );
-        setMovieError('');
     };
 
     const toggleGenreSelection = (genreId) => {
@@ -129,7 +129,6 @@ const Discount = () =>{
                 ? prev.filter((g) => g !== genreId)
                 : [...prev, genreId]
         );
-        setMovieError('');
     };
     
     return(
@@ -218,9 +217,8 @@ const Discount = () =>{
             <div className={style.buttonContainer}>
                 <Button label="Crea tu codigo!" color="primary" callback={generateDiscountCode} />
             </div>
-
         </div>
     )
 }
 
-export default Discount;
+export default withPageAuthRequired(Discount);
