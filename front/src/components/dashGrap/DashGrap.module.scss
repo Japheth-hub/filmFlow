@@ -1,9 +1,42 @@
-.content{
-    width: 500px;
+@import "@/scss/variables.scss";
+
+.card{
+    display: grid;
+    grid-template-columns: 90% 10%;
+    border: 0.5px #bbbaba solid;
+    border-radius: 10px;
+    box-shadow: 2px 4px $mainColor;
+    min-width: 200px;
+    min-height: 250px;
     margin: 10px;
+    padding: 25px;
 }
 .contentGrap{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
+    justify-items: center;
+    max-width: 1200px;
+    padding: 25px;
+}
+
+.grap{
+    min-width: 400px;
+    max-width: 1000px;
+}
+
+.label{
+    color: white;
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+    border: 0.5px #bbbaba solid;
+    border-radius: 10px;
+    background-color: #9c67d8;
+    //box-shadow: 2px 4px $mainColor;
+    min-width: 200px;
+    min-height: 250px;
+    margin: 10px;
+    padding: 25px;
 }
