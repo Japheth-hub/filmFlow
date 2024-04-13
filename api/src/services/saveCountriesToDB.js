@@ -4,13 +4,14 @@ const { Country } = require('../db');
 module.exports = async () => {
     let count = 0;
     let error = 0;
-    for (country of countries) {
+    for (let country of countries) {
         const countryNameLowerCase = country.name.toLowerCase(); 
 
         const [newCountry, created] = await Country.findOrCreate({
             where: {
                 id: country.code,
-                name: countryNameLowerCase 
+                name: countryNameLowerCase, 
+                flag: country.flag, 
             },
         });
 

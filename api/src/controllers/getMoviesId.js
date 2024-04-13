@@ -13,7 +13,7 @@ module.exports = async (query)=>{
                 },
                 {
                     model:Country,
-                    attributes:["id","name"],
+                    attributes:["id","name","flag"],
                     through: { attributes: [] }
                 },
                 {
