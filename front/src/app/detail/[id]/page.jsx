@@ -86,11 +86,9 @@ const DetailContent = () => {
       try {
         let query = "";
         if(user){
-          console.log(user);
           query =`?auth=${user.sid}`;
         }
         const response = await axios.get(`${URL}movies/${id}${query}`);
-        console.log(response.data);
         setMovieData(response.data);
       } catch (error) {
         console.error('Error fetching movie data:', error);
@@ -219,7 +217,7 @@ const renderStarSelector = () => {
     }
   }
 
-  // console.log(alerts)
+
 
   return (
     <div className={style['detail-content']}>
