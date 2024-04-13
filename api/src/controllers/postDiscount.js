@@ -6,7 +6,6 @@ const isValidDate = require('../services/isValidDate');
 
 module.exports = async (req, res) => {
     try {
-
         const { percentage,starts,ends,selectedMovies, selectedGenres } = req.body;
 
         if(!percentage){
@@ -40,18 +39,20 @@ module.exports = async (req, res) => {
 
 
         if(created){
-            if(selectedMovies && !selectedGenres){
+        
+            if(selectedMovies.length && !selectedGenres.length){
 
                 movies = await Movie.findAll({where: {
                     id: {
                         [Op.in]: selectedMovies,
                     },
                 }});
+                console.log(movies);
 
                 discount.setMovies(movies);
             }
 
-            if(selectedGenres && !selectedMovies){
+            if(selectedGenres.length && !selectedMovies.length){
 
                 const genres = await Genre.findAll({where: {
                     id: {

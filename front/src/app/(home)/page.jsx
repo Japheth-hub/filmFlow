@@ -2,7 +2,6 @@
 import axios from "axios";
 import Movies from "../../components/movies/Movies";
 import Carousel from "../../components/carousel/Carousel";
-import SearchBar from "../../components/searchBar/searchBar";
 import { useState, useEffect } from "react";
 import Filters from "@/components/filters/Filters";
 import { useUser } from '@auth0/nextjs-auth0/client';

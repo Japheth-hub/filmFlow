@@ -19,11 +19,6 @@ const Cart = () => {
     const [discountApplied, setDiscountApplied] = useState(false);
     const event = new Event('localChanged');
 
-
-    
-    
-    
-
     const fetchData = async () => {
         try {
             const localCart =  typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('cart')): null;
@@ -49,23 +44,11 @@ const Cart = () => {
                 }
             }
         
-
-            
-
         } catch (error) {
             console.error('Error fetching movie data:', error);
         }
     };
   
-    const handleDelete = async (id) => {
-        try {
-            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
-            setCartData(cartData.filter(movie => movie.id !== id));
-        } catch (error) {
-            console.error('Error deleting movie from cart:', error);
-        }
-    }
-
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -100,6 +83,10 @@ const Cart = () => {
                 window.removeEventListener('localChanged', handleStorageChange);
             };
         }
+
+        return () => {
+            setCartData([]);
+        };
         
       }, []);
 
@@ -109,7 +96,6 @@ const Cart = () => {
       }, [user]);
 
       useEffect(() => {
-        console.log("se actualiza CartData");
         setTotalPrice(cartData.reduce((total, movie) => total + movie.price, 0));
       }, [cartData])
       

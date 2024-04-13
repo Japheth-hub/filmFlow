@@ -7,7 +7,8 @@ import Swal from 'sweetalert2'
 
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL
-    const [code,setCode] = useState('')
+    const [code,setCode] = useState('');
+    const [movieError,setMovieError] = useState();
     const [selectedMovies, setSelectedMovies] = useState([]); 
     const [selectedGenres, setSelectedGenres] = useState([])
     const [starts, setStarts] = useState('');
@@ -50,12 +51,8 @@ const Discount = () =>{
     
 
     const generateDiscountCode = async () => {
-        if (selectedMovies.length === 0 && selectedGenres.length === 0) {
-            
-            const allMoviesIds = movies.map((movie) => movie.id);
-            setSelectedMovies(allMoviesIds);
-
-        } else if (selectedMovies.length > 0 && selectedGenres.length > 0) {
+        console.log("!sadasd");
+        if (selectedMovies.length > 0 && selectedGenres.length > 0) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
