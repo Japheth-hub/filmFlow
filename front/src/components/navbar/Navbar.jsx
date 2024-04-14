@@ -28,6 +28,14 @@ const Nav = (props)=> {
       if(userLocalStorage === null) setUserLocalStorage(JSON.parse(window.localStorage.getItem('FilmFlowUsr')))
     };
 
+  useEffect(() => {  
+    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null);
+  }, [])
+  
+    const isAdmin = userLocalStorage?.role === "admin" ? true : false;    
+
     const handleSearch = async (query) => {
       
   
@@ -39,7 +47,7 @@ const Nav = (props)=> {
   
       try {
         const response = await axios(
-        `${NEXT_PUBLIC_URL}movies?search=${query}`,
+        `${NEXT_PUBLIC_URL}movies?search=${query}&admin=${isAdmin}`,
         );
         
         const data = response.data;
@@ -62,12 +70,6 @@ const Nav = (props)=> {
       window.localStorage.removeItem("FilmFlowUsr");
     }
 
-    useEffect(() => {  
-      setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
-        ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-        : null);
-    }, [])
-    
     
 
     return(

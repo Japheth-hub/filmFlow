@@ -14,6 +14,7 @@ const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 const Account = () =>  {
   const { error, isLoading, user } = useUser();
   const [movies, setMovies] = useState([])
+  const [producerMovies, setProducerMovies] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userLocalStorage,setUserLocalStorage] = useState({});
 
@@ -24,7 +25,18 @@ const Account = () =>  {
         setMovies(data)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
+    }
+  }
+
+  async function fetchProducerMovies(user) {
+    try {
+      const { data } = await axios.get(`${NEXT_PUBLIC_URL}movies?admin=true&userSid=${user.sid}`)
+      if(typeof data === "object"){
+        setProducerMovies(data)
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -36,8 +48,19 @@ const Account = () =>  {
     setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
       ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
       : null);
-  }, [])
+    if(userLocalStorage.role === "producer") {
+      try {
+        fetchProducerMovies(user)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }, [user])
   
+  useEffect(()=>{
+    fetchData()
+  }, [])
+
   if (error) {
     return <div>Error en su session</div>;
   }
@@ -83,7 +106,7 @@ const Account = () =>  {
         ? <div className={style["movies"]} >
           <h3>Tus Peliculas</h3>
           <div className={style["lista"]}>
-            {movies.length > 0 ? movies.map((movie) => (
+            {producerMovies.length > 0 ? producerMovies.map((movie) => (
               <Link key={movie.id} href={`/detail/${movie.id}`}>
                 <div className={style["movie"]}>
                   <img src={movie.poster} alt={movie.name} />
