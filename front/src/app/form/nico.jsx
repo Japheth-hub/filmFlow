@@ -4,19 +4,16 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
+import Modal from '@/components/modal/Modal'
 import { validateMovieForm, validateSelectForm } from './validateMovieForm '
 import Swal from 'sweetalert2'
-import CheckRole from '@/components/checkRole/checkRole'
-import Pill from '@/components/pill/Pill';
-
 
 
 const MovieForm = () => {
 
   const URL = process.env.NEXT_PUBLIC_URL
   const {user} = useUser();
-  let userAux = user
-  const [mediaType, setMediaType] = useState('trailer');
+
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
   const [genreOptions, setGenreOptions] = useState([]);
@@ -32,23 +29,9 @@ const MovieForm = () => {
   const [isLoading, setIsLoading] = useState(false); 
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
-  const [userRole, setUserRole] = useState('')
-  const [mediaURL, setMediaURL] = useState({
-    poster: 'https://s3.oss.go.id/oss/logo/notfound.jpg',
-    trailer: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm',
-    movie: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm'
-  });
-  const [previewData, setPreviewData] = useState({
-    name: '',
-    director: '',
-    countries: [],
-    genres: [],
-    description: '',
-    poster: null,
-    trailer: null,
-    movie: null,
-  });
-
+  const [previewModalOpen, setPreviewModalOpen] = useState(false); 
+  const [previewMovieData, setPreviewMovieData] = useState(null);
+  
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (movieName || director || selectedGenres.length || selectedCountries.length || description || poster || trailer || movie || year) {
@@ -64,53 +47,10 @@ const MovieForm = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [movieName, director, selectedGenres, selectedCountries, description, poster, trailer, movie, year]);
-
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${URL}users/1111`);
-        const userData = response.data;
-        const userSid = userAux.sid
-
-        userAux = userData.find(user => user.sid === userSid);
-
-        if (userAux) {
-          setUserRole(userAux.roleName);
-        } else {
-          console.error("User not found");
-        }
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    
-  fetchUserRole();
-  }, []);
-
-  const toggleMediaType = () => {
-    setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
-  };
-
-  useEffect(() => {
-    const updateURL = (file, type) => {
-      if (file) {
-        const newURL = window.URL.createObjectURL(file);
-        setMediaURL(prevURLs => ({ ...prevURLs, [type]: newURL }));
-        return () => window.URL.revokeObjectURL(newURL);
-      }
-    };
-    const posterCleanup = updateURL(poster, 'poster');
-    const trailerCleanup = updateURL(trailer, 'trailer');
-    const movieCleanup = updateURL(movie, 'movie');
   
-    return () => {
-      if (posterCleanup) posterCleanup();
-      if (trailerCleanup) trailerCleanup();
-      if (movieCleanup) movieCleanup();
-    };
-  }, [poster, trailer, movie]);
+
+
+
 
   useEffect(() => {
     axios.get(`${URL}genres`)
@@ -129,7 +69,6 @@ const MovieForm = () => {
         console.error('Error fetching country options:', error);
       });
   }, []);
-
   useEffect(() => {
     const validation = validateMovieForm({
       movieName,
@@ -141,34 +80,11 @@ const MovieForm = () => {
       year
     });
     setErrors(validation.errors);
-    setPreviewData({
-      name: movieName,
-      director: director,
-      countries: selectedCountries,
-      genres: selectedGenres,
-      description: description,
-      poster: poster,
-      trailer: trailer,
-      movie: movie,
-    });
-  }, [movieName, director,  description, poster, trailer, movie, year, selectedGenres, selectedCountries]);
-
+  }, [movieName, director,  description, poster, trailer, movie, year]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); 
-    Swal.fire({
-      title: 'Enviando formulario...',
-      html: `
-        <div style="display: flex; justify-content: center; align-items: center;">
-          <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-        </div>
-        <img src="https://gamefundpartners.com/wp-content/uploads/2022/04/loading.gif" width="100" height="100" style="margin-right: 15px;">
-        <p style="text-align: center; font-size: 16px; margin-top: 15px;">Por favor, espere...</p>`,
-      showConfirmButton: false, // Ocultar el botón de confirmación
-      allowOutsideClick: false, // Evitar que el usuario cierre la alerta haciendo clic fuera de ella
-    });
-  
     const validationSelect = validateSelectForm({
       selectedGenres,
       selectedCountries,
@@ -233,8 +149,6 @@ const MovieForm = () => {
         auth: userSid
       };
       const movieResponse = await axios.post(`${URL}movies`, data);
-      console.log(movieResponse.data)
-      Swal.close();
       if (movieResponse.status === 200) {
         Swal.fire({
           icon: 'success',
@@ -250,10 +164,6 @@ const MovieForm = () => {
         setPoster(null);
         setTrailer(null);
         setMovie(null);
-        setMediaURL({poster: 'https://s3.oss.go.id/oss/logo/notfound.jpg',
-        trailer: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm',
-        movie: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm'
-      })
         setSelectedCountries([]);
         setYear('');
       } else if (movieResponse.status === 204) {
@@ -309,13 +219,35 @@ const MovieForm = () => {
       setSelectedCountries([...selectedCountries, country]);
     }
   };
+  const openPreviewModal = () => {
+    setPreviewModalOpen(true);
+    // Aquí estableces los datos de la película para mostrar en la vista previa
+    setPreviewMovieData({
+      poster: window.URL.createObjectURL(poster),
+      name: movieName,
+      director: director,
+      countries: selectedCountries,
+      genres: selectedGenres,
+      description: description,
+      trailer:window.URL.createObjectURL(trailer),
+      movie: window.URL.createObjectURL(movie),
+      isLoading: isLoading
 
+      // Agrega otros campos de película según tus necesidades
+    });
+  }
+
+  const closePreviewModal = () => {
+    setPreviewModalOpen(false);
+  };
+
+  const modalSend = () => {
+   handleSubmit()
+   setPreviewModalOpen(false)
+  }
   return (
-    <CheckRole userRole={userRole} requiredRoles={["producer","admin"]}>
     <div className={style["movie-form-container"]}>
-      <div className={style["form-and-preview-wrapper"]}>
       <div className={style["form-wrapper"]}>
-      <h2>Formulario</h2>
       <Link href="/">
         <button className={style["back-button"]}>Ir a home</button>
       </Link>
@@ -426,6 +358,11 @@ const MovieForm = () => {
                 accept="image/*"
               />
               </div>
+              {poster && (
+                <div className={style["image-preview-container"]}>
+                  <img src={window.URL.createObjectURL(poster)} alt="Preview" className={style["poster-preview"]} />
+                </div>
+              )}
               {errors.posterFile && <p className={style["error-message"]}>{errors.posterFile}</p>}
             </div>
             <div className={style["form-group"]}>
@@ -437,6 +374,11 @@ const MovieForm = () => {
                 className={style["form-input"]}
                 accept="video/*"
               />
+              {trailer && (
+                <div className={style["image-preview-container"]}>
+                  <video src={window.URL.createObjectURL(trailer)} controls alt="Preview" className={style["poster-preview"]} />
+                </div>
+              )}
               {errors.trailerFile && <p className={style["error-message"]}>{errors.trailerFile}</p>}
             </div>
             <div className={style["form-group"]}>
@@ -448,51 +390,27 @@ const MovieForm = () => {
                 className={style["form-input"]}
                 accept="video/*"
               />
+              {movie && (
+                <div className={style["image-preview-container"]}>
+                  <video src={window.URL.createObjectURL(movie)} controls alt="Preview" className={style["poster-preview"]} />
+                </div>
+              )}
               {errors.movieFile && <p className={style["error-message"]}>{errors.movieFile}</p>}
             </div>
           </div>
+          
           <div className={style["submit-button-container"]}>
             <button type="submit" className={style["submit-button"]} disabled={isLoading}>
               {isLoading ? 'Enviando...' : 'Enviar'}
             </button>
           </div>
         </form>
-      </div>
-      <div>
-            <h2>Vista Previa</h2>
-      <div className={style['detail-content']}>
-        <div className={style['poster-description-container']}>
-          <div className={style['container-info']}> 
-            <img src={mediaURL.poster} alt={name + ' poster'} className={style['poster-image']} />
-            <div className={style["'description-container-info'"]}>
-            <span className={style['italic-dark']}><h3>{previewData.name}</h3></span>
-            <p><span className={style['italic-dark']}>Dirigida por:</span> {previewData.director}</p>
-            <p><span className={style['italic-dark']}>Año:</span> {year}</p>
-            <p><span className={style['italic-dark']}>Descripción:</span> {previewData.description}</p>
-            <div className={style.genres}>
-              {selectedCountries.map((country) => <Pill key={country.id}  emoji={country.flag} label={country} />)}
-            </div>
-            <div className={style.genres}>
-                {selectedGenres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre}/>)}
-            </div>
-            </div>
-            </div>
-          </div>
-          <div className={style['media-container']}>
-            <button onClick={toggleMediaType}>
-              {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
-            </button>
-            {mediaType === 'trailer' ? (
-              <iframe src={mediaURL.trailer} width="800" height="500" title="Trailer" allowFullScreen />
-            ) : (
-              <iframe src={mediaURL.movie} width="800" height="500" title="Movie" allowFullScreen />
-            )}
-            </div>
+        <div>
+        <button onClick={openPreviewModal}>Vista previa</button>
+        <Modal isOpen={previewModalOpen} onClose={closePreviewModal} movieData={previewMovieData} modalSend={modalSend} />
         </div>
       </div>
     </div>
-   </div>
- </CheckRole>
   );
 };
 export default withPageAuthRequired(MovieForm);

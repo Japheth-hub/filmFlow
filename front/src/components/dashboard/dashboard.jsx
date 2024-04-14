@@ -21,6 +21,7 @@ export default function Dashboard({link, title, sid}) {
     const [totalPage, setTotalPage] = useState()
     const [pagina, setPagina] = useState([])
     const [update, setUpdate] = useState(true)
+    const [dashStatus, setDashStatus] = useState()
     const porPagina = 10
 
     const { error, isLoading, user } = useUser();
@@ -159,7 +160,7 @@ export default function Dashboard({link, title, sid}) {
                 icon: 'info',
                 title: '¡Información!',
                 text: 'No hay películas con este género',
-              });
+            });
         } else {
             setBody(newBody)
             setPage(1);
@@ -170,6 +171,7 @@ export default function Dashboard({link, title, sid}) {
         const status = e.target.value
         const newBody = body2.filter((movie) => movie.status === status)
         if(newBody.length > 0){
+            setBody(newBody)
             setStatus(status)
             setPage(1);
         } else {
@@ -178,6 +180,36 @@ export default function Dashboard({link, title, sid}) {
                 title: '¡Información!',
                 text: `No hay películas con el status ${status}`,
                 });
+        }
+    }
+
+    async function changeStatus(e, id){
+        try {
+            const status = e.target.value
+            const res = await Swal.fire({
+                icon: "warning",
+                title: "¿Estás seguro?",
+                text: "Estas seguro que deseas eliminar esta información",
+                showCancelButton: true,
+                confirmButtonText: "Sí",
+                cancelButtonText: "Cancelar",
+            });
+            if (res.isConfirmed) {
+                const {data} = await axios.put(`${NEXT_PUBLIC_URL}movies/status/${id}`, {"auth": sid, "status": status})
+                setDashStatus(status)
+                setUpdate(!update);
+                Swal.fire({
+                    icon: "success",
+                    title: "¡Éxito!",
+                    text: data.message,
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "¡Error!",
+                text: error || "Ocurrió un error al eliminar la información.",
+            });
         }
     }
 
@@ -323,7 +355,15 @@ export default function Dashboard({link, title, sid}) {
                                     pagina.map((item, index) => (
                                         <tr key={index}>
                                         {column.map((prop, i) => ( 
-                                                <td className={style.td} key={i}>{item[prop]}</td>
+                                                title === "Movies" && prop === 'status'
+                                                ? (<td key={i}>
+                                                    <select className={style[item[prop]]} name="status" onChange={(e)=>{changeStatus(e, item.id)}} defaultValue={item[prop]} value={item[prop]}>
+                                                        <option value="approved">Approved</option>
+                                                        <option value="pending" disabled>Pending</option>
+                                                        <option value="declined">Declined</option>
+                                                    </select>
+                                                </td>)
+                                                : <td className={style.td} key={i}>{item[prop]}</td>
                                                 ))}
                                                 <td className={style.td}>
                                                     <div className={style['btn-actions']}>
