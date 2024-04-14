@@ -131,6 +131,18 @@ const MovieForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); 
+    Swal.fire({
+      title: 'Enviando formulario...',
+      html: `
+        <div style="display: flex; justify-content: center; align-items: center;">
+          <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        </div>
+        <img src="https://gamefundpartners.com/wp-content/uploads/2022/04/loading.gif" width="100" height="100" style="margin-right: 15px;">
+        <p style="text-align: center; font-size: 16px; margin-top: 15px;">Por favor, espere...</p>`,
+      showConfirmButton: false, // Ocultar el botón de confirmación
+      allowOutsideClick: false, // Evitar que el usuario cierre la alerta haciendo clic fuera de ella
+    });
+  
     const validationSelect = validateSelectForm({
       selectedGenres,
       selectedCountries,
@@ -196,6 +208,7 @@ const MovieForm = () => {
       };
       const movieResponse = await axios.post(`${URL}movies`, data);
       console.log(movieResponse.data)
+      Swal.close();
       if (movieResponse.status === 200) {
         Swal.fire({
           icon: 'success',
