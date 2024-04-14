@@ -59,15 +59,12 @@ const Home = () => {
     if(user){
       const upUser = async() => {
         try {
-          const { data } = await axios.post(`${URL}users`, user)    
+          const { data } = await axios.post(`${URL}users`, user)   
           if (typeof window !== 'undefined') {
             window.localStorage.setItem(
-              'FilmFlowUsr', JSON.stringify({...user, admin:data.isAdmin})
+              'FilmFlowUsr', JSON.stringify({...user, role:data.role})
             )
           } 
-          if(data.isAdmin) {
-          } else {
-          }
         } catch (error) {
           console.error("Error updating user:", error);
         }

@@ -130,7 +130,7 @@ const Nav = (props)=> {
                                       {user ? <h5>{user.nickname}</h5> : null}
                                     </li>
                                     <li>
-                                      {userLocalStorage && userLocalStorage.admin 
+                                      {userLocalStorage && userLocalStorage.role === "admin" 
                                         ? <Link href="/admin">
                                             <p>Tablero</p>
                                           </Link>
@@ -146,10 +146,10 @@ const Nav = (props)=> {
                                     </li>
 
                                     <li> 
-                                        {userLocalStorage && userLocalStorage.admin ?
-                                        <Link href="/form">
+                                        {userLocalStorage && userLocalStorage.role !== "viewer" 
+                                        ? <Link href="/form">
                                             <p>Agregar película</p>
-                                        </Link>
+                                          </Link>
                                         : null }
                                     </li>
 

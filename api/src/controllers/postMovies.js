@@ -77,8 +77,10 @@ module.exports = async (req) => {
         //
 
         const status = "pending" 
-        
-        const userId = isAdmin(user) ? undefined : user.id;
+
+        const userIsAdmin = await isAdmin(user)
+        console.log(userIsAdmin)
+        const userId = userIsAdmin ? undefined : user.id;
 
         const [movieDB, created] = await Movie.findOrCreate({
             where: { 

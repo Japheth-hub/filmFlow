@@ -34,6 +34,7 @@ module.exports = async (body) => {
   if (Object.keys(errors).length === 0) {
     const role = await Role.findOne({ where: { role: "viewer" } });
     const adminRole = await Role.findOne({ where: { role: "admin" } });
+    const producerRole = await Role.findOne({ where: { role: "producer" } })
     const [user, created] = await User.findOrCreate({
       where: { email },
       defaults: { name, picture, roleId: role.id, sid },
@@ -50,13 +51,20 @@ module.exports = async (body) => {
         content: `Gracias por registrarse en nuestra web. <br/> <a href="${URL_BACK}account">Haga click aquí para ir a su cuenta</a>.`
       }
       const emailResponse = await sendEmail(mailInfo)
-      console.log(emailResponse)
+      // console.log(emailResponse)
       //
     }
 
+    const isProducer = user.roleId === producerRole.id;
     const isAdmin = user.roleId === adminRole.id;
 
-    return { status: true, sid: user.sid, isAdmin }; 
+    if (isProducer) {
+    return { status: true, sid: user.sid, role: "producer" };
+    } else if (isAdmin) {
+    return { status: true, sid: user.sid, role: "admin" };
+    } else {
+    return { status: true, sid: user.sid, role: "viewer" };
+    }
   } else {
     
     return { status: false, errors };
