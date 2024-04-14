@@ -41,6 +41,9 @@ const DetailContent = () => {
   const goToCategory = (genre) => {
     router.push(`/movies?genre=${genre}`);
   };
+  const goToCountry = (country) => {
+    router.push(`/movies?country=${country}`);
+  };
 
   function showModal(valor, id) {
     setDisplay(valor);
@@ -233,28 +236,20 @@ const renderStarSelector = () => {
           >
             <FacebookIcon size={32} round />
           </FacebookShareButton>
-
-          
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
             <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
-            <div className={style.genres}>
-                      {countries.map((country, index) => (
-              <div key={index}>
-                <p  onClick={() => goToCategory(country.name)}><span className={style['italic-dark']}>Paises:</span> {country.name.replace(/\b\w/g, c => c.toUpperCase())}</p>
-              </div>
-            ))}
-          </div>
             <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
             <p><span className={style['italic-dark']}>Año:</span> {year}</p>
             <div className={style.genres}>
+              {countries.map((country) => <Pill key={country.id}  emoji={country.flag.replace(/-/g, '')} label={country.name} callback={()=>goToCountry(country.name)}/>)}
+            </div>
+            <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>
-            {/* {movieData && <AddToCart movie={movieData} />} */}
             {purchase.includes(movieData.id) 
             ? <Button emoji={'✅'} label='Ya tienes esta pelicula'/> 
             : movieData && <AddToCart movie={movieData} />}
-            
           </div>
         </div>
       </div>
@@ -286,10 +281,9 @@ const renderStarSelector = () => {
             </div>
           </div>
         }
-        
-     
-          <h4>Comentarios</h4>
-
+        {movieData.reviews && movieData.reviews.length > 0 && (
+            <h4>Comentarios</h4>
+          )}
         {movieData.reviews && movieData.reviews.map((review) => (
           <div key={review.id} className={style['review-container']}>
             <img src={review.user?.picture ? review.user.picture : userpic.src} alt={review.user?.name ? review.user.name : "Desconocido"} className={style['user-picture']} />

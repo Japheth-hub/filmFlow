@@ -6,7 +6,7 @@ export default function success() {
     <div className='success'>
         <span className='successIcon'>🎉</span>
         <p className='successTitle'>Gracias por tu compra</p>
-        <a href="/cart">Volver al inicio</a>
+        <a href="/account">Volver al inicio</a>
     </div>
   )
 }

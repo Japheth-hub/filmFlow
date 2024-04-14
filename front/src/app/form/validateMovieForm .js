@@ -24,11 +24,11 @@ export function validateMovieForm(data) {
  if (!data.description || data.description.trim() === '') {
   errors.description = ' ';
 } else {
-  const descriptionSymbolsRegex = /^[a-zA-Z0-9\s;,:.¡!¿?()]*$/;
+  const descriptionSymbolsRegex = /^[a-zA-Z0-9\s;,:.¡!¿?()áéíóúÁÉÍÓÚÜüñÑ]*$/; // Se agregaron los caracteres con acentos y la letra ñ
   if (!descriptionSymbolsRegex.test(data.description)) {
-    errors.description = 'La descripción solo puede contener letras, números y los siguientes símbolos: ";", ",", ":", ".", "¡", "!", "¿", "?", "(", ")"';
+    errors.description = 'La descripción solo puede contener letras, números y los siguientes símbolos: ";", ",", ":", ".", "¡", "!", "¿", "?", "(", ")".'
   } else {
-    const letterCount = data.description.replace(/[^a-zA-Z]/g, '').length;
+    const letterCount = data.description.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]/g, '').length; // Se incluyeron las letras con acentos y la letra ñ
     if (letterCount < 10) {
       errors.description = 'La descripción debe tener al menos 10 letras.';
     } else if (letterCount > 300) {
