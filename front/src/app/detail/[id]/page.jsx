@@ -281,10 +281,9 @@ const renderStarSelector = () => {
             </div>
           </div>
         }
-        
-     
-          <h4>Comentarios</h4>
-
+        {movieData.reviews && movieData.reviews.length > 0 && (
+            <h4>Comentarios</h4>
+          )}
         {movieData.reviews && movieData.reviews.map((review) => (
           <div key={review.id} className={style['review-container']}>
             <img src={review.user?.picture ? review.user.picture : userpic.src} alt={review.user?.name ? review.user.name : "Desconocido"} className={style['user-picture']} />
