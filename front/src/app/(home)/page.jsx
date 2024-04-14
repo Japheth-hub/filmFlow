@@ -8,6 +8,7 @@ import Filters from "@/components/filters/Filters";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Link from "next/link";
 import Loading from "@/components/loading/loading";
+import { updateLocaleStorage } from "@/helpers/updateLocaleStorage";
 
 const Home = () => {
   const {error, isLoading, user} = useUser()
@@ -55,21 +56,9 @@ const Home = () => {
 
   },[]);
 
-  useEffect( () => {
+  useEffect(() => {
     if(user){
-      const upUser = async() => {
-        try {
-          const { data } = await axios.post(`${URL}users`, user)   
-          if (typeof window !== 'undefined') {
-            window.localStorage.setItem(
-              'FilmFlowUsr', JSON.stringify({...user, role:data.role})
-            )
-          } 
-        } catch (error) {
-          console.error("Error updating user:", error);
-        }
-      }
-      upUser()
+      updateLocaleStorage(user)
     }
   }, [user])
 

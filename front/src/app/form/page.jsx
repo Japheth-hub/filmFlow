@@ -8,8 +8,7 @@ import { validateMovieForm, validateSelectForm } from './validateMovieForm '
 import Swal from 'sweetalert2'
 import CheckRole from '@/components/checkRole/checkRole'
 import Pill from '@/components/pill/Pill';
-
-
+import { updateLocaleStorage } from "@/helpers/updateLocaleStorage";
 
 const MovieForm = () => {
 
@@ -67,6 +66,9 @@ const MovieForm = () => {
 
 
   useEffect(() => {
+    if(user){
+      updateLocaleStorage(user)
+    }
     const fetchUserRole = async () => {
       try {
         const response = await axios.get(`${URL}users/1111`);
@@ -87,7 +89,7 @@ const MovieForm = () => {
     };
     
   fetchUserRole();
-  }, []);
+  }, [user]);
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');

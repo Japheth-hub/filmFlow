@@ -4,46 +4,18 @@ import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import style from './account.module.scss'
 import Button from "@/components/button/Button";
-import logo from '../../img/logo-white-expanded.png'
 import { useState } from "react";
 import axios from 'axios'
 import Modal from "./modal"
 import Loading from '@/components/loading/loading'
-import CheckRole from '@/components/checkRole/checkRole'
 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
-
 
 const Account = () =>  {
   const { error, isLoading, user } = useUser();
   const [movies, setMovies] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userRole, setUserRole] = useState('')
-  let userAux = user
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${NEXT_PUBLIC_URL}users/1111`);
-        const userData = response.data;
-        const userSid = userAux.sid
-
-        userAux = userData.find(user => user.sid === userSid);
-
-        if (userAux) {
-          setUserRole(userAux.roleName);
-        } else {
-          console.error("User not found");
-        }
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    
-  fetchUserRole();
-}, []);
-
+  const [userLocalStorage,setUserLocalStorage] = useState({});
 
   async function fetchData(){
     try {
@@ -60,16 +32,16 @@ const Account = () =>  {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  useEffect(()=>{
-    fetchData()
+  useEffect(() => {  
+    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null);
   }, [])
   
   if (error) {
     return <div>Error en su session</div>;
   }
+
   if (isLoading) {
     return (
       <div>
@@ -77,22 +49,23 @@ const Account = () =>  {
       </div>
     );
   }
+
   return (
-    <CheckRole userRole={userRole} requiredRoles={["viewer","producer","admin"]}>
     <div className={style["contenedor"]}>
       <div>
         <div className={style["info"]}>
           <div className={style["datos"]}>
             <img src={user.picture} alt={user.name} />
-            <p>{user.email}</p>
+            <p>{user.email}</p> 
+            {userLocalStorage && userLocalStorage.role === "producer" ? <p>🎬</p> : null}
           </div>
           <ul>
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-          <button className="custom-button" onClick={openModal}>Formulario de Producer</button>
+          {userLocalStorage && userLocalStorage.role === "viewer" ? <Button emoji={'🎬'} color={'purple'} label={"Convertirse en Producer"} callback={openModal}></Button> : null}
         </ul>
         </div>
         <div className={style["movies"]}>
-          <h3>Tus Peliculas</h3>
+          <h3>Tus Peliculas Compradas</h3>
           <div className={style["lista"]}>
             {movies.length > 0 ? movies.map((movie) => (
               <Link key={movie.id} href={`/detail/${movie.id}`}>
@@ -106,9 +79,25 @@ const Account = () =>  {
           }
           </div>
         </div>
+        {userLocalStorage && userLocalStorage.role === "producer" 
+        ? <div className={style["movies"]} >
+          <h3>Tus Peliculas</h3>
+          <div className={style["lista"]}>
+            {movies.length > 0 ? movies.map((movie) => (
+              <Link key={movie.id} href={`/detail/${movie.id}`}>
+                <div className={style["movie"]}>
+                  <img src={movie.poster} alt={movie.name} />
+                  <p>{movie.name}</p>
+                </div>
+              </Link>
+            )) : <h3 className={style['sinCompras']}>Aun no tienes Peliculas para ver</h3>
+            
+          }
+          </div>
+        </div> 
+        : null }
       </div>
     </div>
-    </CheckRole>
   );
 }
 
