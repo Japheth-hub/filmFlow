@@ -18,7 +18,7 @@ module.exports = async (req) => {
 
         const countries = await Country.findAll({
             ...options,
-            attributes: ['id', 'name']
+            attributes: ['id', 'name', 'flag']
         });
 
         if (!countries) {
