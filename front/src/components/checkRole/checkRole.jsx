@@ -1,18 +1,18 @@
 import Link from "next/link";
 import './cRole.css'
 
-const CheckRole = ({ userRole, requiredRole, children }) => {
-  if (userRole !== requiredRole) {
+const CheckRole = ({ userRole, requiredRoles, children }) => {
+  if (!requiredRoles.includes(userRole)) {
     return (
-        <div className="checkRole">
-            <span className='crying'>😢</span>
+      <div className="checkRole">
+        <span className='crying'>😢</span>
 
-            <p className="noAccess">No cuentas con la autorización suficiente </p>
-            
-            <Link href="/">
-                Volver al inicio
-            </Link>
-      </div>
+        <p className="noAccess">No cuentas con la autorización suficiente </p>
+        
+        <Link href="/">
+          Volver al inicio
+        </Link>
+    </div>
     );
   }
   return children;

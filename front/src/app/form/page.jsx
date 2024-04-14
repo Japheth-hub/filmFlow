@@ -7,12 +7,15 @@ import style from './form.module.css'
 import Modal from '@/components/modal/Modal'
 import { validateMovieForm, validateSelectForm } from './validateMovieForm '
 import Swal from 'sweetalert2'
+import CheckRole from '@/components/checkRole/checkRole'
+
 
 
 const MovieForm = () => {
 
   const URL = process.env.NEXT_PUBLIC_URL
   const {user} = useUser();
+  let userAux = user
 
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
@@ -31,9 +34,32 @@ const MovieForm = () => {
   const [year, setYear] = useState('');
   const [previewModalOpen, setPreviewModalOpen] = useState(false); 
   const [previewMovieData, setPreviewMovieData] = useState(null);
-  
+  const [userRole, setUserRole] = useState('')
+
   
 
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(`${URL}users/1111`);
+        const userData = response.data;
+        const userSid = userAux.sid
+
+        userAux = userData.find(user => user.sid === userSid);
+
+        if (userAux) {
+          setUserRole(userAux.roleName);
+        } else {
+          console.error("User not found");
+        }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    
+  fetchUserRole();
+  }, []);
 
 
 
@@ -231,6 +257,7 @@ const MovieForm = () => {
    setPreviewModalOpen(false)
   }
   return (
+    <CheckRole userRole={userRole} requiredRoles={["producer","admin"]}>
     <div className={style["movie-form-container"]}>
       <div className={style["form-wrapper"]}>
       <Link href="/">
@@ -396,6 +423,7 @@ const MovieForm = () => {
         </div>
       </div>
     </div>
+    </CheckRole>
   );
 };
 export default withPageAuthRequired(MovieForm);
