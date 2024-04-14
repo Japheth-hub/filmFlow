@@ -6,13 +6,16 @@ import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
 import { validateMovieForm, validateSelectForm } from './validateMovieForm '
 import Swal from 'sweetalert2'
+import CheckRole from '@/components/checkRole/checkRole'
 import Pill from '@/components/pill/Pill';
+
 
 
 const MovieForm = () => {
 
   const URL = process.env.NEXT_PUBLIC_URL
   const {user} = useUser();
+  let userAux = user
   const [mediaType, setMediaType] = useState('trailer');
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
@@ -29,6 +32,7 @@ const MovieForm = () => {
   const [isLoading, setIsLoading] = useState(false); 
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
+  const [userRole, setUserRole] = useState('')
   const [mediaURL, setMediaURL] = useState({
     poster: 'https://s3.oss.go.id/oss/logo/notfound.jpg',
     trailer: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm',
@@ -60,8 +64,30 @@ const MovieForm = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [movieName, director, selectedGenres, selectedCountries, description, poster, trailer, movie, year]);
-  
 
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(`${URL}users/1111`);
+        const userData = response.data;
+        const userSid = userAux.sid
+
+        userAux = userData.find(user => user.sid === userSid);
+
+        if (userAux) {
+          setUserRole(userAux.roleName);
+        } else {
+          console.error("User not found");
+        }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    
+  fetchUserRole();
+  }, []);
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
@@ -285,6 +311,7 @@ const MovieForm = () => {
   };
 
   return (
+    <CheckRole userRole={userRole} requiredRoles={["producer","admin"]}>
     <div className={style["movie-form-container"]}>
       <div className={style["form-and-preview-wrapper"]}>
       <div className={style["form-wrapper"]}>
@@ -464,7 +491,8 @@ const MovieForm = () => {
         </div>
       </div>
     </div>
-</div>
+   </div>
+ </CheckRole>
   );
 };
 export default withPageAuthRequired(MovieForm);

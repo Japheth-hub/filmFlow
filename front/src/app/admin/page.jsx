@@ -1,18 +1,45 @@
 'use client'
-import React,  {useState} from 'react'
+import React,  {useState, useEffect} from 'react'
 import Dashboard from '@/components/dashboard/dashboard'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client'
 import style from './admin.module.scss'
 import Image from 'next/image'
 import burgerMenu from '@/img/burger-menu.png'
 import DashGrap from '@/components/dashGrap/DashGrap'
 import DashPayments from '@/components/dashPayments/DashPayments'
 import Loading from "@/components/loading/loading";
+import CheckRole from '@/components/checkRole/checkRole'
 
-function Admin() {
+const Admin = () => {
   const URL = process.env.NEXT_PUBLIC_URL
   const {user, isLoading, error} = useUser()
   const [component, setComponent] = useState(0)
+  const [userRole, setUserRole] = useState('')
+
+  let userAux = user
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(`${URL}users/1111`);
+        const userData = response.data;
+        const userSid = userAux.sid
+
+        userAux = userData.find(user => user.sid === userSid);
+
+        if (userAux) {
+          setUserRole(userAux.roleName);
+        } else {
+          console.error("User not found");
+        }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    
+  fetchUserRole();
+}, []);
 
   const showMovies = async() => {
       setComponent(2);
@@ -63,6 +90,7 @@ function Admin() {
 
   if(user){
     return (
+      <CheckRole userRole={userRole} requiredRoles="admin">
     <div>
     <div className={style.pos}>
         <div className={style.menu}>
@@ -91,8 +119,9 @@ function Admin() {
         </div>
     </div>
     </div>
+    </CheckRole>
     )
   }
 }
 
-export default Admin
+export default withPageAuthRequired(Admin)

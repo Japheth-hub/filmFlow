@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import style from './account.module.scss'
 import Button from "@/components/button/Button";
@@ -9,15 +9,40 @@ import { useState } from "react";
 import axios from 'axios'
 import Modal from "./modal"
 import Loading from '@/components/loading/loading'
+import CheckRole from '@/components/checkRole/checkRole'
 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
 
 
-export default function Account() {
+const Account = () =>  {
   const { error, isLoading, user } = useUser();
   const [movies, setMovies] = useState([])
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userRole, setUserRole] = useState('')
+  let userAux = user
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(`${NEXT_PUBLIC_URL}users/1111`);
+        const userData = response.data;
+        const userSid = userAux.sid
+
+        userAux = userData.find(user => user.sid === userSid);
+
+        if (userAux) {
+          setUserRole(userAux.roleName);
+        } else {
+          console.error("User not found");
+        }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    
+  fetchUserRole();
+}, []);
 
 
   async function fetchData(){
@@ -53,6 +78,7 @@ export default function Account() {
     );
   }
   return (
+    <CheckRole userRole={userRole} requiredRoles={["viewer","producer","admin"]}>
     <div className={style["contenedor"]}>
       <div>
         <div className={style["info"]}>
@@ -82,5 +108,8 @@ export default function Account() {
         </div>
       </div>
     </div>
+    </CheckRole>
   );
 }
+
+export default withPageAuthRequired(Account) 
