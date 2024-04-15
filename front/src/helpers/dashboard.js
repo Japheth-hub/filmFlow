@@ -19,7 +19,7 @@ export const showMovies = async () => {
     });
     return clearData;
   } catch (error) {
-    console.log(error);
+    console.log('Error en Movies', error);
   }
 };
 
@@ -55,9 +55,31 @@ export const showReviews = async () => {
     });
     return clearData;
   } catch (error) {
-    console.log(error);
+    console.log('Error en reviews', error);
   }
 };
+
+export const showDiscount = async () => {
+  try {
+    const { data } = await axios(`${URL}discount`);
+    const clearData = data.map((discount)=>{
+      return {
+        id: discount.id,
+        code: discount.code,
+        percentage: discount.percentage,
+        used: discount.used,
+        starts: discount.starts.slice(0, 10),
+        ends: discount.ends.slice(0, 10),
+        movie: discount.movies?.map((movie) => movie.name).join("/"),
+        genre: discount.genres?.map((genre) => genre.name).join("/"),
+        created: discount.createdAt.slice(0, 10)
+      };
+    })
+    return clearData
+  } catch (error) {
+    console.log('Error en el discount', error)
+  }
+}
 
 export const showOrder = async (order, tipo, body) => {
   let newBody
@@ -75,9 +97,17 @@ export const showOrder = async (order, tipo, body) => {
     }
   } else if (tipo === "Movie") {
     if (!order) {
-      newBody = body.sort((a, b) => a.movie.localeCompare(b.movie));
+      newBody = body.sort((a, b) => {
+        if (!a.movie) return 1;
+        if (!b.movie) return -1;
+        return a.movie.localeCompare(b.movie);
+      });
     } else {
-      newBody = body.sort((a, b) => b.movie.localeCompare(a.movie));
+      newBody = body.sort((a, b) => {
+        if (!a.movie) return 1;
+        if (!b.movie) return -1;
+        return b.movie.localeCompare(a.movie);
+      });
     }
   } else if (tipo === "Points") {
     if (!order) {
@@ -91,6 +121,35 @@ export const showOrder = async (order, tipo, body) => {
     } else {
       newBody = body.sort((a, b) => b.role.localeCompare(a.role));
     }
+  } else if (tipo === "Percentage") {
+    if (!order) {
+      newBody = body.sort((a, b) => a.percentage - b.percentage);
+    } else {
+      newBody = body.sort((a, b) => b.percentage - a.percentage);
+    }
   }
   return newBody
+}
+
+export const showSelects = async () => {
+  try {
+    const select = {}
+    const mov = await axios(`${URL}movies`);
+    const gen = await axios(`${URL}genres`);
+    select.movies = mov.data.map((movie)=>{
+      return {
+        id: movie.id,
+        name: movie.name
+      }
+    })
+    select.genres = gen.data.map((genre)=>{
+      return {
+        id: genre.id,
+        name: genre.name
+      }
+    })
+    return select
+  } catch (error) {
+    console.log(error)
+  }
 }

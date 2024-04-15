@@ -72,6 +72,7 @@ const MovieForm = () => {
       updateLocaleStorage(user)
     }
 
+
     const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
       ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
       : null)
@@ -91,6 +92,7 @@ const MovieForm = () => {
           }
         }
     },[userLocalStorage])
+
 
 
   const toggleMediaType = () => {

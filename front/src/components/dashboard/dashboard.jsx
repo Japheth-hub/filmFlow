@@ -3,9 +3,12 @@ import style from '../../app/admin/admin.module.scss'
 import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
-import { showMovies, showReviews, showUsers, showOrder } from "@/helpers/dashboard";
+import { showMovies, showReviews, showUsers, showOrder, showDiscount } from "@/helpers/dashboard";
+import Loading from "@/components/loading/loading";
+import ModalPromo from './modalPromo'
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link"; 
+
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
@@ -22,7 +25,9 @@ export default function Dashboard({link, title, sid}) {
     const [totalPage, setTotalPage] = useState()
     const [pagina, setPagina] = useState([])
     const [update, setUpdate] = useState(true)
-    const [dashStatus, setDashStatus] = useState()
+    const [codeType, setCodeType] = useState("default");
+    const [currentDate, setCurrentDate] = useState(new Date().toISOString().slice(0, 10));
+    const [display, setDisplay] = useState("none")
     const porPagina = 10
 
     const { error, isLoading, user } = useUser();
@@ -83,6 +88,8 @@ export default function Dashboard({link, title, sid}) {
         setSelectGenre("Genero");
         setStatus("Status")
         setPage(1)
+        setCodeType('default')
+        setCurrentDate(new Date().toISOString().slice(0, 10))
         body.sort((a, b) => a.id - b.id)
     }
 
@@ -197,7 +204,6 @@ export default function Dashboard({link, title, sid}) {
             });
             if (res.isConfirmed) {
                 const {data} = await axios.put(`${NEXT_PUBLIC_URL}movies/status/${id}`, {"auth": sid, "status": status})
-                setDashStatus(status)
                 setUpdate(!update);
                 Swal.fire({
                     icon: "success",
@@ -216,7 +222,7 @@ export default function Dashboard({link, title, sid}) {
 
     function handleSearch(e){
         let search = []
-        title === 'Reviews' 
+        title === 'Reviews' || title === 'Promos' 
         ? search = body2.filter((data) => data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
         : search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase()))
         if(search.length > 0){
@@ -269,6 +275,43 @@ export default function Dashboard({link, title, sid}) {
         }
     }
 
+    function handleDiscount(e){
+        setCodeType(e.target.value)
+        handleDate(currentDate, e.target.value)
+
+    }
+
+    function handleDate(e, type){
+        const date = e.target ? e.target.value : e
+        setCurrentDate(date)
+        let newBody = []
+        switch(type){
+            case 'start':
+                    newBody = body2.filter((code) => code.starts > date)
+                    setBody(newBody)
+                break
+            case 'current':
+                    newBody = body2.filter((code) => code.starts <= date && code.ends >= date);
+                    setBody(newBody);
+                break
+            case 'finished':
+                    newBody = body2.filter((code) => code.ends < date)
+                    setBody(newBody);
+                break
+            default:
+                Swal.fire({
+                icon: "warning",
+                title: "Selecciona el tipo",
+                text: "Por iniciar / Activas / Finalizadas",
+            });
+                break
+        }
+    }
+
+    function showModal(display){
+        setDisplay(display)
+    }
+
     useEffect(()=>{
         async function datos(type){
             let datos
@@ -281,6 +324,9 @@ export default function Dashboard({link, title, sid}) {
                     break
                 case "Reviews":
                     datos = await showReviews();
+                    break
+                case "Promos":
+                    datos = await showDiscount();
                     break
                 default :
                     console.log('No hay Datos para mostrar')
@@ -302,6 +348,11 @@ export default function Dashboard({link, title, sid}) {
         }
     }, [page, body])
 
+    if (isLoading){
+        return <Loading />
+    }
+
+
     return (
         <div>
             <h3 className={style.title}>{title}</h3>
@@ -313,8 +364,18 @@ export default function Dashboard({link, title, sid}) {
                     <Button callback={()=>{handleOrder('Movie')}} emoji={order ? '🔻' : '🔺'} label={'Movie'}></Button>
                     <Button callback={()=>{handleOrder('Points')}} emoji={order ? '🔻' : '🔺'} label={'Points'}></Button>
                 </>)
-                    : <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
+                    : title !== "Promos" && <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
                 }
+                {title === 'Promos' && (<>
+                    <Button callback={()=>{handleOrder('Percentage')}} emoji={order ? '🔻' : '🔺'} label={'Percentage'}></Button> 
+                    <select className={style.status} defaultValue='default' value={codeType} onChange={handleDiscount}>
+                        <option value="default" disabled>Selecciona tipo</option>
+                        <option value="start">Por Iniciar</option>
+                        <option value="current">Activas</option>
+                        <option value="finished">Finalizadas</option>
+                    </select>
+                    <input className={style.calendar} type="date" id="fecha" name="fecha" value={currentDate} onChange={(e)=>{handleDate(e, codeType)}}/>
+                </>)}
                 {title === 'Movies' && 
                     (<>
                         <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duration'}></Button>
@@ -325,12 +386,13 @@ export default function Dashboard({link, title, sid}) {
                             <option value="declined">Declined</option>
                         </select>
                         <select name="genre" className={style.genreSelect} defaultValue="Genero" value={selectGenre} onChange={handleGenre}>
-                            <option value="Genero">Selecciona un genero</option>
+                            <option value="Genero" disabled>Selecciona un genero</option>
                             {genres && genres.map((genre, index) => {
                                 return <option key={index} value={genre}>{genre}</option>
                             })}
                         </select>
                     </>)}
+                {title === "Promos" && <Link href='/discount'><Button label={"Crear Promo"} /*callback={()=>{showModal("block")}}*//></Link>}
                 <input className={style.searchTable} type="text" onChange={handleSearch} placeholder='Search...' value={search} />
             </div>
             <div className={style.paginado}>
@@ -352,38 +414,48 @@ export default function Dashboard({link, title, sid}) {
                             </tr>
                         </thead>
                         <tbody className={style.tbody}>
-                                {pagina && pagina.length > 0 && column && column.length > 0 &&
-                                    pagina.map((item, index) => (
-                                        <tr key={index}>
-                                        {column.map((prop, i) => ( 
-                                                title === "Movies" && prop === 'status'
-                                                ? (<td key={i}>
-                                                    <select className={style[item[prop]]} name="status" onChange={(e)=>{changeStatus(e, item.id)}} defaultValue={item[prop]} value={item[prop]}>
-                                                        <option value="approved">Approved</option>
-                                                        <option value="pending" disabled>Pending</option>
-                                                        <option value="declined">Declined</option>
-                                                    </select>
-                                                </td>)
-                                                : <td className={style.td} key={i}>{item[prop]}</td> && title === "Movies" && prop === "name" ? <td className={style.td} key={i}><Link href={`detail/${item.id}`}>{item[prop]}</Link></td> : <td className={style.td} key={i}>{item[prop]}</td>
-                                                ))}
-                                                <td className={style.td}>
-                                                    <div className={style['btn-actions']}>
-                                                        {item.deleted === "Active"
+                                {body.length > 0 
+                                    ? pagina && pagina.length > 0 && column && column.length > 0 &&
+                                        pagina.map((item, index) => (
+                                            <tr key={index}>
+                                            {column.map((prop, i) => ( 
+                                                    title === "Movies" && prop === 'status'
+                                                    ? (<td key={i}>
+                                                        <select className={style[item[prop]]} name="status" onChange={(e)=>{changeStatus(e, item.id)}} defaultValue={item[prop]} value={item[prop]}>
+                                                            <option value="approved">Approved</option>
+                                                            <option value="pending" disabled>Pending</option>
+                                                            <option value="declined">Declined</option>
+                                                        </select>
+                                                    </td>)
+                                                    : <td className={style.td} key={i}>{item[prop]}</td> && title === "Movies" && prop === "name" ? <td className={style.td} key={i}><Link href={`detail/${item.id}`}>{item[prop]}</Link></td> : <td className={style.td} key={i}>{item[prop]}</td>
+                                                    ))}
+                                                    <td className={style.td}>
+                                                        <div className={style['btn-actions']}>
+                                                            {title === "Promos"
                                                             ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
-                                                            : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
-                                                        }
-                                                        {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
-                                                        {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )}
-                                                        {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
-                                                    </div>
-                                                </td>
-                                        </tr>       
-                                    ))
+                                                            : item.deleted === "Active"
+                                                                ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                                : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
+                                                            }
+                                                            {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
+                                                            {/* {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )} */}
+                                                            {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
+                                                        </div>
+                                                    </td>
+                                            </tr>       
+                                        ))
+                                    
+                                    : <tr className={style.tr}><td className={style.tdDefault} colSpan={column.length + 1}>No hay Datos por mostrar</td></tr>
                                 }
                         </tbody>
                     </table>
             }
             </div>
+            {title === 'Promos' &&
+                <div className={style.modalContainer} style={{display : display}}>
+                    <ModalPromo showModal={showModal}/>
+                </div>
+            }
         </div>
     )
 }
