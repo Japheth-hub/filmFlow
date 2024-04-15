@@ -347,7 +347,7 @@ const sampleMovies = [
     },
     {
         name: "Coco",
-        director: "Lee Unkrich, Adrian Molina",
+        director: "Lee Unkrich",
         genres: "Animation, Adventure, Family",
         description: "Miguel, un joven con un gran sueño de ser músico, se enfrenta a una antigua prohibición familiar: ¡la música está vedada! Decidido a romper la tradición y encontrar su destino, Miguel se adentra en la colorida y sorprendente Tierra de los Muertos. Allí, emprende una búsqueda para encontrar a su tatarabuelo, ¡un legendario cantante!",
         duration: 105,
@@ -436,7 +436,7 @@ const sampleMovies = [
     {
         name: "La Máscara del Zorro",
         director: "Martin Campbell",
-        genres: "Action, Adventure, Romance, Western",
+        genres: "Action, Adventure, Romance",
         description: "Don Diego de la Vega, un noble español, es convertido en el Zorro, un justiciero enmascarado que lucha contra la tiranía del gobernador Montero en la California colonial española.",
         duration: 136,
         country: "United States",

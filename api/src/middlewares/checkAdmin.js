@@ -1,7 +1,15 @@
 const {User,Role} = require('../db')
 module.exports = async (req,res,next)=>{
     const errors = {};
-    const {auth} = req.body;
+    let { auth } = req.params;
+
+    if(!auth){
+        auth  = req.body.auth;
+    }
+
+    if(!auth){
+        auth  = req.query.auth;
+    }
     
     if(!auth) return res.status(403).json({status:false,message:"Falta sid en petición"});
     
