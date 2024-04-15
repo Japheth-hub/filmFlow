@@ -97,7 +97,7 @@ const Nav = (props)=> {
                           <Link key={index} href = {`/detail/${result.id}`}>
                             <li>
                               <div className={styles.card} onClick={()=>router.push(`/detail/${result.id}`)}>
-                                <div>{result.name}</div>
+                                
                                 <div>
                                   <img
                                     src={result.poster}
@@ -105,6 +105,7 @@ const Nav = (props)=> {
                                     className={styles.searchbar__image}
                                     />
                                 </div>
+                                <div>{result.name}</div>
                               </div>
                             </li>
                           </Link>
