@@ -35,6 +35,12 @@ module.exports = async (query)=>{
                     console.log("puede comentar");
                     movie.dataValues.reviewPermission = true;
                 }
+                if(movie.userId && movie.userId === user.id){
+                    movie.dataValues.isOwner = true;
+                }
+                if(user.role.role = "admin") {
+                    movie.dataValues.isAdmin = true;
+                }
             }
             return movie;
         }
