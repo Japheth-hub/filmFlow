@@ -82,12 +82,8 @@ const Discount = () =>{
     
 
     const generateDiscountCode = async () => {
-        if (selectedMovies.length === 0 && selectedGenres.length === 0) {
-            
-            const allMoviesIds = movies.map((movie) => movie.id);
-            setSelectedMovies(allMoviesIds);
-
-        } else if (selectedMovies.length > 0 && selectedGenres.length > 0) {
+        console.log("!sadasd");
+        if (selectedMovies.length > 0 && selectedGenres.length > 0) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -143,6 +139,12 @@ const Discount = () =>{
                     icon: 'success',
                     title: '¡Éxito!',
                     text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Volver',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin'
+                    }
                 });
             }
 
@@ -161,6 +163,12 @@ const Discount = () =>{
                     icon: 'success',
                     title: '¡Éxito!',
                     text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Volver',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin'
+                    }
                 });
             }
             

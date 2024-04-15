@@ -81,7 +81,11 @@ const Movies = ({ params }) => {
         let { data } = await axios.get(`${URL}genres`);
         let dataCountries = await axios.get(`${URL}countries?existent=true`);
         setGenres(data);
-        setCountries(dataCountries.data);
+        const capitalize = dataCountries.data.map((pais) => ({
+          ...pais,
+          name: pais.name.split(' ').map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ")
+        }));
+        setCountries(capitalize);
       } catch (error) {
         console.error('Error fetching genres or countries:', error);
       }
@@ -180,8 +184,8 @@ const Movies = ({ params }) => {
                 onChange={handleChange}
               >
                 <option value={""} >Seleccione...</option>
-                <option value={"name"}>Name</option>
-                <option value={"duration"}>Duration</option>
+                <option value={"name"}>Nombre</option>
+                <option value={"duration"}>Duracion</option>
               </select>
             </div>
             <div className={style.optionsField}>

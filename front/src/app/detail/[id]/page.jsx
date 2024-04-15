@@ -84,44 +84,39 @@ const DetailContent = () => {
       });
     }
   }
+  
+  async function fetchData() {
+    setIsLoading(true);
+    setError(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        let query = "";
-        if(user){
-          console.log(user);
-          query =`?auth=${user.sid}`;
-        }
-        const response = await axios.get(`${URL}movies/${id}${query}`);
-        if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
-          router.push(`/`);
-        } 
-        setMovieData(response.data);
-      } catch (error) {
-        console.error('Error fetching movie data:', error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
+    try {
+      let query = "";
+      if (user) {
+        query = `?auth=${user.sid}`;
       }
-    };
-    fetchData();
-  }, [id,user]);
-
-  useEffect(() => {
-    async function reload(){
-      try {
-        const {data} = await axios.get(`${URL}movies/${id}`);
-        setMovieData(data)
-      } catch (error) {
-        console.log(error)
+      const response = await axios.get(`${URL}movies/${id}${query}`);
+      if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
+        router.push(`/`);
+      } 
+      setMovieData(response.data);
+      if (response.data && response.data.id && purchase.includes(response.data.id)) {
+        setHasMovie(true);
+      } else {
+        setHasMovie(false);
       }
+    } catch (error) {
+      console.error('Error fetching movie data:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
-    reload()
-  }, [update]);
+  }
+
+
+  useEffect(() => {
+    fetchData();
+  }, [id, user,update]);
+
   
   useEffect(() => {
     async function getPurchase(){
@@ -271,9 +266,12 @@ const renderStarSelector = () => {
         </div>
       </div>
       <div className={style['media-container']}>
+
+      {purchase.includes(movieData.id) &&
         <button onClick={toggleMediaType}>
           {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
         </button>
+      }
         {mediaType === 'trailer' ? (
           <iframe src={trailer} width="800" height="500" title="Trailer" allowFullScreen />
         ) : (

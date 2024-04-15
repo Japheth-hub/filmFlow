@@ -17,12 +17,8 @@ const Cart = () => {
     const [totalPrice,setTotalPrice] = useState(null);
     const [userDiscountCode, setUserDiscountCode] = useState('');
     const [discountApplied, setDiscountApplied] = useState(false);
+    const [discountError, setDiscountError] = useState('')
     const event = new Event('localChanged');
-
-
-    
-    
-    
 
     const fetchData = async () => {
         try {
@@ -49,23 +45,11 @@ const Cart = () => {
                 }
             }
         
-
-            
-
         } catch (error) {
             console.error('Error fetching movie data:', error);
         }
     };
   
-    const handleDelete = async (id) => {
-        try {
-            const response = await axios.delete(`${URL}cart/${id}`, { data: {auth: user.sid}});
-            setCartData(cartData.filter(movie => movie.id !== id));
-        } catch (error) {
-            console.error('Error deleting movie from cart:', error);
-        }
-    }
-
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -76,7 +60,13 @@ const Cart = () => {
             });
             setCartData(data.movies);
             setDiscountApplied(true);
+            setDiscountError('')
         } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                setDiscountError(error.response.data.message);
+            } else {
+                setDiscountError('Ha ocurrido un error inesperado.');
+            }
             console.error('Error applying discounts:', error);
         }
     };
@@ -100,6 +90,10 @@ const Cart = () => {
                 window.removeEventListener('localChanged', handleStorageChange);
             };
         }
+
+        return () => {
+            setCartData([]);
+        };
         
       }, []);
 
@@ -109,7 +103,6 @@ const Cart = () => {
       }, [user]);
 
       useEffect(() => {
-        console.log("se actualiza CartData");
         setTotalPrice(cartData.reduce((total, movie) => total + movie.price, 0));
       }, [cartData])
       
@@ -163,7 +156,8 @@ const Cart = () => {
                 className={style.input}
             />
             <Button label="Aplicar descuento" color="primary" callback={handleSubmit}/>
-            {userDiscountCode && discountApplied && <p className={style.successMessage}>Descuento aplicado!</p>}            
+            {userDiscountCode && discountError && <p className={style.errorMessage}>{discountError}</p>}
+            {userDiscountCode && discountApplied && <p className={style.successMessage}>¡Descuento aplicado!</p>}            
             </form>
 
         </div>

@@ -327,7 +327,7 @@ const MovieForm = () => {
     <div className={style["movie-form-container"]}>
       <div className={style["form-and-preview-wrapper"]}>
       <div className={style["form-wrapper"]}>
-      <h2>Formulario</h2>
+      <h2 className={style["text-black"]}>Formulario</h2>
       <Link href="/">
         <button className={style["back-button"]}>Ir a home</button>
       </Link>
