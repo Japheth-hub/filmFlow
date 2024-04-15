@@ -84,48 +84,37 @@ const DetailContent = () => {
       });
     }
   }
+  async function fetchData() {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      let query = "";
+      if (user) {
+        query = `?auth=${user.sid}`;
+      }
+      const response = await axios.get(`${URL}movies/${id}${query}`);
+      if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
+        router.push(`/`);
+      } 
+      setMovieData(response.data);
+      if (response.data && response.data.id && purchase.includes(response.data.id)) {
+        setHasMovie(true);
+      } else {
+        setHasMovie(false);
+      }
+    } catch (error) {
+      console.error('Error fetching movie data:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      setError(null);
-  
-      try {
-        let query = "";
-        if (user) {
-          query = `?auth=${user.sid}`;
-        }
-        const response = await axios.get(`${URL}movies/${id}${query}`);
-        if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
-          router.push(`/`);
-        } 
-        setMovieData(response.data);
-        if (response.data && response.data.id && purchase.includes(response.data.id)) {
-          setHasMovie(true);
-        } else {
-          setHasMovie(false);
-        }
-      } catch (error) {
-        console.error('Error fetching movie data:', error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
     fetchData();
-  }, [id, user]);
+  }, [id, user,update]);
 
-  useEffect(() => {
-    async function reload(){
-      try {
-        const {data} = await axios.get(`${URL}movies/${id}`);
-        setMovieData(data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    reload()
-  }, [update]);
   
   useEffect(() => {
     async function getPurchase(){
