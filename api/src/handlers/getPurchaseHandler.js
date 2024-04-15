@@ -8,6 +8,9 @@ module.exports = async (req, res) => {
             return res.status(422).json(data.message)
         }
 
+        if(!data.purchases.length) {
+            return res.status(422).json("No hay compras")
+        }
         return res.status(200).json(data.purchases)
     } catch (error) {
         console.error(error)
