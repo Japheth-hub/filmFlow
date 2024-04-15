@@ -14,7 +14,7 @@ const MovieForm = () => {
 
   const URL = process.env.NEXT_PUBLIC_URL
   const {user} = useUser();
-  let userAux = user
+
   const [mediaType, setMediaType] = useState('trailer');
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
@@ -32,6 +32,8 @@ const MovieForm = () => {
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
   const [userRole, setUserRole] = useState('')
+  const [userLocalStorage,setUserLocalStorage] = useState({});
+
   const [mediaURL, setMediaURL] = useState({
     poster: 'https://s3.oss.go.id/oss/logo/notfound.jpg',
     trailer: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm',
