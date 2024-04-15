@@ -19,8 +19,8 @@
   width: 100%;
   position: relative;
   align-items: center;
-
-  font: $mainFont;
+  font-family: $mainFont;
+  flex-wrap: wrap;
 
   li {
     flex: 1;
@@ -138,6 +138,16 @@
           box-shadow: none;
         }
       }
+    }
+  }
+}
+@media only screen and (max-width: $breakpointMD) {
+  /* CSS rules that apply when the screen width is 492 pixels or less */
+  /* For example: */
+  .navList {
+    justify-content: center;
+    > div {
+      margin-top: 20px;
     }
   }
 }
