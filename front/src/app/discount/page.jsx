@@ -102,9 +102,9 @@ const Discount = () =>{
             return;
         }
 
-        const currentDate = new Date().toISOString().split('T')[0]; 
+        const currentDate = new Date(); 
         
-        if (starts.substr(0, 10) <= currentDate) {
+        if (starts <= currentDate) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -113,7 +113,7 @@ const Discount = () =>{
             return;
         }
 
-        if (ends.substr(0, 10) <= starts.substr(0, 10)) {
+        if (ends <= starts) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -123,21 +123,45 @@ const Discount = () =>{
         }
         
         try {
-            const response = await axios.post(`${URL}discount`, {
-                selectedMovies,
-                selectedGenres,
-                percentage: percentage,
-                starts,
-                ends
-            });
 
-            setCode(response.data.code.code);
-            setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
-            });
+            if(selectedMovies.length > 0 && selectedGenres.length === 0){
+
+                const response = await axios.post(`${URL}discount`, {
+                    selectedMovies,
+                    percentage: percentage,
+                    starts,
+                    ends
+                });
+
+                setCode(response.data.code.code);
+                setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                });
+            }
+
+            if(selectedGenres.length > 0 && selectedMovies.length === 0){
+                const response = await axios.post(`${URL}discount`, {
+                    selectedGenres,
+                    percentage: percentage,
+                    starts,
+                    ends
+                });
+
+                setCode(response.data.code.code);
+                setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                });
+            }
+            
+            
         } catch (error) {
             console.error('Error generating discount code:', error);
         }
@@ -211,16 +235,10 @@ const Discount = () =>{
                     <label htmlFor="startsDate">Fecha de inicio:    </label>
                     <input
                         className={style.input}
-                        type="date"
+                        type="datetime-local"
                         id="startsDate"
-                        value={starts.substr(0, 10)} 
-                        onChange={(e) => setStarts(e.target.value + 'T12:00:00Z')} 
-                    />
-                    <input
-                        className={style.input}
-                        type="time"
-                        value={starts.substr(11, 5)} 
-                        onChange={(e) => setStarts(`${starts.substr(0, 10)}T${e.target.value}:00Z`)}
+                        value={starts} 
+                        onChange={(e) => setStarts(e.target.value)} 
                     />
                 </div>
 
@@ -228,16 +246,10 @@ const Discount = () =>{
                     <label htmlFor="endsDate">Fecha de caducidad:  </label>
                     <input
                         className={style.input}                    
-                        type="date"
+                        type="datetime-local"
                         id="endsDate"
-                        value={ends.substr(0, 10)} 
-                        onChange={(e) => setEnds(e.target.value + 'T12:00:00Z')} 
-                    />
-                    <input
-                        className={style.input}
-                        type="time"
-                        value={ends.substr(11, 5)} 
-                        onChange={(e) => setEnds(`${ends.substr(0, 10)}T${e.target.value}:00Z`)} 
+                        value={ends} 
+                        onChange={(e) => setEnds(e.target.value)} 
                     />
                 </div>
             </div>
