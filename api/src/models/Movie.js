@@ -40,6 +40,10 @@ module.exports = (sequelize) => {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
+        revenue:{
+            type: DataTypes.FLOAT,
+            allowNull: true,
+        },
         year: {
             type: DataTypes.INTEGER,
             allowNull: false,

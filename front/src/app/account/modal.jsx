@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import style from './modal.module.scss';
-
+import PhoneInput from 'react-phone-number-input';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Swal from 'sweetalert2';
 import Modal2 from "./modal2";
+import 'react-phone-number-input/style.css'
 
 const Modal = ({ isOpen, onClose }) => {
     const {user} = useUser();
@@ -16,7 +17,7 @@ const Modal = ({ isOpen, onClose }) => {
         paymentAccount: userEmail,
         phoneNumber: ""
     });
-
+console.log(formData)
     const [confirmEmail, setConfirmEmail] = useState(false);
     const [showSecondModal, setShowSecondModal] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -101,12 +102,10 @@ const Modal = ({ isOpen, onClose }) => {
                     </div>
                     <div className={style["form-group"]}>
                         <label htmlFor="phoneNumber">Número de teléfono:</label>
-                        <input
-                            type="text"
-                            id="phoneNumber"
-                            name="phoneNumber"
+                        <PhoneInput
+                            placeholder="Enter phone number"
                             value={formData.phoneNumber}
-                            onChange={handleChange}
+                            onChange={(phoneNumber) => setFormData({ ...formData, phoneNumber })}
                         />
                     </div>
                     <div className={style["form-groups"]}>
@@ -114,11 +113,11 @@ const Modal = ({ isOpen, onClose }) => {
                         type="button"
                         onClick={() => setShowSecondModal(true)}
                         className={`${style["button"]} ${isButtonDisabled ? style["button-disabled"] : style["button-primary"]}`}
-                        disabled={isButtonDisabled}
+                        disabled={isButtonDisabled || formData.phoneNumber === ""}
                     >
                         Ver terminos y condiciones
                     </button>
-                        {showSecondModal && <Modal2 formData={formData} onClose={handleCloseAllModals} />}
+                        {showSecondModal && <Modal2 formData={formData} onClose={handleCloseAllModals} user={user}/>}
                     </div>
                 </form>
             </div>

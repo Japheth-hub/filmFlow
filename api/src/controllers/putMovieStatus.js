@@ -9,6 +9,10 @@ module.exports = async (body, id) => {
 
         const movie = await Movie.findByPk(id)
 
+        if(!movie) {
+            return { status: false, message: `La pelicula no existe`}
+        }
+
         if (movie.status === status) {
             return { status: false, message: `La pelicula ya tiene ese estado`}
         }
