@@ -18,12 +18,26 @@ const Account = () =>  {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userLocalStorage,setUserLocalStorage] = useState({});
 
-  async function fetchData(){
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  useEffect(() => {  
+    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null);
+  }, [user])
+
+  async function fetchData(user){
     try {
       const { data } = await axios(`${NEXT_PUBLIC_URL}purchases/${user.sid}`);
       if(typeof data === "object"){
         setMovies(data)
       }
+      if(userLocalStorage === null) {
+        setUserLocalStorage(JSON.parse(window.localStorage.getItem('FilmFlowUsr')))
+      }
+      fetchProducerMovies(user)
     } catch (error) {
       console.error(error)
     }
@@ -40,26 +54,9 @@ const Account = () =>  {
     }
   }
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  useEffect(() => {  
-    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
-      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-      : null);
-    if(userLocalStorage.role === "producer") {
-      try {
-        fetchProducerMovies(user)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-  }, [user])
-  
   useEffect(()=>{
-    fetchData()
-  }, [])
+    fetchData(user)
+  }, [user])
 
   if (error) {
     return <div>Error en su session</div>;
