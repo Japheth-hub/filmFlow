@@ -273,15 +273,23 @@ const renderStarSelector = () => {
             <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
-              <label>Puntuación:</label>
-              {alerts.points !== true && <span>{alerts.points}</span>}
               <div className={style['star-selector']}>
-                {renderStarSelector()}
+                {alerts.points !== true && <span className={style.alerts}>{alerts.points}</span>}
+                <div className={style.reviewPoints}>
+                  <label>Puntuación:</label>
+                  {renderStarSelector()}
+                </div>
               </div>
-              <label>Comentario:</label>
-              {alerts.comment !== true && <span>{alerts.comment}</span>}
-              <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-              <button onClick={handleReviewSubmit}>Subir comentario</button>
+              <div className={style.reviewComment}>
+                {alerts.comment !== true && <span className={style.alerts}>{alerts.comment}</span>}
+                <div className={style.textarea}>
+                  <label>Comentario:</label>
+                  <textarea rows='5' cols='40' value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
+                </div>
+              </div>
+              <div className={style.comentar}>
+                <Button label={'Comentar'} color={'green'} callback={handleReviewSubmit}/>
+              </div>
             </div>
           </div>
         }
