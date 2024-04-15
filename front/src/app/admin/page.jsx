@@ -17,34 +17,36 @@ const Admin = () => {
   const {user, isLoading, error} = useUser()
   const [component, setComponent] = useState(0)
   const [userRole, setUserRole] = useState('')
+  const [userLocalStorage,setUserLocalStorage] = useState({});
 
-  let userAux = user
   
   useEffect(() => {
+  
     if(user){
       updateLocaleStorage(user)
     }
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${URL}users/1111`);
-        const userData = response.data;
-        const userSid = userAux.sid
 
-        userAux = userData.find(user => user.sid === userSid);
+    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null)
 
-        if (userAux) {
-          setUserRole(userAux.roleName);
-        } else {
-          console.error("User not found");
-        }
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+      setUserLocalStorage(userstorage);
     
-  fetchUserRole();
-}, [user]);
+        
+      
+    }, [user]);
+
+
+    useEffect(()=>{
+
+      if(userLocalStorage.role) {
+          try {
+            setUserRole(userLocalStorage.role)
+          } catch (error) {
+            console.error(error)
+          }
+        }
+    },[userLocalStorage])
 
   const showMovies = async() => {
       setComponent(2);

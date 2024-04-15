@@ -14,7 +14,7 @@ const MovieForm = () => {
 
   const URL = process.env.NEXT_PUBLIC_URL
   const {user} = useUser();
-  let userAux = user
+
   const [mediaType, setMediaType] = useState('trailer');
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
@@ -32,6 +32,8 @@ const MovieForm = () => {
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
   const [userRole, setUserRole] = useState('')
+  const [userLocalStorage,setUserLocalStorage] = useState({});
+
   const [mediaURL, setMediaURL] = useState({
     poster: 'https://s3.oss.go.id/oss/logo/notfound.jpg',
     trailer: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm',
@@ -69,27 +71,29 @@ const MovieForm = () => {
     if(user){
       updateLocaleStorage(user)
     }
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${URL}users/1111`);
-        const userData = response.data;
-        const userSid = userAux.sid
 
-        userAux = userData.find(user => user.sid === userSid);
 
-        if (userAux) {
-          setUserRole(userAux.roleName);
-        } else {
-          console.error("User not found");
+    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null)
+
+      setUserLocalStorage(userstorage);        
+      
+    }, [user]);
+
+
+    useEffect(()=>{
+
+      if(userLocalStorage.role) {
+          try {
+            setUserRole(userLocalStorage.role)
+          } catch (error) {
+            console.error(error)
+          }
         }
+    },[userLocalStorage])
 
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    
-  fetchUserRole();
-  }, [user]);
+
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
@@ -159,17 +163,7 @@ const MovieForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); 
-    Swal.fire({
-      title: 'Enviando formulario...',
-      html: `
-        <div style="display: flex; justify-content: center; align-items: center;">
-          <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-        </div>
-        <img src="https://gamefundpartners.com/wp-content/uploads/2022/04/loading.gif" width="100" height="100" style="margin-right: 15px;">
-        <p style="text-align: center; font-size: 16px; margin-top: 15px;">Por favor, espere...</p>`,
-      showConfirmButton: false, // Ocultar el botón de confirmación
-      allowOutsideClick: false, // Evitar que el usuario cierre la alerta haciendo clic fuera de ella
-    });
+   
   
     const validationSelect = validateSelectForm({
       selectedGenres,
@@ -195,8 +189,24 @@ const MovieForm = () => {
     if (Object.keys(mergedErrors).length > 0) {
       setErrors(mergedErrors);
       setIsLoading(false);
+      Swal.fire({
+        icon: 'warning',
+        title: '¡Advertencia!',
+        text: 'Todos los campos son requeridos.',
+      });
       return;
     }
+    Swal.fire({
+      title: 'Enviando formulario...',
+      html: `
+        <div style="display: flex; justify-content: center; align-items: center;">
+          <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        </div>
+        <img src="https://gamefundpartners.com/wp-content/uploads/2022/04/loading.gif" width="100" height="100" style="margin-right: 15px;">
+        <p style="text-align: center; font-size: 16px; margin-top: 15px;">Por favor, espere...</p>`,
+      showConfirmButton: false, // Ocultar el botón de confirmación
+      allowOutsideClick: false, // Evitar que el usuario cierre la alerta haciendo clic fuera de ella
+    });
     try {
       //Promesas relacionadas a Cloudinary:
       const posterData = new Promise((resolve, reject) => {

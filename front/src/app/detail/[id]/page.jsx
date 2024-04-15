@@ -14,7 +14,9 @@ import {
   FacebookShareButton,
   FacebookIcon,
   WhatsappShareButton,
-  WhatsappIcon
+  WhatsappIcon,
+  TwitterIcon,
+  TwitterShareButton,
 } from "react-share";
 import validateReview from "@/helpers/validateReview";
 
@@ -38,6 +40,7 @@ const DetailContent = () => {
   const [idReview, setIdReview] = useState()
   const [alerts, setAlerts] = useState({points: true, comment: true})
   const [hasMovie, setHasMovie] = useState(false);
+  
 
   const goToCategory = (genre) => {
     router.push(`/movies?genre=${genre}`);
@@ -81,48 +84,40 @@ const DetailContent = () => {
       });
     }
   }
+  
+  async function fetchData() {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      let query = "";
+      if (user) {
+        query = `?auth=${user.sid}`;
+      }
+      const response = await axios.get(`${URL}movies/${id}${query}`);
+      if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
+        router.push(`/`);
+      } 
+      setMovieData(response.data);
+      if (response.data && response.data.id && purchase.includes(response.data.id)) {
+        setHasMovie(true);
+      } else {
+        setHasMovie(false);
+      }
+    } catch (error) {
+      console.error('Error fetching movie data:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
 
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      setError(null);
-  
-      try {
-        let query = "";
-        if (user) {
-          query = `?auth=${user.sid}`;
-        }
-        const response = await axios.get(`${URL}movies/${id}${query}`);
-        setMovieData(response.data);
-        if (response.data && response.data.id && purchase.includes(response.data.id)) {
-          setHasMovie(true);
-        } else {
-          setHasMovie(false);
-        }
-      } catch (error) {
-        console.error('Error fetching movie data:', error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
     fetchData();
-  }, [id, user]);
+  }, [id, user,update]);
 
-  useEffect(() => {
-    async function reload(){
-      try {
-        const {data} = await axios.get(`${URL}movies/${id}`);
-        setMovieData(data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    reload()
-  }, [update]);
   
-
-
   useEffect(() => {
     async function getPurchase(){
       try {
@@ -241,11 +236,6 @@ const renderStarSelector = () => {
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
           <div className={style['description-container-info']}>
-          <FacebookShareButton
-            url="https://filmflow.chekogarcia.com.mx/"
-          >
-            <FacebookIcon size={32} round />
-          </FacebookShareButton>
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
             <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
@@ -261,10 +251,25 @@ const renderStarSelector = () => {
             ? <Button emoji={'✅'} label='Ya tienes esta pelicula'/> 
             : movieData && <AddToCart movie={movieData} />}
           </div>
+            <FacebookShareButton
+              url="https://filmflow.chekogarcia.com.mx/">
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+            <WhatsappShareButton
+              url="https://filmflow.chekogarcia.com.mx/">
+              <WhatsappIcon size={32} round />
+            </WhatsappShareButton>
+            <TwitterShareButton
+              url="https://filmflow.chekogarcia.com.mx/">
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
         </div>
       </div>
       <div className={style['media-container']}>
+<<<<<<< HEAD
       {purchase.includes(movieData.id) &&
+=======
+>>>>>>> bf7e4fa95460c9c48115e5b3afdec8c2196f560b
         <button onClick={toggleMediaType}>
           {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
         </button>

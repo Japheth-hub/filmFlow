@@ -4,10 +4,11 @@ import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
 import { showMovies, showReviews, showUsers, showOrder, showDiscount } from "@/helpers/dashboard";
-import { useUser } from "@auth0/nextjs-auth0/client"; 
 import Loading from "@/components/loading/loading";
 import ModalPromo from './modalPromo'
-import Link from 'next/link';
+import { useUser } from "@auth0/nextjs-auth0/client";
+import Link from "next/link"; 
+
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
@@ -434,7 +435,7 @@ export default function Dashboard({link, title, sid}) {
                                                             <option value="declined">Declined</option>
                                                         </select>
                                                     </td>)
-                                                    : <td className={style.td} key={i}>{item[prop]}</td>
+                                                    : <td className={style.td} key={i}>{item[prop]}</td> && title === "Movies" && prop === "name" ? <td className={style.td} key={i}><Link href={`detail/${item.id}`}>{item[prop]}</Link></td> : <td className={style.td} key={i}>{item[prop]}</td>
                                                     ))}
                                                     <td className={style.td}>
                                                         <div className={style['btn-actions']}>
