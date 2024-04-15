@@ -26,20 +26,31 @@ const Discount = () =>{
     const [userLocalStorage,setUserLocalStorage] = useState({});
 
     useEffect(() => {
-         
-        setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
-            ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-            : null);
-            if(userLocalStorage.role) {
-                try {
-                  setUserRole(userLocalStorage.role)
-                } catch (error) {
-                  console.error(error)
-                }
+        if(user){
+          updateLocaleStorage(user)
+        }
+    
+        const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
+          ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+          : null)
+    
+          setUserLocalStorage(userstorage);        
+          
+        }, [user]);
+    
+    
+        useEffect(()=>{
+    
+          if(userLocalStorage.role) {
+              try {
+                setUserRole(userLocalStorage.role)
+              } catch (error) {
+                console.error(error)
+              }
             }
-        
-    }, [user]);
+        },[userLocalStorage])
 
+        
     useEffect(() => {
         const fetchData = async () => {
             try {
