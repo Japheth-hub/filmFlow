@@ -25,6 +25,10 @@ module.exports = async (req, res) => {
             return {status:false,message:"La fecha de témino tiene que ser futura"} 
         }
 
+        if((selectedMovies && selectedMovies.length) && (selectedGenres && selectedGenres.length)){
+            return {status:false,message:"No puedes agregar género y película al mismo tiempo"} 
+        }
+
 
 
         const genCode = coupon.generate();
@@ -40,7 +44,7 @@ module.exports = async (req, res) => {
 
         if(created){
         
-            if(selectedMovies.length && !selectedGenres.length){
+            if(selectedMovies){
 
                 const movies = await Movie.findAll({where: {
                     id: {
@@ -52,7 +56,7 @@ module.exports = async (req, res) => {
                 discount.setMovies(movies);
             }
 
-            if(selectedGenres.length && !selectedMovies.length){
+            if(selectedGenres){
 
                 const genres = await Genre.findAll({where: {
                     id: {
