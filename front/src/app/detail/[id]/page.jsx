@@ -266,10 +266,8 @@ const renderStarSelector = () => {
         </div>
       </div>
       <div className={style['media-container']}>
-<<<<<<< HEAD
+
       {purchase.includes(movieData.id) &&
-=======
->>>>>>> bf7e4fa95460c9c48115e5b3afdec8c2196f560b
         <button onClick={toggleMediaType}>
           {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
         </button>
