@@ -2,7 +2,7 @@ const developers = [
     {
         "name": "Candela Gómez",
         "description": "Descripción Cande",
-        "linkedIn": "https://www.linkedin.com/in/gerant-seminario-496b59214/?originalSubdomain=ve",
+        "linkedIn": "https://www.linkedin.com/in/candela-gomez18/",
         "gitHub": "https://github.com/cngomez18",
         "image": "https://avatars.githubusercontent.com/u/104803655?v=4"
     },

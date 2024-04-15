@@ -82,7 +82,7 @@
   margin-bottom: 20px;
 }
 
-.form {
+.discountform {
   display: flex;
   align-items: center;
   font-family: $mainFont;
@@ -93,6 +93,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-right: 10px;
+  width: 25%;
 }
 
 .successMessage {

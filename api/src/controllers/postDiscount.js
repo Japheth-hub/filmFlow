@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
         
             if(selectedMovies.length && !selectedGenres.length){
 
-                movies = await Movie.findAll({where: {
+                const movies = await Movie.findAll({where: {
                     id: {
                         [Op.in]: selectedMovies,
                     },

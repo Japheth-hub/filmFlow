@@ -13,7 +13,7 @@ module.exports = async (query)=>{
                 },
                 {
                     model:Country,
-                    attributes:["id","name"],
+                    attributes:["id","name","flag"],
                     through: { attributes: [] }
                 },
                 {
@@ -34,6 +34,12 @@ module.exports = async (query)=>{
                 if(await checkUserMoviePurchase(user.id,movie.id)){
                     console.log("puede comentar");
                     movie.dataValues.reviewPermission = true;
+                }
+                if(movie.userId && movie.userId === user.id){
+                    movie.dataValues.isOwner = true;
+                }
+                if(user.role.role = "admin") {
+                    movie.dataValues.isAdmin = true;
                 }
             }
             return movie;

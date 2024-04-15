@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 module.exports = async function getMovies(query){
 
-    let {search, genre, orderType, order,limit,user,country,purchases, paranoid,today, admin } = query;
+    let {search, genre, orderType, order,limit,user,country,purchases, paranoid,today, admin, userSid } = query;
    
     try {
         let options = {
@@ -14,7 +14,7 @@ module.exports = async function getMovies(query){
                     through: { attributes: [] }
                 },
                 {
-                    model: Country, // Agregando el modelo Country
+                    model: Country, 
                     attributes: ["id", "name"]
                 },
                 {
@@ -25,7 +25,8 @@ module.exports = async function getMovies(query){
                     model: Review, 
                     attributes: ["id", "comment", "points"]
                 }
-            ]
+            ],
+            where: {}
         };
 
         if(search){
@@ -49,6 +50,11 @@ module.exports = async function getMovies(query){
             if(!options.where){
                 options.where = {};
             }
+            options.where.userId = user.id;
+        }
+
+        if(userSid) {
+            const user = await User.findOne({ where: { sid: userSid}})
             options.where.userId = user.id;
         }
 
@@ -113,11 +119,9 @@ module.exports = async function getMovies(query){
             }
         }
 
-        if(!admin){
-            options.where = {
-                status: "approved"
-            }
-        }
+        if (!admin || admin === "false") {
+            options.where.status = "approved";
+        } 
         
         const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price", "deletedAt"]})
 

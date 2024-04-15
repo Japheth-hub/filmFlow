@@ -10,6 +10,7 @@ const checkAdmin = require('../middlewares/checkAdmin');
 const getCheckAdmin = require('../middlewares/getCheckAdmin')
 const checkAuth = require('../middlewares/checkAuth');
 const checkOwner = require('../middlewares/checkOwner');
+const getProducerInfoHandler = require("../handlers/getProducerInfoHandler");
 
 
 const usersRouter = Router();
@@ -20,6 +21,7 @@ usersRouter.get('/:auth', getCheckAdmin, getUsersHandler);
 usersRouter.get("/restore/:id", restoredUsersHandler);
 usersRouter.delete("/:id/:auth", getCheckAdmin, deleteUserHandler);
 usersRouter.put('/', checkAdmin, putUserHandler);
+usersRouter.get('/producer/:userSid', getProducerInfoHandler)
 usersRouter.put('/producer', checkAuth, putProducerHandler);
 usersRouter.put('/producer/pay', checkAdmin, putProducerPayHandler);
 

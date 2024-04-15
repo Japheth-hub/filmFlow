@@ -14,7 +14,9 @@ import {
   FacebookShareButton,
   FacebookIcon,
   WhatsappShareButton,
-  WhatsappIcon
+  WhatsappIcon,
+  TwitterIcon,
+  TwitterShareButton,
 } from "react-share";
 import validateReview from "@/helpers/validateReview";
 
@@ -37,9 +39,14 @@ const DetailContent = () => {
   const [update, setUpdate] = useState(true)
   const [idReview, setIdReview] = useState()
   const [alerts, setAlerts] = useState({points: true, comment: true})
+  const [hasMovie, setHasMovie] = useState(false);
+  
 
   const goToCategory = (genre) => {
     router.push(`/movies?genre=${genre}`);
+  };
+  const goToCountry = (country) => {
+    router.push(`/movies?country=${country}`);
   };
 
   function showModal(valor, id) {
@@ -79,28 +86,34 @@ const DetailContent = () => {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       setIsLoading(true);
       setError(null);
-
+  
       try {
         let query = "";
-        if(user){
-          console.log(user);
-          query =`?auth=${user.sid}`;
+        if (user) {
+          query = `?auth=${user.sid}`;
         }
         const response = await axios.get(`${URL}movies/${id}${query}`);
-        console.log(response.data);
+        if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
+          router.push(`/`);
+        } 
         setMovieData(response.data);
+        if (response.data && response.data.id && purchase.includes(response.data.id)) {
+          setHasMovie(true);
+        } else {
+          setHasMovie(false);
+        }
       } catch (error) {
         console.error('Error fetching movie data:', error);
         setError(error);
       } finally {
         setIsLoading(false);
       }
-    };
+    }
     fetchData();
-  }, [id,user]);
+  }, [id, user]);
 
   useEffect(() => {
     async function reload(){
@@ -114,8 +127,6 @@ const DetailContent = () => {
     reload()
   }, [update]);
   
-
-
   useEffect(() => {
     async function getPurchase(){
       try {
@@ -197,6 +208,9 @@ const renderStarSelector = () => {
         setNewReview({ points: 0, comment: '' });
       }
       setAlerts({ points: data.points, comment: data.comment });
+      setTimeout(() => {
+        setAlerts({ points: true, comment: true });
+      }, 3000);
     } catch (error) {
       console.error('Error submitting review:', error);
     }
@@ -214,12 +228,15 @@ const renderStarSelector = () => {
           setNewReview({ points: 0, comment: "" });
         }
         setAlerts({ points: data.points, comment: data.comment });
+        setTimeout(() => {
+          setAlerts({ points: true, comment: true });
+        }, 3000);
     } catch (error) {
       console.log("Error al actualizar",error)
     }
   }
 
-  // console.log(alerts)
+
 
   return (
     <div className={style['detail-content']}>
@@ -228,39 +245,38 @@ const renderStarSelector = () => {
         <div className={style['container-info']}> 
           <img src={poster} alt={name + ' poster'} className={style['poster-image']} />
           <div className={style['description-container-info']}>
-          <FacebookShareButton
-            url="https://filmflow.chekogarcia.com.mx/"
-          >
-            <FacebookIcon size={32} round />
-          </FacebookShareButton>
-
-          
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
             <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
-            <div className={style.genres}>
-                      {countries.map((country, index) => (
-              <div key={index}>
-                <p  onClick={() => goToCategory(country.name)}><span className={style['italic-dark']}>Paises:</span> {country.name.replace(/\b\w/g, c => c.toUpperCase())}</p>
-              </div>
-            ))}
-          </div>
             <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
             <p><span className={style['italic-dark']}>Año:</span> {year}</p>
             <div className={style.genres}>
+              {countries.map((country) => <Pill key={country.id}  emoji={country.flag.replace(/-/g, '')} label={country.name} callback={()=>goToCountry(country.name)}/>)}
+            </div>
+            <div className={style.genres}>
               {genres.map((genre) => <Pill key={genre.id} emoji={genre.emoji} label={genre.label} callback={()=>goToCategory(genre.name)}/>)}
             </div>
-            {/* {movieData && <AddToCart movie={movieData} />} */}
             {purchase.includes(movieData.id) 
             ? <Button emoji={'✅'} label='Ya tienes esta pelicula'/> 
             : movieData && <AddToCart movie={movieData} />}
-            
           </div>
+            <FacebookShareButton
+              url="https://filmflow.chekogarcia.com.mx/">
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+            <WhatsappShareButton
+              url="https://filmflow.chekogarcia.com.mx/">
+              <WhatsappIcon size={32} round />
+            </WhatsappShareButton>
+            <TwitterShareButton
+              url="https://filmflow.chekogarcia.com.mx/">
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
         </div>
       </div>
       <div className={style['media-container']}>
-        <button onClick={toggleMediaType}>
-          {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
+      <button onClick={toggleMediaType} disabled={!hasMovie}>
+          {mediaType === 'trailer ' ? 'Ver Película' : 'Ver Trailer'}
         </button>
         {mediaType === 'trailer' ? (
           <iframe src={trailer} width="800" height="500" title="Trailer" allowFullScreen />
@@ -274,22 +290,29 @@ const renderStarSelector = () => {
             <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
-              <label>Puntuación:</label>
-              {alerts.points !== true && <span>{alerts.points}</span>}
               <div className={style['star-selector']}>
-                {renderStarSelector()}
+                {alerts.points !== true && <span className={style.alerts}>{alerts.points}</span>}
+                <div className={style.reviewPoints}>
+                  <label>Puntuación:</label>
+                  {renderStarSelector()}
+                </div>
               </div>
-              <label>Comentario:</label>
-              {alerts.comment !== true && <span>{alerts.comment}</span>}
-              <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-              <button onClick={handleReviewSubmit}>Subir comentario</button>
+              <div className={style.reviewComment}>
+                {alerts.comment !== true && <span className={style.alerts}>{alerts.comment}</span>}
+                <div className={style.textarea}>
+                  <label>Comentario:</label>
+                  <textarea rows='5' cols='40' value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
+                </div>
+              </div>
+              <div className={style.comentar}>
+                <Button label={'Comentar'} color={'green'} callback={handleReviewSubmit}/>
+              </div>
             </div>
           </div>
         }
-        
-     
-          <h4>Comentarios</h4>
-
+        {movieData.reviews && movieData.reviews.length > 0 && (
+            <h4>Comentarios</h4>
+          )}
         {movieData.reviews && movieData.reviews.map((review) => (
           <div key={review.id} className={style['review-container']}>
             <img src={review.user?.picture ? review.user.picture : userpic.src} alt={review.user?.name ? review.user.name : "Desconocido"} className={style['user-picture']} />
