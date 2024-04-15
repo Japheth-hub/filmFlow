@@ -21,22 +21,32 @@ const Admin = () => {
 
   
   useEffect(() => {
+  
     if(user){
       updateLocaleStorage(user)
     }
-         
-      setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
-        ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-        : null);
-        if(userLocalStorage.role) {
+
+    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null)
+
+      setUserLocalStorage(userstorage);
+    
+        
+      
+    }, [user]);
+
+
+    useEffect(()=>{
+
+      if(userLocalStorage.role) {
           try {
             setUserRole(userLocalStorage.role)
           } catch (error) {
             console.error(error)
           }
         }
-      
-    }, [user]);
+    },[userLocalStorage])
 
   const showMovies = async() => {
       setComponent(2);

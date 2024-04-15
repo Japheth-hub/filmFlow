@@ -71,19 +71,27 @@ const MovieForm = () => {
     if(user){
       updateLocaleStorage(user)
     }
-    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+
+    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
       ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-      : null);
+      : null)
+
+      setUserLocalStorage(userstorage);        
+      
+    }, [user]);
+
+
+    useEffect(()=>{
+
       if(userLocalStorage.role) {
-        try {
-          setUserRole(userLocalStorage.role)
-        } catch (error) {
-          console.error(error)
+          try {
+            setUserRole(userLocalStorage.role)
+          } catch (error) {
+            console.error(error)
+          }
         }
-        
-    };
-    
-  }, [user]);
+    },[userLocalStorage])
+
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
