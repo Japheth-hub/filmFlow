@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 import { showMovies, showReviews, showUsers, showOrder, showDiscount } from "@/helpers/dashboard";
 import { useUser } from "@auth0/nextjs-auth0/client"; 
 import Loading from "@/components/loading/loading";
+import ModalPromo from './modalPromo'
+import Link from 'next/link';
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
@@ -24,6 +26,7 @@ export default function Dashboard({link, title, sid}) {
     const [update, setUpdate] = useState(true)
     const [codeType, setCodeType] = useState("default");
     const [currentDate, setCurrentDate] = useState(new Date().toISOString().slice(0, 10));
+    const [display, setDisplay] = useState("none")
     const porPagina = 10
 
     const { error, isLoading, user } = useUser();
@@ -304,6 +307,10 @@ export default function Dashboard({link, title, sid}) {
         }
     }
 
+    function showModal(display){
+        setDisplay(display)
+    }
+
     useEffect(()=>{
         async function datos(type){
             let datos
@@ -340,11 +347,10 @@ export default function Dashboard({link, title, sid}) {
         }
     }, [page, body])
 
-    // console.log(body)
-
     if (isLoading){
         return <Loading />
     }
+
 
     return (
         <div>
@@ -385,6 +391,7 @@ export default function Dashboard({link, title, sid}) {
                             })}
                         </select>
                     </>)}
+                {title === "Promos" && <Link href='/discount'><Button label={"Crear Promo"} /*callback={()=>{showModal("block")}}*//></Link>}
                 <input className={style.searchTable} type="text" onChange={handleSearch} placeholder='Search...' value={search} />
             </div>
             <div className={style.paginado}>
@@ -423,12 +430,14 @@ export default function Dashboard({link, title, sid}) {
                                                     ))}
                                                     <td className={style.td}>
                                                         <div className={style['btn-actions']}>
-                                                            {item.deleted === "Active"
+                                                            {title === "Promos"
+                                                            ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                            : item.deleted === "Active"
                                                                 ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
                                                                 : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                             }
                                                             {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
-                                                            {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )}
+                                                            {/* {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )} */}
                                                             {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
                                                         </div>
                                                     </td>
@@ -441,6 +450,11 @@ export default function Dashboard({link, title, sid}) {
                     </table>
             }
             </div>
+            {title === 'Promos' &&
+                <div className={style.modalContainer} style={{display : display}}>
+                    <ModalPromo showModal={showModal}/>
+                </div>
+            }
         </div>
     )
 }

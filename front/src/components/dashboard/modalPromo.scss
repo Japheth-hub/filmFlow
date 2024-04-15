@@ -1,0 +1,13 @@
+@import "../../scss/variables.scss";
+
+.modal{
+    width: 40%;
+    margin: 5% auto;
+    border-radius: 10px;
+    border: 1px solid $mainColor;
+    box-shadow: 0px 0px 20px $mainColor;
+    background-color: white;
+    padding-bottom: 20px;
+
+   
+}
