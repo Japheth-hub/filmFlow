@@ -84,6 +84,8 @@ const Admin = () => {
         return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
       case 6:
         return <DashPayments title={`Pagos`} link={`${URL}users/`} sid={user.sid}/>;
+      case 7:
+        return <Dashboard title={`Promos`} link={`${URL}discount/`} sid={user.sid}/>;
       default:
           return <p>Selecciona una opción del menú</p>
     }
@@ -112,7 +114,7 @@ const Admin = () => {
             <div onClick={() => showReviews()}><a role="img" aria-label="Reviews">⭐</a><span>Reviews</span></div>
             <div onClick={() => setComponent()}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
             <div onClick={() => showPayments()}><a role="img" aria-label="Pagos">💸</a><span>Pagos</span></div>
-            <div onClick={() => setComponent()}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
+            <div onClick={() => setComponent(7)}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
           </div>
         </div>
         <div className={style.content}>
