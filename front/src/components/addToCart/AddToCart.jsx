@@ -68,7 +68,8 @@ export default function AddToCart({movie}) {
             
           } catch (error) {
             console.error('Error adding movie to cart:', error);
-            alert('An error occurred while adding the movie to the cart.');
+            const newCart = [...cart,movie];
+            saveCart(newCart);
           }
         }
 
@@ -92,6 +93,10 @@ export default function AddToCart({movie}) {
             saveCart(remoteCart.data.movies);
         }
         catch(error) {
+            const newCart = [...cart].filter((item)=>{
+                return item.id !== movie.id;
+            })
+            saveCart(newCart);
             console.error('Error removing item from cart:', error);
         }
     }

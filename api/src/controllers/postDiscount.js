@@ -6,7 +6,6 @@ const isValidDate = require('../services/isValidDate');
 
 module.exports = async (req, res) => {
     try {
-
         const { percentage,starts,ends,selectedMovies, selectedGenres } = req.body;
 
         if(!percentage){
@@ -26,6 +25,10 @@ module.exports = async (req, res) => {
             return {status:false,message:"La fecha de témino tiene que ser futura"} 
         }
 
+        if((selectedMovies && selectedMovies.length) && (selectedGenres && selectedGenres.length)){
+            return {status:false,message:"No puedes agregar género y película al mismo tiempo"} 
+        }
+
 
 
         const genCode = coupon.generate();
@@ -40,18 +43,20 @@ module.exports = async (req, res) => {
 
 
         if(created){
-            if(selectedMovies && !selectedGenres){
+        
+            if(selectedMovies){
 
                 const movies = await Movie.findAll({where: {
                     id: {
                         [Op.in]: selectedMovies,
                     },
                 }});
+                console.log(movies);
 
                 discount.setMovies(movies);
             }
 
-            if(selectedGenres && !selectedMovies){
+            if(selectedGenres){
 
                 const genres = await Genre.findAll({where: {
                     id: {

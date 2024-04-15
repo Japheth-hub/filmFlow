@@ -82,12 +82,8 @@ const Discount = () =>{
     
 
     const generateDiscountCode = async () => {
-        if (selectedMovies.length === 0 && selectedGenres.length === 0) {
-            
-            const allMoviesIds = movies.map((movie) => movie.id);
-            setSelectedMovies(allMoviesIds);
-
-        } else if (selectedMovies.length > 0 && selectedGenres.length > 0) {
+        console.log("!sadasd");
+        if (selectedMovies.length > 0 && selectedGenres.length > 0) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',

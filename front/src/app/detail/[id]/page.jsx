@@ -84,48 +84,39 @@ const DetailContent = () => {
       });
     }
   }
-
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      setError(null);
   
-      try {
-        let query = "";
-        if (user) {
-          query = `?auth=${user.sid}`;
-        }
-        const response = await axios.get(`${URL}movies/${id}${query}`);
-        if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
-          router.push(`/`);
-        } 
-        setMovieData(response.data);
-        if (response.data && response.data.id && purchase.includes(response.data.id)) {
-          setHasMovie(true);
-        } else {
-          setHasMovie(false);
-        }
-      } catch (error) {
-        console.error('Error fetching movie data:', error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
+  async function fetchData() {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      let query = "";
+      if (user) {
+        query = `?auth=${user.sid}`;
       }
+      const response = await axios.get(`${URL}movies/${id}${query}`);
+      if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
+        router.push(`/`);
+      } 
+      setMovieData(response.data);
+      if (response.data && response.data.id && purchase.includes(response.data.id)) {
+        setHasMovie(true);
+      } else {
+        setHasMovie(false);
+      }
+    } catch (error) {
+      console.error('Error fetching movie data:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
-    fetchData();
-  }, [id, user]);
+  }
+
 
   useEffect(() => {
-    async function reload(){
-      try {
-        const {data} = await axios.get(`${URL}movies/${id}`);
-        setMovieData(data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    reload()
-  }, [update]);
+    fetchData();
+  }, [id, user,update]);
+
   
   useEffect(() => {
     async function getPurchase(){
@@ -275,8 +266,8 @@ const renderStarSelector = () => {
         </div>
       </div>
       <div className={style['media-container']}>
-      <button onClick={toggleMediaType} disabled={!hasMovie}>
-          {mediaType === 'trailer ' ? 'Ver Película' : 'Ver Trailer'}
+        <button onClick={toggleMediaType}>
+          {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
         </button>
         {mediaType === 'trailer' ? (
           <iframe src={trailer} width="800" height="500" title="Trailer" allowFullScreen />
