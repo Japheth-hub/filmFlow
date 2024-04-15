@@ -69,27 +69,29 @@ const MovieForm = () => {
     if(user){
       updateLocaleStorage(user)
     }
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${URL}users/1111`);
-        const userData = response.data;
-        const userSid = userAux.sid
 
-        userAux = userData.find(user => user.sid === userSid);
 
-        if (userAux) {
-          setUserRole(userAux.roleName);
-        } else {
-          console.error("User not found");
+    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null)
+
+      setUserLocalStorage(userstorage);        
+      
+    }, [user]);
+
+
+    useEffect(()=>{
+
+      if(userLocalStorage.role) {
+          try {
+            setUserRole(userLocalStorage.role)
+          } catch (error) {
+            console.error(error)
+          }
         }
+    },[userLocalStorage])
 
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    
-  fetchUserRole();
-  }, [user]);
+
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
