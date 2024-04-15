@@ -117,7 +117,7 @@ console.log(formData)
                     >
                         Ver terminos y condiciones
                     </button>
-                        {showSecondModal && <Modal2 formData={formData} onClose={handleCloseAllModals} />}
+                        {showSecondModal && <Modal2 formData={formData} onClose={handleCloseAllModals} user={user}/>}
                     </div>
                 </form>
             </div>

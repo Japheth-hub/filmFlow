@@ -23,7 +23,7 @@ module.exports = async (code)=>{
             return {status:false,message:"El descuento no existe"};
         }
         
-        if(discount.starts < currentDate){
+        if(discount.starts > currentDate){
             return {status:false,message:"El descuento aún no es válido"};
         }
     

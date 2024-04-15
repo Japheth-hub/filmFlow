@@ -3,10 +3,16 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import style from './discount.module.scss'
 import Button from '../../components/button/Button'
+import CheckRole from '@/components/checkRole/checkRole'
 import Swal from 'sweetalert2'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+
 
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL
+    let { user } = useUser()
+    let userAux = user
+
     const [code,setCode] = useState('')
     const [selectedMovies, setSelectedMovies] = useState([]); 
     const [selectedGenres, setSelectedGenres] = useState([])
@@ -16,14 +22,37 @@ const Discount = () =>{
     const [genres, setGenres] = useState([]);
     const [percentage, setPercentage] = useState(0);
     const [discounts, setDiscounts] = useState([]);
-    
+    const [userRole, setUserRole] = useState('')
+
+    useEffect(() => {
+        const fetchUserRole = async () => {
+                try {
+                const response = await axios.get(`${URL}users/1111`);
+                const userData = response.data;
+                const userSid = userAux.sid
+        
+                userAux = userData.find(user => user.sid === userSid);
+        
+                if (userAux) {
+                    setUserRole(userAux.roleName);
+                } else {
+                    console.error("User not found");
+                }
+        
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+      
+        fetchUserRole();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const moviesRes = await axios.get(`${URL}movies`);
                 setMovies(moviesRes.data);
-                
+                console.log("user",user)
                 const genresRes = await axios.get(`${URL}genres`);
                 setGenres(genresRes.data);
             } catch (error) {
@@ -73,9 +102,9 @@ const Discount = () =>{
             return;
         }
 
-        const currentDate = new Date().toISOString().split('T')[0]; 
+        const currentDate = new Date(); 
         
-        if (starts.substr(0, 10) <= currentDate) {
+        if (starts <= currentDate) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -84,7 +113,7 @@ const Discount = () =>{
             return;
         }
 
-        if (ends.substr(0, 10) <= starts.substr(0, 10)) {
+        if (ends <= starts) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -94,21 +123,45 @@ const Discount = () =>{
         }
         
         try {
-            const response = await axios.post(`${URL}discount`, {
-                selectedMovies,
-                selectedGenres,
-                percentage: percentage,
-                starts,
-                ends
-            });
 
-            setCode(response.data.code.code);
-            setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
-            });
+            if(selectedMovies.length > 0 && selectedGenres.length === 0){
+
+                const response = await axios.post(`${URL}discount`, {
+                    selectedMovies,
+                    percentage: percentage,
+                    starts,
+                    ends
+                });
+
+                setCode(response.data.code.code);
+                setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                });
+            }
+
+            if(selectedGenres.length > 0 && selectedMovies.length === 0){
+                const response = await axios.post(`${URL}discount`, {
+                    selectedGenres,
+                    percentage: percentage,
+                    starts,
+                    ends
+                });
+
+                setCode(response.data.code.code);
+                setDiscounts((prevDiscounts) => [...prevDiscounts, response.data.code]);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                });
+            }
+            
+            
         } catch (error) {
             console.error('Error generating discount code:', error);
         }
@@ -120,7 +173,6 @@ const Discount = () =>{
                 ? prev.filter((m) => m !== movieId)
                 : [...prev, movieId]
         );
-        setMovieError('');
     };
 
     const toggleGenreSelection = (genreId) => {
@@ -129,10 +181,10 @@ const Discount = () =>{
                 ? prev.filter((g) => g !== genreId)
                 : [...prev, genreId]
         );
-        setMovieError('');
     };
     
     return(
+        <CheckRole userRole={userRole} requiredRoles="admin">
         <div className={style.discountContainer}>
 
             <h2>Generador de códigos de descuento</h2>
@@ -183,16 +235,10 @@ const Discount = () =>{
                     <label htmlFor="startsDate">Fecha de inicio:    </label>
                     <input
                         className={style.input}
-                        type="date"
+                        type="datetime-local"
                         id="startsDate"
-                        value={starts.substr(0, 10)} 
-                        onChange={(e) => setStarts(e.target.value + 'T12:00:00Z')} 
-                    />
-                    <input
-                        className={style.input}
-                        type="time"
-                        value={starts.substr(11, 5)} 
-                        onChange={(e) => setStarts(`${starts.substr(0, 10)}T${e.target.value}:00Z`)}
+                        value={starts} 
+                        onChange={(e) => setStarts(e.target.value)} 
                     />
                 </div>
 
@@ -200,16 +246,10 @@ const Discount = () =>{
                     <label htmlFor="endsDate">Fecha de caducidad:  </label>
                     <input
                         className={style.input}                    
-                        type="date"
+                        type="datetime-local"
                         id="endsDate"
-                        value={ends.substr(0, 10)} 
-                        onChange={(e) => setEnds(e.target.value + 'T12:00:00Z')} 
-                    />
-                    <input
-                        className={style.input}
-                        type="time"
-                        value={ends.substr(11, 5)} 
-                        onChange={(e) => setEnds(`${ends.substr(0, 10)}T${e.target.value}:00Z`)} 
+                        value={ends} 
+                        onChange={(e) => setEnds(e.target.value)} 
                     />
                 </div>
             </div>
@@ -218,9 +258,9 @@ const Discount = () =>{
             <div className={style.buttonContainer}>
                 <Button label="Crea tu codigo!" color="primary" callback={generateDiscountCode} />
             </div>
-
         </div>
+    </CheckRole>
     )
 }
 
-export default Discount;
+export default withPageAuthRequired(Discount);
