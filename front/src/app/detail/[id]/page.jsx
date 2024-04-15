@@ -204,6 +204,9 @@ const renderStarSelector = () => {
         setNewReview({ points: 0, comment: '' });
       }
       setAlerts({ points: data.points, comment: data.comment });
+      setTimeout(() => {
+        setAlerts({ points: true, comment: true });
+      }, 3000);
     } catch (error) {
       console.error('Error submitting review:', error);
     }
@@ -221,6 +224,9 @@ const renderStarSelector = () => {
           setNewReview({ points: 0, comment: "" });
         }
         setAlerts({ points: data.points, comment: data.comment });
+        setTimeout(() => {
+          setAlerts({ points: true, comment: true });
+        }, 3000);
     } catch (error) {
       console.log("Error al actualizar",error)
     }
