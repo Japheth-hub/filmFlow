@@ -110,10 +110,12 @@ const Movies = ({ params }) => {
         const getMovies = async () => {
           const query = new URLSearchParams(cleanQuery(queryParams)).toString();
           let { data } = await axios.get(`${URL}movies?${query}`);
+          console.log(data)
           setMovies(data);
         };
         getMovies();
       }catch(error){
+        setMovies(error.response.data.message)
         console.log(error);
       }
   
