@@ -223,7 +223,9 @@ export default function Dashboard({link, title, sid}) {
     function handleSearch(e){
         let search = []
         title === 'Reviews' || title === 'Promos' 
-        ? search = body2.filter((data) => data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
+        ? search = body2.filter((data) =>  title === 'Promos' && data.movie === "" 
+            ? data.genre.toLowerCase().includes(e.target.value.toLowerCase())
+            : data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
         : search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase()))
         if(search.length > 0){
             setSearch(e.target.value)
@@ -332,11 +334,15 @@ export default function Dashboard({link, title, sid}) {
                     console.log('No hay Datos para mostrar')
                     break
             }
-            getData(datos)
             setPage(1);
             getGenre();
-            setTotalPage(Math.ceil(datos.length / porPagina));
-            handlePagination(datos);
+            if(datos !== undefined){
+                getData(datos)
+                setTotalPage(Math.ceil(datos.length / porPagina));
+                handlePagination(datos);
+            } else {
+                setBody([])
+            }
         }
         datos(title)
     }, [title, update])
@@ -400,7 +406,9 @@ export default function Dashboard({link, title, sid}) {
                 <span>{`${page} de ${totalPage}`}</span>
                 <button onClick={()=>{masMenos(true);}}>{'▶'}</button>
             </div>
-            <div className={style.divTabla}>
+            {body.length > 0 
+                ?
+                <div className={style.divTabla}>
                 {column.length > 0 &&
                 <table className={style.table}>
                         <thead className={style.thead}>
@@ -416,7 +424,7 @@ export default function Dashboard({link, title, sid}) {
                         <tbody className={style.tbody}>
                                 {body.length > 0 
                                     ? pagina && pagina.length > 0 && column && column.length > 0 &&
-                                        pagina.map((item, index) => (
+                                    pagina.map((item, index) => (
                                             <tr key={index}>
                                             {column.map((prop, i) => ( 
                                                     title === "Movies" && prop === 'status'
@@ -437,25 +445,26 @@ export default function Dashboard({link, title, sid}) {
                                                                 ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
                                                                 : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                             }
-                                                            {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
-                                                            {/* {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )} */}
+                                                            {title !== "Reviews" && title !== "Promos" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
                                                             {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
                                                         </div>
                                                     </td>
                                             </tr>       
                                         ))
                                     
-                                    : <tr className={style.tr}><td className={style.tdDefault} colSpan={column.length + 1}>No hay Datos por mostrar</td></tr>
+                                        : <tr className={style.tr}><td className={style.tdDefault} colSpan={column.length + 1}>No hay Datos por mostrar</td></tr>
                                 }
                         </tbody>
                     </table>
             }
             </div>
-            {title === 'Promos' &&
+            : <h5 className={style.welcome}>No hay Datos por Mostrar</h5>
+        }
+            {/* {title === 'Promos' &&
                 <div className={style.modalContainer} style={{display : display}}>
                     <ModalPromo showModal={showModal}/>
                 </div>
-            }
+            } */}
         </div>
     )
 }

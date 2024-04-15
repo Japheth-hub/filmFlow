@@ -1,31 +1,32 @@
 const { Purchase,Movie,PurchaseMovie } = require('../db');
 const { Op } = require('sequelize');
 
-module.exports = async function getPurchases(query){
+module.exports = async function getPurchases(req){
     try {
+        const {limit,user,month} = req.query;
         
         let options = {};
-        const {limit,user,month} = query;
-        if(limit){
+        
+        if(limit){    
             options = {
                 ...options,
                 limit
             }
         }
-    
+
         if(user){
             options.include =  [
                 {
-                  model: Movie,
-                  where: { userId: user },
-                  through: {
+                model: Movie,
+                where: { userId: user },
+                through: {
                     model: PurchaseMovie,
                     attributes: ['price'], 
-                  },
+                },
                 }
-              ]
+            ]
         }
-    
+
         if(month){
             const endDate = new Date();
             const startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
@@ -35,11 +36,13 @@ module.exports = async function getPurchases(query){
                 }
             }
         }
-    
+
+
         const purchases = await Purchase.findAll({...options});
-    
-        return purchases;
+
+        return { status: true, purchases: purchases}
     } catch (error) {
-        return error
+        console.error(error)
+        return { status: false, message: "Error:", error}
     }
 }
