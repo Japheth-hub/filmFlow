@@ -143,6 +143,12 @@ const Discount = () =>{
                     icon: 'success',
                     title: '¡Éxito!',
                     text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Volver',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin'
+                    }
                 });
             }
 
@@ -161,6 +167,12 @@ const Discount = () =>{
                     icon: 'success',
                     title: '¡Éxito!',
                     text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Volver',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin'
+                    }
                 });
             }
             

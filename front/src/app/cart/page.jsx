@@ -17,6 +17,7 @@ const Cart = () => {
     const [totalPrice,setTotalPrice] = useState(null);
     const [userDiscountCode, setUserDiscountCode] = useState('');
     const [discountApplied, setDiscountApplied] = useState(false);
+    const [discountError, setDiscountError] = useState('')
     const event = new Event('localChanged');
 
 
@@ -76,7 +77,13 @@ const Cart = () => {
             });
             setCartData(data.movies);
             setDiscountApplied(true);
+            setDiscountError('')
         } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                setDiscountError(error.response.data.message);
+            } else {
+                setDiscountError('Ha ocurrido un error inesperado.');
+            }
             console.error('Error applying discounts:', error);
         }
     };
@@ -163,7 +170,8 @@ const Cart = () => {
                 className={style.input}
             />
             <Button label="Aplicar descuento" color="primary" callback={handleSubmit}/>
-            {userDiscountCode && discountApplied && <p className={style.successMessage}>Descuento aplicado!</p>}            
+            {userDiscountCode && discountError && <p className={style.errorMessage}>{discountError}</p>}
+            {userDiscountCode && discountApplied && <p className={style.successMessage}>¡Descuento aplicado!</p>}            
             </form>
 
         </div>
