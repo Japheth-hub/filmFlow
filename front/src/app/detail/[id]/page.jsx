@@ -84,6 +84,7 @@ const DetailContent = () => {
       });
     }
   }
+  
   async function fetchData() {
     setIsLoading(true);
     setError(null);
@@ -110,6 +111,7 @@ const DetailContent = () => {
       setIsLoading(false);
     }
   }
+
 
   useEffect(() => {
     fetchData();
@@ -264,8 +266,8 @@ const renderStarSelector = () => {
         </div>
       </div>
       <div className={style['media-container']}>
-      <button onClick={toggleMediaType} disabled={!hasMovie}>
-          {mediaType === 'trailer ' ? 'Ver Película' : 'Ver Trailer'}
+        <button onClick={toggleMediaType}>
+          {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
         </button>
         {mediaType === 'trailer' ? (
           <iframe src={trailer} width="800" height="500" title="Trailer" allowFullScreen />

@@ -7,7 +7,7 @@ import Loading from "@/components/loading/loading";
 import CheckRole from '@/components/checkRole/checkRole'
 import Swal from 'sweetalert2'
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-
+import { updateLocaleStorage } from "@/helpers/updateLocaleStorage";
 
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL

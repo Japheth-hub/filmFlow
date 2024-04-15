@@ -30,7 +30,7 @@ const Home = () => {
         let listGenre = data
         listGenre.unshift({
           id: '-1',
-          name: 'search',
+          name: '',
           label: 'Buscar',
           emoji:"🔍"
         })
