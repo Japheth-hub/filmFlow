@@ -2,7 +2,6 @@
 import axios from "axios";
 import Movies from "../../components/movies/Movies";
 import Carousel from "../../components/carousel/Carousel";
-import SearchBar from "../../components/searchBar/searchBar";
 import { useState, useEffect } from "react";
 import Filters from "@/components/filters/Filters";
 import { useUser } from '@auth0/nextjs-auth0/client';
@@ -13,19 +12,8 @@ import { updateLocaleStorage } from "@/helpers/updateLocaleStorage";
 const Home = () => {
   const {error, isLoading, user} = useUser()
   const URL = process.env.NEXT_PUBLIC_URL
-  const [results, setResults] = useState([])
-  const [movie, setMovie] = useState(
-    [{
-      id: 'cargando',
-      title: 'cargando'
-    }]
-  )
-  const [genres, setGenres] = useState(
-    [{
-      id: 'cargando',
-      name: 'cargando'
-    }]
-  )
+  const [movie, setMovie] = useState()
+  const [genres, setGenres] = useState()
 
   useEffect(() => {
     const getMovies = async() => {
@@ -68,9 +56,10 @@ const Home = () => {
 
   return (
   <div>
-    <Carousel movie={movie} dim={['900px', '400px']} autoplay={5}/>
+
+    {movie && <Carousel movie={movie} dim={['900px', '400px']} autoplay={5}/>}
     <div>
-      <Filters genres={genres}/>
+     {genres && <Filters genres={genres}/>}
     </div>
     <div>
       <h3>Novedades</h3>
