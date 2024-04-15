@@ -438,8 +438,7 @@ export default function Dashboard({link, title, sid}) {
                                                                 ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
                                                                 : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                             }
-                                                            {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
-                                                            {/* {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )} */}
+                                                            {title !== "Reviews" && title !== "Promos" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
                                                             {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
                                                         </div>
                                                     </td>
@@ -452,11 +451,11 @@ export default function Dashboard({link, title, sid}) {
                     </table>
             }
             </div>
-            {title === 'Promos' &&
+            {/* {title === 'Promos' &&
                 <div className={style.modalContainer} style={{display : display}}>
                     <ModalPromo showModal={showModal}/>
                 </div>
-            }
+            } */}
         </div>
     )
 }

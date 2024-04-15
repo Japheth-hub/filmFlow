@@ -264,9 +264,11 @@ const renderStarSelector = () => {
         </div>
       </div>
       <div className={style['media-container']}>
-      <button onClick={toggleMediaType} disabled={!hasMovie}>
-          {mediaType === 'trailer ' ? 'Ver Película' : 'Ver Trailer'}
+      {purchase.includes(movieData.id) &&
+        <button onClick={toggleMediaType}>
+          {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
         </button>
+      }
         {mediaType === 'trailer' ? (
           <iframe src={trailer} width="800" height="500" title="Trailer" allowFullScreen />
         ) : (
