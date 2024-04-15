@@ -222,7 +222,9 @@ export default function Dashboard({link, title, sid}) {
     function handleSearch(e){
         let search = []
         title === 'Reviews' || title === 'Promos' 
-        ? search = body2.filter((data) => data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
+        ? search = body2.filter((data) =>  title === 'Promos' && data.movie === "" 
+            ? data.genre.toLowerCase().includes(e.target.value.toLowerCase())
+            : data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
         : search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase()))
         if(search.length > 0){
             setSearch(e.target.value)
