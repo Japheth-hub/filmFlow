@@ -9,6 +9,8 @@ import DashGrap from '@/components/dashGrap/DashGrap'
 import DashPayments from '@/components/dashPayments/DashPayments'
 import Loading from "@/components/loading/loading";
 import CheckRole from '@/components/checkRole/checkRole'
+import axios from 'axios'
+import { updateLocaleStorage } from "@/helpers/updateLocaleStorage";
 
 const Admin = () => {
   const URL = process.env.NEXT_PUBLIC_URL
@@ -17,8 +19,11 @@ const Admin = () => {
   const [userRole, setUserRole] = useState('')
 
   let userAux = user
-
+  
   useEffect(() => {
+    if(user){
+      updateLocaleStorage(user)
+    }
     const fetchUserRole = async () => {
       try {
         const response = await axios.get(`${URL}users/1111`);
@@ -39,7 +44,7 @@ const Admin = () => {
     };
     
   fetchUserRole();
-}, []);
+}, [user]);
 
   const showMovies = async() => {
       setComponent(2);
@@ -90,7 +95,7 @@ const Admin = () => {
 
   if(user){
     return (
-      <CheckRole userRole={userRole} requiredRoles="admin">
+      <CheckRole userRole={userRole} requiredRoles={"admin"}>
     <div>
     <div className={style.pos}>
         <div className={style.menu}>

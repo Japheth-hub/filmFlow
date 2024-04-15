@@ -208,7 +208,7 @@ export default function Dashboard({link, title, sid}) {
             Swal.fire({
                 icon: "error",
                 title: "¡Error!",
-                text: error || "Ocurrió un error al eliminar la información.",
+                text: error.response.data.message || "Ocurrió un error al eliminar la información.",
             });
         }
     }
