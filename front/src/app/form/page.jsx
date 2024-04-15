@@ -71,18 +71,16 @@ const MovieForm = () => {
     if(user){
       updateLocaleStorage(user)
     }
-    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
-      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-      : null);
-      if(userLocalStorage.role) {
-        try {
-          setUserRole(userLocalStorage.role)
-        } catch (error) {
-          console.error(error)
-        }
-        
+    if(userLocalStorage === null) {
+      setUserLocalStorage(JSON.parse(window.localStorage.getItem('FilmFlowUsr')))
+    }
+    if(userLocalStorage.role) {
+      try {
+        setUserRole(userLocalStorage.role)
+      } catch (error) {
+        console.error(error)
+      }  
     };
-    
   }, [user]);
 
   const toggleMediaType = () => {
