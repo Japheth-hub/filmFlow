@@ -3,7 +3,7 @@ module.exports = (date)=>{
     if(!isNaN(Date.parse(date))){
         console.log("la fecha es válida");
         const current = new Date();
-        return date > current;
+        return date >= current;
     }else{
         return false
     }
