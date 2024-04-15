@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import style from './discount.module.scss'
 import Button from '../../components/button/Button'
+import Loading from "@/components/loading/loading";
 import CheckRole from '@/components/checkRole/checkRole'
 import Swal from 'sweetalert2'
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
@@ -10,8 +11,7 @@ import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL
-    let { user } = useUser()
-    let userAux = user
+    let { user, isLoading } = useUser()
 
     const [code,setCode] = useState('')
     const [selectedMovies, setSelectedMovies] = useState([]); 
@@ -23,36 +23,28 @@ const Discount = () =>{
     const [percentage, setPercentage] = useState(0);
     const [discounts, setDiscounts] = useState([]);
     const [userRole, setUserRole] = useState('')
+    const [userLocalStorage,setUserLocalStorage] = useState({});
 
     useEffect(() => {
-        const fetchUserRole = async () => {
+         
+        setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+            ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+            : null);
+            if(userLocalStorage.role) {
                 try {
-                const response = await axios.get(`${URL}users/1111`);
-                const userData = response.data;
-                const userSid = userAux.sid
-        
-                userAux = userData.find(user => user.sid === userSid);
-        
-                if (userAux) {
-                    setUserRole(userAux.roleName);
-                } else {
-                    console.error("User not found");
+                  setUserRole(userLocalStorage.role)
+                } catch (error) {
+                  console.error(error)
                 }
-        
-            } catch (error) {
-                console.error("Error fetching data:", error);
             }
-        };
-      
-        fetchUserRole();
-    }, []);
+        
+    }, [user]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const moviesRes = await axios.get(`${URL}movies`);
                 setMovies(moviesRes.data);
-                console.log("user",user)
                 const genresRes = await axios.get(`${URL}genres`);
                 setGenres(genresRes.data);
             } catch (error) {
@@ -182,6 +174,10 @@ const Discount = () =>{
                 : [...prev, genreId]
         );
     };
+
+    if (isLoading) {
+        return <Loading></Loading>;
+    }
     
     return(
         <CheckRole userRole={userRole} requiredRoles="admin">

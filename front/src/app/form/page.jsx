@@ -14,7 +14,7 @@ const MovieForm = () => {
 
   const URL = process.env.NEXT_PUBLIC_URL
   const {user} = useUser();
-  let userAux = user
+
   const [mediaType, setMediaType] = useState('trailer');
   const [movieName, setMovieName] = useState('');
   const [director, setDirector] = useState('');
@@ -32,6 +32,8 @@ const MovieForm = () => {
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
   const [userRole, setUserRole] = useState('')
+  const [userLocalStorage,setUserLocalStorage] = useState({});
+
   const [mediaURL, setMediaURL] = useState({
     poster: 'https://s3.oss.go.id/oss/logo/notfound.jpg',
     trailer: 'https://www.shutterstock.com/shutterstock/videos/1028480267/preview/stock-footage-file-not-found-glitch-text-abstract-vintage-twitched-k-loop-motion-animation-black-old-retro.webm',
@@ -69,26 +71,18 @@ const MovieForm = () => {
     if(user){
       updateLocaleStorage(user)
     }
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${URL}users/1111`);
-        const userData = response.data;
-        const userSid = userAux.sid
-
-        userAux = userData.find(user => user.sid === userSid);
-
-        if (userAux) {
-          setUserRole(userAux.roleName);
-        } else {
-          console.error("User not found");
+    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null);
+      if(userLocalStorage.role) {
+        try {
+          setUserRole(userLocalStorage.role)
+        } catch (error) {
+          console.error(error)
         }
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+        
     };
     
-  fetchUserRole();
   }, [user]);
 
   const toggleMediaType = () => {
