@@ -11,8 +11,10 @@ import Loading from "@/components/loading/loading";
 import CheckRole from '@/components/checkRole/checkRole'
 import axios from 'axios'
 import { updateLocaleStorage } from "@/helpers/updateLocaleStorage";
+import { useRouter } from 'next/navigation';
 
 const Admin = () => {
+  const router = useRouter()
   const URL = process.env.NEXT_PUBLIC_URL
   const {user, isLoading, error} = useUser()
   const [component, setComponent] = useState(0)
@@ -21,32 +23,25 @@ const Admin = () => {
 
   
   useEffect(() => {
-  
     if(user){
-      updateLocaleStorage(user)
-    }
-
-    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
-      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-      : null)
-
-      setUserLocalStorage(userstorage);
-    
-        
-      
-    }, [user]);
-
-
-    useEffect(()=>{
-
-      if(userLocalStorage.role) {
-          try {
-            setUserRole(userLocalStorage.role)
-          } catch (error) {
-            console.error(error)
-          }
+      updateLocaleStorage(user).then(
+        response => {
+          setUserLocalStorage(response.role)
         }
-    },[userLocalStorage])
+      )
+    }
+  }, [user]);
+
+  useEffect(()=>{
+
+    if(userLocalStorage) {
+        try {
+          setUserRole(userLocalStorage)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+  },[userLocalStorage])
 
   const showMovies = async() => {
       setComponent(2);
@@ -99,9 +94,9 @@ const Admin = () => {
 
   if(user){
     return (
-      <CheckRole userRole={userRole} requiredRoles={"admin"}>
-    <div>
-    <div className={style.pos}>
+      <CheckRole userRole={[userRole]} requiredRoles={"admin"}>
+      <div>
+      <div className={style.pos}>
         <div className={style.menu}>
         <Image
           src={burgerMenu}

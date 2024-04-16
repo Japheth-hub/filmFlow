@@ -126,14 +126,3 @@ export const totalSalesMonth = async(sid) => {
         return("FALLÓ totalSalesMonth:", error);
     }
 }
-export const revrankGenre = async() => {
-    let dataGrap;
-    try {
-        const { data } = await axios.get(`${URL}reviews`);
-        dataGrap = data
-
-        return dataGrap
-    } catch (error) {
-        return("FALLÓ revrankXgenre:", error);
-    }
-}
