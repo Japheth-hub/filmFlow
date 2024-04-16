@@ -112,16 +112,19 @@ const Movies = ({ params }) => {
     if(queryParams){
       try{
         const getMovies = async () => {
-          const query = new URLSearchParams(cleanQuery(queryParams)).toString();
-          let { data } = await axios.get(`${URL}movies?${query}`);
-          setMovies(data);
-        };
+          try {
+            const query = new URLSearchParams(cleanQuery(queryParams)).toString();
+            let { data } = await axios.get(`${URL}movies?${query}`);
+            setMovies(data);
+          } catch (error) {
+            setMovies(error.response.data.message)
+            console.error(error)
+          };
+          }
         getMovies();
       }catch(error){
         console.log(error);
       }
-  
-      
     }
   }, [queryParams]);
 
