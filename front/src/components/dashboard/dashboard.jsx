@@ -3,6 +3,7 @@ import style from '../../app/admin/admin.module.scss'
 import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
+import Modal from '../modal/Modal';
 import { showMovies, showReviews, showUsers, showOrder } from "@/helpers/dashboard";
 import { useUser } from "@auth0/nextjs-auth0/client"; 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
@@ -22,9 +23,13 @@ export default function Dashboard({link, title, sid}) {
     const [pagina, setPagina] = useState([])
     const [update, setUpdate] = useState(true)
     const [dashStatus, setDashStatus] = useState()
+    const [selectedMovie, setSelectedMovie] = useState(null)
+    const [isOpenModal, setIsOpenModal] = useState(false)
     const porPagina = 10
 
     const { error, isLoading, user } = useUser();
+
+    
 
     async function rolChange(sid, rolToChange) {
         try {
@@ -293,7 +298,7 @@ export default function Dashboard({link, title, sid}) {
         }
         datos(title)
     }, [title, update])
-    
+   
     useEffect(()=>{
         if(body){
             handlePagination(body);
@@ -301,6 +306,25 @@ export default function Dashboard({link, title, sid}) {
         }
     }, [page, body])
 
+
+    const openModal = async (movie) =>{
+        const {data} = await axios.get(`${NEXT_PUBLIC_URL}movies/${movie.id}`)
+        setSelectedMovie({
+            id: data.id,
+            poster: data.poster,
+            name: data.name,
+            genres: data.genres.map(genre => genre.name),
+            countries : data.countries.map(country => country.name),
+            director : data.director,
+            description : data.description,
+            movie: data.movie,
+            trailer: data.trailer,
+            edit: true
+
+        })
+        setIsOpenModal(true)
+
+    }
     return (
         <div>
             <h3 className={style.title}>{title}</h3>
@@ -371,7 +395,15 @@ export default function Dashboard({link, title, sid}) {
                                                             ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
                                                             : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                         }
-                                                        {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
+                                                        {title !== "Reviews" && <Button emoji={'✏️'} label={''} color={'blue'} callback={()=>{openModal(item)}}></Button>}
+                                                        {isOpenModal && (
+                                                            <Modal 
+                                                                isOpen={isOpenModal}
+                                                                onClose={() => setIsOpenModal(false)}
+                                                                movieData={selectedMovie}
+                                                                modalSend={openModal}
+                                                            />
+                                                        )}
                                                         {title === "Users" && item.role !== "admin" && item.role !== "producer" && ( <Button emoji={'🎬'} label={''} color={'purple'} callback={()=>{rolChange(item.sid, "producer")}}></Button> )}
                                                         {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
                                                     </div>
