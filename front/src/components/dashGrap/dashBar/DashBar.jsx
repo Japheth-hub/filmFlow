@@ -4,7 +4,7 @@ import style from "../DashGrap.module.scss"
 
 export default function DashArea({chartData}) {
     const options = {
-        responsive: true
+        responsive: true,
     }
     return (
         <div className={style.grap}><Bar options={options} data={chartData}/></div>

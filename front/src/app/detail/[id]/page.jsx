@@ -223,7 +223,7 @@ const renderStarSelector = () => {
           setAlerts({ points: true, comment: true });
         }, 3000);
     } catch (error) {
-      console.log("Error al actualizar",error)
+      console.error("Error al actualizar",error)
     }
   }
 
@@ -238,7 +238,11 @@ const renderStarSelector = () => {
           <div className={style['description-container-info']}>
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
+<<<<<<< HEAD
             <p><span className={style['italic-dark']}>Duración:</span> {duration} Minutos</p>
+=======
+            <p><span className={style['italic-dark']}>Duración:</span> {duration}</p>
+>>>>>>> 16d6fc299d42aa6c78fbb131e926f151f88ae241
             <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
             <p><span className={style['italic-dark']}>Año:</span> {year}</p>
             <div className={style.genres}>

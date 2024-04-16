@@ -79,7 +79,7 @@ export default function Dashboard({link, title, sid}) {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -344,7 +344,6 @@ export default function Dashboard({link, title, sid}) {
                     setPlaceholder("Buscar Pelicula/Genero");
                     break
                 default :
-                    console.log('No hay Datos para mostrar...')
                     break
             }
             setPage(1);

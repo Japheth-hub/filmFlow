@@ -63,7 +63,7 @@ export default function DashUsers({datos, link}) {
                 }
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
     function handleOrder(tipo) {

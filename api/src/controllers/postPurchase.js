@@ -46,7 +46,13 @@ module.exports = async (purchaseInfo) => {
             });
         })
 
+        let movieNames = "";
         for (const movie of moviesDB) {
+            if (movieNames !== "") {
+                movieNames += ", ";
+            }
+            movieNames += movie.name;
+
             if (!movie.userId) {
                 continue;
             }
@@ -77,17 +83,17 @@ module.exports = async (purchaseInfo) => {
         const mailInfo = {
             destination: user.email,
             topic: "Compra realizada",
-            content: `Se ha confirmado su compra`,
+            content: `Se ha confirmado su compra de ${movieNames} por el monto de ${amount}$`,
         }
 
         try {
             const emailResponse = await sendEmail(mailInfo);
-            console.log(emailResponse.message)
+            // console.log(emailResponse.message)
         } catch (error) {
             console.log('Error sending email:', error);
         }
         //
-        console.log("peliculas compradas con exito")
+        // console.log("peliculas compradas con exito")
    
     } catch (error) {
         console.log(error);
