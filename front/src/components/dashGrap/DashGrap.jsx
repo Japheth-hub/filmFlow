@@ -20,8 +20,8 @@ const DashGrap = ({sid}) => {
             fill: true,
             label: "Ventas diarias",
             data: 'Cargando..',
-            borderColor: 'rgb(150, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)'
+            borderColor: 'rgb(53, 162, 235)',
+            backgroundColor: 'rgb(53, 162, 235, 0.7)' 
         }]
     })
 
@@ -31,7 +31,7 @@ const DashGrap = ({sid}) => {
             label: "Cantidad de películas",
             data: 'Cargando..',
             borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)'
+            backgroundColor: 'rgb(53, 162, 235, 0.7)'
         }]
     })
     
@@ -41,7 +41,7 @@ const DashGrap = ({sid}) => {
             label: "Ranking y revies por género",
             data: 'Cargando..',
             borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)'
+            backgroundColor: 'rgb(53, 162, 235, 0.7)'
         }]
     })
 
@@ -51,7 +51,7 @@ const DashGrap = ({sid}) => {
             label: "Nuevos usuarios",
             data: 'Cargando..',
             borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)'
+            backgroundColor: 'rgb(53, 162, 235, 0.7)'
         }]
     })
 
@@ -144,12 +144,12 @@ const DashGrap = ({sid}) => {
                         <TooltipInfoGrap content={data.moviesByGenre}/>
                         <DashBar chartData={movieXgenre}/>
                     </div>
-                    <div className={style.card}>
+                    {/* <div className={style.card}>
                         <h5>Cantidad de interacciones</h5>
                         <TooltipInfoGrap content={data.interactions}/>
                         <h2>{totalUser}</h2>
                     </div>
-        {/* GRAPHIC 
+        GRAPHIC 
                     <div className={style.card}>
                         <h3>Ranking y reviews por género</h3>
                         <TooltipInfoGrap content={data.rankingAndReviews}/>
@@ -157,21 +157,20 @@ const DashGrap = ({sid}) => {
                     </div>
                     <div className={style.label}>
                         <h3>Rankings y comentarios</h3>
-                    </div>
-                    <div className={style.label}>
-                        <h3>Usuarios</h3>
-                    </div>
-        */}
+                    </div> */}
         {/* GRAPHIC */}
+                    <div className={style.card}>
+                        <h5>Usuarios totales</h5>
+                        <TooltipInfoGrap content={data.totalUsers}/>
+                        <h2>{totalUser}</h2>
+                    </div>
                     <div className={style.card}>
                         <h3>Usuarios Creados por día</h3>
                         <TooltipInfoGrap content={data.usersByDay}/>
                         <DashBar chartData={userXday}/>
                     </div>
-                    <div className={style.card}>
-                        <h5>Usuarios totales</h5>
-                        <TooltipInfoGrap content={data.totalUsers}/>
-                        <h2>{totalUser}</h2>
+                    <div className={style.label}>
+                        <h3>Usuarios</h3>
                     </div>
                 </div>)
                 :(<div className={style.contentGrap}>
