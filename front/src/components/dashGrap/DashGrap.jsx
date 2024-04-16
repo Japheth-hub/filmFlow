@@ -149,7 +149,7 @@ const DashGrap = ({sid}) => {
                         <TooltipInfoGrap content={data.interactions}/>
                         <h2>{totalUser}</h2>
                     </div>
-        {/* GRAPHIC */}
+        {/* GRAPHIC 
                     <div className={style.card}>
                         <h3>Ranking y reviews por género</h3>
                         <TooltipInfoGrap content={data.rankingAndReviews}/>
@@ -161,6 +161,7 @@ const DashGrap = ({sid}) => {
                     <div className={style.label}>
                         <h3>Usuarios</h3>
                     </div>
+        */}
         {/* GRAPHIC */}
                     <div className={style.card}>
                         <h3>Usuarios Creados por día</h3>
