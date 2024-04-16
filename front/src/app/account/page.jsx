@@ -48,7 +48,7 @@ const Account = () =>  {
         setProducerMovies(data)
       }
     } catch (error) {
-      console.error(error.response.data.message)
+      console.error(error.response.data.message + ' que hayas creado')
     }
   }
   
