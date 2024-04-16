@@ -19,7 +19,7 @@ export const showMovies = async () => {
     });
     return clearData;
   } catch (error) {
-    console.log('Error en Movies', error);
+    console.error('Error en Movies', error);
   }
 };
 
@@ -39,7 +39,7 @@ export const showUsers = async (sid) => {
     });
     return clearData;
   } catch (error) {
-    console.log("Error en la funcion showUsers de admin/page.jsx", error);
+    console.error("Error en la funcion showUsers de admin/page.jsx", error);
   }
 };
 
@@ -56,7 +56,7 @@ export const showReviews = async () => {
     });
     return clearData;
   } catch (error) {
-    console.log('Error en reviews', error);
+    console.error('Error en reviews', error);
   }
 };
 
@@ -78,7 +78,7 @@ export const showDiscount = async () => {
     })
     return clearData
   } catch (error) {
-    console.log('Error en el discount', error)
+    console.error('Error en el discount', error)
   }
 }
 
@@ -157,7 +157,7 @@ export const showSelects = async () => {
     })
     return select
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
@@ -179,6 +179,6 @@ export const showPurchases = async (sid) => {
     })
     return clearData
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }

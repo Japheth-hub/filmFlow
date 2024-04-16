@@ -82,7 +82,6 @@ const Discount = () =>{
     
 
     const generateDiscountCode = async () => {
-        console.log("!sadasd");
         if (selectedMovies.length > 0 && selectedGenres.length > 0) {
             Swal.fire({
                 icon: 'error',

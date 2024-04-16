@@ -223,7 +223,7 @@ const renderStarSelector = () => {
           setAlerts({ points: true, comment: true });
         }, 3000);
     } catch (error) {
-      console.log("Error al actualizar",error)
+      console.error("Error al actualizar",error)
     }
   }
 

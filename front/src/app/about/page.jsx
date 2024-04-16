@@ -6,14 +6,9 @@ import linkedIn from '../../img/linkedin.png';
 import Image from 'next/image';
 import developers from '@/utils/developers.js'
 
-import { useEffect } from 'react';
 
 const About = ()=>{
-    useEffect(() => {
-      console.log(developers.length);
-      
-    }, [])
-    
+
     return(
         <div className={style.about}>
         

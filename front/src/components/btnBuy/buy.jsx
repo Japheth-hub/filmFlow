@@ -15,7 +15,7 @@ export default function Buy({sid,code,cart}) {
         window.location = movies.data.url;
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

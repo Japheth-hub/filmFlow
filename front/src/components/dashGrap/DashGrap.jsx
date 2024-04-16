@@ -83,7 +83,6 @@ const DashGrap = ({sid}) => {
 
         //*RANKINGS Y REVIEWS
         revrankGenre().then(response => {
-            console.log(response);
             // setSalesXday({
             //     ...userXday, labels: response.labels,
             //     datasets:[{

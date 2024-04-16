@@ -123,7 +123,7 @@ const Movies = ({ params }) => {
           }
         getMovies();
       }catch(error){
-        console.log(error);
+        console.error(error);
       }
     }
   }, [queryParams]);
