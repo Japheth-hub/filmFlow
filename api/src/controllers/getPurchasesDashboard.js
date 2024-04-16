@@ -1,4 +1,4 @@
-const { Purchase,Movie,PurchaseMovie } = require('../db');
+const { Purchase,Movie,PurchaseMovie, User } = require('../db');
 const { Op } = require('sequelize');
 
 module.exports = async function getPurchases(req){
@@ -14,18 +14,19 @@ module.exports = async function getPurchases(req){
             }
         }
 
-        if(user){
+        // if(user){
             options.include =  [
                 {
                 model: Movie,
-                where: { userId: user },
-                through: {
-                    model: PurchaseMovie,
-                    attributes: ['price'], 
-                },
+                // where: { userId: user },
+                // through: {
+                //     model: PurchaseMovie,
+                // //     attributes: ['price'], 
+                // },
+                model: User
                 }
             ]
-        }
+        // }
 
         if(month){
             const endDate = new Date();

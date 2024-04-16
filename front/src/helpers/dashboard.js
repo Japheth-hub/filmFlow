@@ -127,6 +127,12 @@ export const showOrder = async (order, tipo, body) => {
     } else {
       newBody = body.sort((a, b) => b.percentage - a.percentage);
     }
+  } else if (tipo === "Amount") {
+    if (!order) {
+      newBody = body.sort((a, b) => a.amount - b.amount);
+    } else {
+      newBody = body.sort((a, b) => b.amount - a.amount);
+    }
   }
   return newBody
 }
@@ -149,6 +155,28 @@ export const showSelects = async () => {
       }
     })
     return select
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const showPurchases = async (sid) => {
+  try {
+    const { data } = await axios(`${URL}purchases/dashboard/${sid}`);
+    const clearData = data.map((purchase) => {
+      return  {
+        id: purchase.id,
+        stripeId: purchase.stripeId,
+        status: purchase.status,
+        method: purchase.method,
+        currency: purchase.currency,
+        amount: purchase.amount,
+        createdAt: purchase.createdAt.slice(0, 10),
+        user: purchase.user.name,
+        email: purchase.user.email
+      }
+    })
+    return clearData
   } catch (error) {
     console.log(error)
   }
