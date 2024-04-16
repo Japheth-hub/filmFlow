@@ -17,7 +17,6 @@ const Modal = ({ isOpen, onClose }) => {
         paymentAccount: userEmail,
         phoneNumber: ""
     });
-console.log(formData)
     const [confirmEmail, setConfirmEmail] = useState(false);
     const [showSecondModal, setShowSecondModal] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);

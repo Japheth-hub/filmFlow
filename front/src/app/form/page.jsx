@@ -237,7 +237,6 @@ const MovieForm = () => {
         auth: userSid
       };
       const movieResponse = await axios.post(`${URL}movies`, data);
-      //console.log(movieResponse.data)
       Swal.close();
       if (movieResponse.status === 200) {
         Swal.fire({

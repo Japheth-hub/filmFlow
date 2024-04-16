@@ -37,7 +37,7 @@ const Cart = () => {
                    
                     setCartData(syncData.data.movies);
                 } catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             }else{
                 if(localCart){

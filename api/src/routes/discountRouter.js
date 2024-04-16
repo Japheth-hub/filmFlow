@@ -5,6 +5,7 @@ const getMovieDiscount = require('../controllers/getMovieDiscount')
 const getGenreDiscount = require('../controllers/getGenreDiscount');
 const postDiscountHandler = require("../handlers/postDiscountHandler");
 const applyDiscountHandler = require("../handlers/applyDiscountHandler");
+const deleteDiscountHandler = require("../handlers/deleteDiscountHandler");
 const discountRouter = Router();
 
 discountRouter.get('/', getDiscounts)
@@ -13,5 +14,6 @@ discountRouter.get('/movie/:id', getMovieDiscount)
 discountRouter.get('/genre/:id', getGenreDiscount)
 discountRouter.post('/', postDiscountHandler);
 discountRouter.put('/:code',putDiscount);
+discountRouter.delete("/:id", deleteDiscountHandler);
 
 module.exports = discountRouter;

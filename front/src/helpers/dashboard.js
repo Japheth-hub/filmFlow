@@ -8,7 +8,7 @@ export const showMovies = async () => {
     const clearData = data.map((movie) => {
       return {
         id: movie.id,
-        name: movie.name,
+        name: movie.name || "",
         duration: movie.duration,
         status: movie.status,
         user: movie.user ? movie.user.name : "Admin",
@@ -19,7 +19,7 @@ export const showMovies = async () => {
     });
     return clearData;
   } catch (error) {
-    console.log('Error en Movies', error);
+    console.error('Error en Movies', error);
   }
 };
 
@@ -39,7 +39,7 @@ export const showUsers = async (sid) => {
     });
     return clearData;
   } catch (error) {
-    console.log("Error en la funcion showUsers de admin/page.jsx", error);
+    console.error("Error en la funcion showUsers de admin/page.jsx", error);
   }
 };
 
@@ -49,13 +49,14 @@ export const showReviews = async () => {
     const clearData = data.map((review) => {
       return {
         ...review,
+        movie: review.movie || "",
         update: review.update.slice(0, 10),
         deleted: review.deleted ? review.deleted.slice(0, 10) : "Active",
       };
     });
     return clearData;
   } catch (error) {
-    console.log('Error en reviews', error);
+    console.error('Error en reviews', error);
   }
 };
 
@@ -70,14 +71,14 @@ export const showDiscount = async () => {
         used: discount.used,
         starts: discount.starts.slice(0, 10),
         ends: discount.ends.slice(0, 10),
-        movie: discount.movies?.map((movie) => movie.name).join("/"),
-        genre: discount.genres?.map((genre) => genre.name).join("/"),
+        movie: discount.movies?.map((movie) => movie.name).join("/") || "",
+        genre: discount.genres?.map((genre) => genre.name).join("/") || "",
         created: discount.createdAt.slice(0, 10)
       };
     })
     return clearData
   } catch (error) {
-    console.log('Error en el discount', error)
+    console.error('Error en el discount', error)
   }
 }
 
@@ -127,6 +128,12 @@ export const showOrder = async (order, tipo, body) => {
     } else {
       newBody = body.sort((a, b) => b.percentage - a.percentage);
     }
+  } else if (tipo === "Amount") {
+    if (!order) {
+      newBody = body.sort((a, b) => a.amount - b.amount);
+    } else {
+      newBody = body.sort((a, b) => b.amount - a.amount);
+    }
   }
   return newBody
 }
@@ -150,6 +157,28 @@ export const showSelects = async () => {
     })
     return select
   } catch (error) {
-    console.log(error)
+    console.error(error)
+  }
+}
+
+export const showPurchases = async (sid) => {
+  try {
+    const { data } = await axios(`${URL}purchases/dashboard/${sid}`);
+    const clearData = data.map((purchase) => {
+      return  {
+        id: purchase.id,
+        stripeId: purchase.stripeId,
+        status: purchase.status,
+        method: purchase.method,
+        currency: purchase.currency,
+        amount: purchase.amount,
+        createdAt: purchase.createdAt.slice(0, 10),
+        user: purchase.user.name || "",
+        email: purchase.user.email || ""
+      }
+    })
+    return clearData
+  } catch (error) {
+    console.error(error)
   }
 }

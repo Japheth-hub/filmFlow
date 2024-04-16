@@ -3,7 +3,7 @@ import style from '../../app/admin/admin.module.scss'
 import Button from '../button/Button'
 import axios from 'axios'
 import Swal from 'sweetalert2';
-import { showMovies, showReviews, showUsers, showOrder, showDiscount } from "@/helpers/dashboard";
+import { showMovies, showReviews, showUsers, showOrder, showDiscount, showPurchases } from "@/helpers/dashboard";
 import Loading from "@/components/loading/loading";
 import ModalPromo from './modalPromo'
 import { useUser } from "@auth0/nextjs-auth0/client";
@@ -78,7 +78,7 @@ export default function Dashboard({link, title, sid}) {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -222,11 +222,15 @@ export default function Dashboard({link, title, sid}) {
 
     function handleSearch(e){
         let search = []
-        title === 'Reviews' || title === 'Promos' 
-        ? search = body2.filter((data) =>  title === 'Promos' && data.movie === "" 
+        title === "Movies"  ? search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === "Users"   ? search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === "Reviews" ? search = body2.filter((data) => data.movie?.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === 'Promos'
+        ? search = body2.filter((data) => data.movie === "" 
             ? data.genre.toLowerCase().includes(e.target.value.toLowerCase())
             : data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
-        : search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        : "" 
+        title === 'Ventas' ? search = body2.filter((data) => data.email.toLowerCase().includes(e.target.value.toLowerCase())) : ""
         if(search.length > 0){
             setSearch(e.target.value)
             setBody(search)
@@ -327,11 +331,13 @@ export default function Dashboard({link, title, sid}) {
                 case "Reviews":
                     datos = await showReviews();
                     break
+                case "Ventas":
+                    datos = await showPurchases(sid);
+                    break
                 case "Promos":
                     datos = await showDiscount();
                     break
                 default :
-                    console.log('No hay Datos para mostrar')
                     break
             }
             setPage(1);
@@ -345,6 +351,7 @@ export default function Dashboard({link, title, sid}) {
             }
         }
         datos(title)
+        setSearch("")
     }, [title, update])
     
     useEffect(()=>{
@@ -358,7 +365,6 @@ export default function Dashboard({link, title, sid}) {
         return <Loading />
     }
 
-
     return (
         <div>
             <h3 className={style.title}>{title}</h3>
@@ -370,8 +376,9 @@ export default function Dashboard({link, title, sid}) {
                     <Button callback={()=>{handleOrder('Movie')}} emoji={order ? '🔻' : '🔺'} label={'Movie'}></Button>
                     <Button callback={()=>{handleOrder('Points')}} emoji={order ? '🔻' : '🔺'} label={'Points'}></Button>
                 </>)
-                    : title !== "Promos" && <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
+                    : title !== "Promos" && title !== 'Ventas' && <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
                 }
+                {title === 'Ventas' && <Button callback={()=>{handleOrder('Amount')}} emoji={order ? '🔻' : '🔺'} label={'Amount'}></Button>}
                 {title === 'Promos' && (<>
                     <Button callback={()=>{handleOrder('Percentage')}} emoji={order ? '🔻' : '🔺'} label={'Percentage'}></Button> 
                     <select className={style.status} defaultValue='default' value={codeType} onChange={handleDiscount}>
@@ -418,7 +425,7 @@ export default function Dashboard({link, title, sid}) {
                                         return <th className={style.th} key={index}>{item.toUpperCase()}</th>
                                     })
                                 }
-                                <th className={style.th}>ACTIONS</th>
+                                {title !== 'Ventas' && <th className={style.th}>ACTIONS</th>}
                             </tr>
                         </thead>
                         <tbody className={style.tbody}>
@@ -437,18 +444,20 @@ export default function Dashboard({link, title, sid}) {
                                                     </td>)
                                                     : <td className={style.td} key={i}>{item[prop]}</td> && title === "Movies" && prop === "name" ? <td className={style.td} key={i}><Link href={`detail/${item.id}`}>{item[prop]}</Link></td> : <td className={style.td} key={i}>{item[prop]}</td>
                                                     ))}
-                                                    <td className={style.td}>
-                                                        <div className={style['btn-actions']}>
-                                                            {title === "Promos"
-                                                            ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
-                                                            : item.deleted === "Active"
+                                                    { title !== "Ventas" && 
+                                                        <td className={style.td}>
+                                                            <div className={style['btn-actions']}>
+                                                                {title === "Promos"
                                                                 ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
-                                                                : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
-                                                            }
-                                                            {title !== "Reviews" && title !== "Promos" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
-                                                            {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
-                                                        </div>
-                                                    </td>
+                                                                : item.deleted === "Active"
+                                                                    ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
+                                                                    : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
+                                                                }
+                                                                {title !== "Reviews" && title !== "Promos" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
+                                                                {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
+                                                            </div>
+                                                        </td>
+                                                    }
                                             </tr>       
                                         ))
                                     

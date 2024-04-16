@@ -25,6 +25,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: 1200px;
 }
 
 .welcome{
@@ -36,8 +37,14 @@
 }
 
 .table{
-    width: 100%;
+    max-width: 100%;
     padding: 5px;
+    color: black;
+
+    th, td{
+        max-width: 200px;
+        word-wrap: break-word;
+    }
 }
 .thead{
     background-color: $mainColor;
@@ -49,7 +56,6 @@
 .th{
     font-size: 1.2rem;
     padding: 5px 10px;
-    max-width: 150px;
 }
 .td{
     text-align: center;
@@ -159,7 +165,7 @@
 .searchTable, 
 .calendar{
     border: 2px solid $mainColor;
-    color: black;
+    color: white;
     background-color: rgba(139, 51, 240, 0.3);
 }
 

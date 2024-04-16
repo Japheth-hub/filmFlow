@@ -115,7 +115,7 @@ export default function AddToCart({movie}) {
                     setCart(remoteCart.data.movies);
         
                    } catch (error) {
-                    console.log(error);
+                    console.error(error);
                    }
                
                 })();

@@ -33,7 +33,7 @@ const Movie = ({ elem, dim }) => {
                         setPurchase(idsMovies)
                     }
                 } catch (error) {
-                        console.log(error);
+                        console.error(error);
                 }
             }
             getPurchase()

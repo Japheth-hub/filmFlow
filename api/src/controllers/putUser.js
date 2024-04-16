@@ -1,6 +1,6 @@
 const { User, Role } = require('../db');
 
-module.exports = async (body) => {
+module.exports = async (body, currentUser) => {
     try {
         //Esta esperando recibir los siguientes parametros por body de la siguiente manera:
         //{
@@ -16,7 +16,11 @@ module.exports = async (body) => {
         if (!user) {
             return { status: false, message: 'Error al encontrar el usuario' };
         }
+        if (user.sid === currentUser.sid) {
+            return { status: false, message: 'No puedes cambiar tu propio rol' };
+        }    
 
+        const viewerRole = await Role.findOne({ where: { role: "viewer" } });
         const producerRole = await Role.findOne({ where: { role: "producer" } });
         const adminRole = await Role.findOne({ where: { role: "admin" } });
 
@@ -29,6 +33,12 @@ module.exports = async (body) => {
         if (user.roleId === producerRole.id && roleToChange === "producer") {
             return { status: false, message: 'El usuario ya es producer' };
         }
+        if (user.roleId === viewerRole.id && roleToChange === "viewer") {
+            return { status: false, message: 'El usuario ya es viewer' };
+        }
+        if (user.roleId === adminRole.id && roleToChange === "viewer" && user.email === "filmflowmail@gmail.com") {
+            return { status: false, message: 'No se puede degradar a ese usuario'}
+        }
 
         if (roleToChange === 'admin') {
             user.roleId = adminRole.id;
@@ -39,6 +49,14 @@ module.exports = async (body) => {
             user.roleId = producerRole.id;
             await user.save();
             return { status: true, message: 'Cambiado el rol del usuario a producer exitosamente' };
+        }
+        if (roleToChange === 'viewer') {
+            user.roleId = viewerRole.id;
+            user.phone = null;
+            user.payment_account = null;
+            user.payment_method = null;
+            await user.save();
+            return { status: true, message: 'Cambiado el rol del usuario a viewer exitosamente' };
         }
     } catch (error) {
         console.log(error);

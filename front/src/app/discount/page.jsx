@@ -221,7 +221,7 @@ const Discount = () =>{
                                 checked={selectedGenres.includes(genre.id)}
                                 onChange={() => toggleGenreSelection(genre.id)}
                             />
-                            <label>{genre.name}</label>
+                            <label>{genre.label}</label>
                         </div>
                     ))}
                 </div>
