@@ -78,7 +78,7 @@ export default function Dashboard({link, title, sid}) {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -338,7 +338,6 @@ export default function Dashboard({link, title, sid}) {
                     datos = await showDiscount();
                     break
                 default :
-                    console.log('No hay Datos para mostrar')
                     break
             }
             setPage(1);
