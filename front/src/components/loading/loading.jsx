@@ -4,7 +4,7 @@ import style from './loading.module.scss'
 export default function Loading() {
   return (
     <div className={style.loader}>
-      Loading
+      Cargando
       <span></span>
     </div>
   );

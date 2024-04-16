@@ -17,5 +17,4 @@ module.exports = [
     { name: "tv movie", emoji: "📺", label: "Película de TV" },
     { name: "thriller", emoji: "🔪", label: "Thriller" },
     { name: "war", emoji: "💣", label: "Guerra" },
-    { name: "western", emoji: "🤠", label: "Western" }
 ];

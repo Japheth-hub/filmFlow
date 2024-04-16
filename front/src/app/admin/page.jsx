@@ -17,34 +17,36 @@ const Admin = () => {
   const {user, isLoading, error} = useUser()
   const [component, setComponent] = useState(0)
   const [userRole, setUserRole] = useState('')
+  const [userLocalStorage,setUserLocalStorage] = useState({});
 
-  let userAux = user
   
   useEffect(() => {
+  
     if(user){
       updateLocaleStorage(user)
     }
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${URL}users/1111`);
-        const userData = response.data;
-        const userSid = userAux.sid
 
-        userAux = userData.find(user => user.sid === userSid);
+    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null)
 
-        if (userAux) {
-          setUserRole(userAux.roleName);
-        } else {
-          console.error("User not found");
-        }
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+      setUserLocalStorage(userstorage);
     
-  fetchUserRole();
-}, [user]);
+        
+      
+    }, [user]);
+
+
+    useEffect(()=>{
+
+      if(userLocalStorage.role) {
+          try {
+            setUserRole(userLocalStorage.role)
+          } catch (error) {
+            console.error(error)
+          }
+        }
+    },[userLocalStorage])
 
   const showMovies = async() => {
       setComponent(2);
@@ -81,9 +83,11 @@ const Admin = () => {
       case 4:
         return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
       case 5:
-        return <Dashboard title={`Reviews`} link={`${URL}reviews/`} sid={user.sid}/>;
+        return <Dashboard title={`Ventas`} link={`${URL}purchases/`} sid={user.sid}/>;
       case 6:
         return <DashPayments title={`Pagos`} link={`${URL}users/`} sid={user.sid}/>;
+      case 7:
+        return <Dashboard title={`Promos`} link={`${URL}discount/`} sid={user.sid}/>;
       default:
           return <p>Selecciona una opción del menú</p>
     }
@@ -110,9 +114,9 @@ const Admin = () => {
             <div onClick={() => showMovies()}><a role="img" aria-label="Películas">🎬</a><span>Películas</span></div>
             <div onClick={() => showUsers()}><a role="img" aria-label="Usuarios">👤</a><span>Usuarios</span></div>
             <div onClick={() => showReviews()}><a role="img" aria-label="Reviews">⭐</a><span>Reviews</span></div>
-            <div onClick={() => setComponent()}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
+            <div onClick={() => setComponent(5)}><a role="img" aria-label="Ventas">💰</a><span>Ventas</span></div>
             <div onClick={() => showPayments()}><a role="img" aria-label="Pagos">💸</a><span>Pagos</span></div>
-            <div onClick={() => setComponent()}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
+            <div onClick={() => setComponent(7)}><a role="img" aria-label="Promos">🤩</a><span>Promos</span></div>
           </div>
         </div>
         <div className={style.content}>

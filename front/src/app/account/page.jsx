@@ -15,8 +15,19 @@ const Account = () =>  {
   const { error, isLoading, user } = useUser();
   const [movies, setMovies] = useState([])
   const [producerMovies, setProducerMovies] = useState([])
+  const [producerInfo, setProducerInfo] = useState({})
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userLocalStorage,setUserLocalStorage] = useState({});
+  const [userLocalStorage,setUserLocalStorage] = useState(null);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  useEffect(() => {  
+    if(userLocalStorage === null) {
+      setUserLocalStorage(JSON.parse(window.localStorage.getItem('FilmFlowUsr')))
+    }
+  }, [])
 
   async function fetchData(){
     try {
@@ -36,30 +47,25 @@ const Account = () =>  {
         setProducerMovies(data)
       }
     } catch (error) {
-      console.error(error)
+      console.error(error.response.data.message)
     }
   }
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  useEffect(() => {  
-    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
-      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-      : null);
-    if(userLocalStorage.role === "producer") {
-      try {
-        fetchProducerMovies(user)
-      } catch (error) {
-        console.error(error)
-      }
+  async function fetchProducerInfo(user) {
+    try {
+      const { data } = await axios.get(`${NEXT_PUBLIC_URL}users/producer/${user.sid}`)
+      const info = data.producerInfo
+      setProducerInfo(info)
+    } catch (error) {
+      console.error(error.response.data.message)
     }
-  }, [user])
-  
+  }
+
   useEffect(()=>{
     fetchData()
-  }, [])
+    fetchProducerMovies(user)
+    fetchProducerInfo(user)
+  }, [user])
 
   if (error) {
     return <div>Error en su session</div>;
@@ -82,6 +88,12 @@ const Account = () =>  {
             <p>{user.email}</p> 
             {userLocalStorage && userLocalStorage.role === "producer" ? <p>🎬</p> : null}
           </div>
+          <div className={style["producer-info"]}>
+            {userLocalStorage && userLocalStorage.role === "producer" ? <p>Saldo: {producerInfo.payment_amount}$</p> : null}
+            {userLocalStorage && userLocalStorage.role === "producer" ? <p>Numero de telefono: {producerInfo.phone}</p> : null}
+            {userLocalStorage && userLocalStorage.role === "producer" ? <p>Cuenta: {producerInfo.payment_method}</p> : null}
+            {userLocalStorage && userLocalStorage.role === "producer" ? <p>Correo de la cuenta: {producerInfo.payment_account}</p> : null}
+            </div>
           <ul>
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
           {userLocalStorage && userLocalStorage.role === "viewer" ? <Button emoji={'🎬'} color={'purple'} label={"Convertirse en Producer"} callback={openModal}></Button> : null}

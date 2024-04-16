@@ -4,6 +4,9 @@
     align-items: center;
     padding: 20px;
   }
+  .text-black{
+    color:black
+  }
   
   .back-button {
     background-color: #333;
@@ -38,6 +41,7 @@
   .form-label {
     font-weight: bold;
     margin-bottom: 5px;
+    color:black
   }
   
   .form-input,
@@ -94,6 +98,7 @@
   .genre-list li {
     margin-right: 5px;
     margin-bottom: 5px;
+    color: black;
   }
   
   .genre-list li button {

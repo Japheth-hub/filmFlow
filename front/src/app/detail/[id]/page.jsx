@@ -84,44 +84,39 @@ const DetailContent = () => {
       });
     }
   }
+  
+  async function fetchData() {
+    setIsLoading(true);
+    setError(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        let query = "";
-        if(user){
-          console.log(user);
-          query =`?auth=${user.sid}`;
-        }
-        const response = await axios.get(`${URL}movies/${id}${query}`);
-        if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
-          router.push(`/`);
-        } 
-        setMovieData(response.data);
-      } catch (error) {
-        console.error('Error fetching movie data:', error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
+    try {
+      let query = "";
+      if (user) {
+        query = `?auth=${user.sid}`;
       }
-    };
-    fetchData();
-  }, [id,user]);
-
-  useEffect(() => {
-    async function reload(){
-      try {
-        const {data} = await axios.get(`${URL}movies/${id}`);
-        setMovieData(data)
-      } catch (error) {
-        console.log(error)
+      const response = await axios.get(`${URL}movies/${id}${query}`);
+      if(!response.data.isOwner && !response.data.isAdmin && response.data.status !== "approved") {
+        router.push(`/`);
+      } 
+      setMovieData(response.data);
+      if (response.data && response.data.id && purchase.includes(response.data.id)) {
+        setHasMovie(true);
+      } else {
+        setHasMovie(false);
       }
+    } catch (error) {
+      console.error('Error fetching movie data:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
-    reload()
-  }, [update]);
+  }
+
+
+  useEffect(() => {
+    fetchData();
+  }, [id, user,update]);
+
   
   useEffect(() => {
     async function getPurchase(){
@@ -204,6 +199,9 @@ const renderStarSelector = () => {
         setNewReview({ points: 0, comment: '' });
       }
       setAlerts({ points: data.points, comment: data.comment });
+      setTimeout(() => {
+        setAlerts({ points: true, comment: true });
+      }, 3000);
     } catch (error) {
       console.error('Error submitting review:', error);
     }
@@ -221,12 +219,15 @@ const renderStarSelector = () => {
           setNewReview({ points: 0, comment: "" });
         }
         setAlerts({ points: data.points, comment: data.comment });
+        setTimeout(() => {
+          setAlerts({ points: true, comment: true });
+        }, 3000);
     } catch (error) {
       console.log("Error al actualizar",error)
     }
   }
 
-  // console.log(alerts)
+
 
   return (
     <div className={style['detail-content']}>
@@ -265,9 +266,12 @@ const renderStarSelector = () => {
         </div>
       </div>
       <div className={style['media-container']}>
+
+      {purchase.includes(movieData.id) &&
         <button onClick={toggleMediaType}>
           {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
         </button>
+      }
         {mediaType === 'trailer' ? (
           <iframe src={trailer} width="800" height="500" title="Trailer" allowFullScreen />
         ) : (
@@ -280,15 +284,23 @@ const renderStarSelector = () => {
             <h4>Deja un comentario</h4>
             {successMessage && <div className={style['success-message']}>{successMessage}</div>}
             <div className={style['review-form']}>
-              <label>Puntuación:</label>
-              {alerts.points !== true && <span>{alerts.points}</span>}
               <div className={style['star-selector']}>
-                {renderStarSelector()}
+                {alerts.points !== true && <span className={style.alerts}>{alerts.points}</span>}
+                <div className={style.reviewPoints}>
+                  <label>Puntuación:</label>
+                  {renderStarSelector()}
+                </div>
               </div>
-              <label>Comentario:</label>
-              {alerts.comment !== true && <span>{alerts.comment}</span>}
-              <textarea value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
-              <button onClick={handleReviewSubmit}>Subir comentario</button>
+              <div className={style.reviewComment}>
+                {alerts.comment !== true && <span className={style.alerts}>{alerts.comment}</span>}
+                <div className={style.textarea}>
+                  <label>Comentario:</label>
+                  <textarea rows='5' cols='40' value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} />
+                </div>
+              </div>
+              <div className={style.comentar}>
+                <Button label={'Comentar'} color={'green'} callback={handleReviewSubmit}/>
+              </div>
             </div>
           </div>
         }

@@ -3,15 +3,15 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import style from './discount.module.scss'
 import Button from '../../components/button/Button'
+import Loading from "@/components/loading/loading";
 import CheckRole from '@/components/checkRole/checkRole'
 import Swal from 'sweetalert2'
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-
+import { updateLocaleStorage } from "@/helpers/updateLocaleStorage";
 
 const Discount = () =>{
     const URL = process.env.NEXT_PUBLIC_URL
-    let { user } = useUser()
-    let userAux = user
+    let { user, isLoading } = useUser()
 
     const [code,setCode] = useState('')
     const [selectedMovies, setSelectedMovies] = useState([]); 
@@ -23,36 +23,39 @@ const Discount = () =>{
     const [percentage, setPercentage] = useState(0);
     const [discounts, setDiscounts] = useState([]);
     const [userRole, setUserRole] = useState('')
+    const [userLocalStorage,setUserLocalStorage] = useState({});
 
     useEffect(() => {
-        const fetchUserRole = async () => {
-                try {
-                const response = await axios.get(`${URL}users/1111`);
-                const userData = response.data;
-                const userSid = userAux.sid
-        
-                userAux = userData.find(user => user.sid === userSid);
-        
-                if (userAux) {
-                    setUserRole(userAux.roleName);
-                } else {
-                    console.error("User not found");
-                }
-        
-            } catch (error) {
-                console.error("Error fetching data:", error);
+        if(user){
+          updateLocaleStorage(user)
+        }
+    
+        const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
+          ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+          : null)
+    
+          setUserLocalStorage(userstorage);        
+          
+        }, [user]);
+    
+    
+        useEffect(()=>{
+    
+          if(userLocalStorage.role) {
+              try {
+                setUserRole(userLocalStorage.role)
+              } catch (error) {
+                console.error(error)
+              }
             }
-        };
-      
-        fetchUserRole();
-    }, []);
+        },[userLocalStorage])
 
+        
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const moviesRes = await axios.get(`${URL}movies`);
                 setMovies(moviesRes.data);
-                console.log("user",user)
                 const genresRes = await axios.get(`${URL}genres`);
                 setGenres(genresRes.data);
             } catch (error) {
@@ -79,12 +82,8 @@ const Discount = () =>{
     
 
     const generateDiscountCode = async () => {
-        if (selectedMovies.length === 0 && selectedGenres.length === 0) {
-            
-            const allMoviesIds = movies.map((movie) => movie.id);
-            setSelectedMovies(allMoviesIds);
-
-        } else if (selectedMovies.length > 0 && selectedGenres.length > 0) {
+        console.log("!sadasd");
+        if (selectedMovies.length > 0 && selectedGenres.length > 0) {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -140,6 +139,12 @@ const Discount = () =>{
                     icon: 'success',
                     title: '¡Éxito!',
                     text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Volver',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin'
+                    }
                 });
             }
 
@@ -158,6 +163,12 @@ const Discount = () =>{
                     icon: 'success',
                     title: '¡Éxito!',
                     text: `¡El código de descuento se ha generado con éxito! Código: ${response.data.code.code}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Volver',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin'
+                    }
                 });
             }
             
@@ -182,6 +193,10 @@ const Discount = () =>{
                 : [...prev, genreId]
         );
     };
+
+    if (isLoading) {
+        return <Loading></Loading>;
+    }
     
     return(
         <CheckRole userRole={userRole} requiredRoles="admin">

@@ -4,7 +4,7 @@
 html,
 body {
   color: black;
-  background-color: $neutralLight;
+  background-color: $neutralDark;
   height: 100%;
   margin: 0;
   font-family: $secondaryFont;
@@ -12,6 +12,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: white;
+}
+
+a,a:visited{
+  color:white
 }
 
 .wrapper {
@@ -37,7 +42,7 @@ h3 {
   height: 100%;
 }
 
-button{
+button {
   cursor: pointer;
 }
 
