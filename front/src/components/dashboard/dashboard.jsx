@@ -222,13 +222,15 @@ export default function Dashboard({link, title, sid}) {
 
     function handleSearch(e){
         let search = []
-        title === 'Reviews' || title === 'Promos' 
-        ? search = body2.filter((data) =>  title === 'Promos' && data.movie === "" 
+        title === "Movies"  ? search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === "Users"   ? search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === "Reviews" ? search = body2.filter((data) => data.movie?.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === 'Promos'
+        ? search = body2.filter((data) => data.movie === "" 
             ? data.genre.toLowerCase().includes(e.target.value.toLowerCase())
             : data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
-        : title !== 'Ventas' 
-            ? search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase()))
-            : search = body2.filter((data) => data.email.toLowerCase().includes(e.target.value.toLowerCase()))
+        : "" 
+        title === 'Ventas' ? search = body2.filter((data) => data.email.toLowerCase().includes(e.target.value.toLowerCase())) : ""
         if(search.length > 0){
             setSearch(e.target.value)
             setBody(search)
@@ -350,6 +352,7 @@ export default function Dashboard({link, title, sid}) {
             }
         }
         datos(title)
+        setSearch("")
     }, [title, update])
     
     useEffect(()=>{
@@ -362,7 +365,6 @@ export default function Dashboard({link, title, sid}) {
     if (isLoading){
         return <Loading />
     }
-
 
     return (
         <div>

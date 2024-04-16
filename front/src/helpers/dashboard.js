@@ -8,7 +8,7 @@ export const showMovies = async () => {
     const clearData = data.map((movie) => {
       return {
         id: movie.id,
-        name: movie.name,
+        name: movie.name || "",
         duration: movie.duration,
         status: movie.status,
         user: movie.user ? movie.user.name : "Admin",
@@ -49,6 +49,7 @@ export const showReviews = async () => {
     const clearData = data.map((review) => {
       return {
         ...review,
+        movie: review.movie || "",
         update: review.update.slice(0, 10),
         deleted: review.deleted ? review.deleted.slice(0, 10) : "Active",
       };
@@ -70,8 +71,8 @@ export const showDiscount = async () => {
         used: discount.used,
         starts: discount.starts.slice(0, 10),
         ends: discount.ends.slice(0, 10),
-        movie: discount.movies?.map((movie) => movie.name).join("/"),
-        genre: discount.genres?.map((genre) => genre.name).join("/"),
+        movie: discount.movies?.map((movie) => movie.name).join("/") || "",
+        genre: discount.genres?.map((genre) => genre.name).join("/") || "",
         created: discount.createdAt.slice(0, 10)
       };
     })
@@ -172,8 +173,8 @@ export const showPurchases = async (sid) => {
         currency: purchase.currency,
         amount: purchase.amount,
         createdAt: purchase.createdAt.slice(0, 10),
-        user: purchase.user.name,
-        email: purchase.user.email
+        user: purchase.user.name || "",
+        email: purchase.user.email || ""
       }
     })
     return clearData
