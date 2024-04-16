@@ -238,7 +238,7 @@ const renderStarSelector = () => {
           <div className={style['description-container-info']}>
             <span className={style['italic-dark']}><h3>{name}</h3></span>
             <p><span className={style['italic-dark']}>Dirigida por:</span> {director}</p>
-            <p><span className={style['italic-dark']}>Duración:</span> {duration} minutes</p>
+            <p><span className={style['italic-dark']}>Duración:</span> {duration} Minutos</p>
             <p><span className={style['italic-dark']}>Descripción:</span> {description}</p>
             <p><span className={style['italic-dark']}>Año:</span> {year}</p>
             <div className={style.genres}>
