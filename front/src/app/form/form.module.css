@@ -98,6 +98,7 @@
   .genre-list li {
     margin-right: 5px;
     margin-bottom: 5px;
+    color: black;
   }
   
   .genre-list li button {
