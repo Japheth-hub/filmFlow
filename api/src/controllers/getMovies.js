@@ -125,8 +125,6 @@ module.exports = async function getMovies(query){
         
         const movies = await Movie.findAll({...options,attributes: ['id','name',"poster","trailer","movie","director","description","duration","status", "price", "deletedAt"]})
 
-
-        console.log(options);
         return movies
     } catch (error) {
         console.log(error)
