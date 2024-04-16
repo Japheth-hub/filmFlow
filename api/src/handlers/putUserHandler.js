@@ -3,12 +3,13 @@ const putUser = require('../controllers/putUser')
 module.exports = async (req, res) => {
     try {
         const body = req.body
+        const currentUser = req.user
 
         if (Object.keys(body).length === 0) {
             return res.status(422).json({ message: 'No hay datos para actualizar' });
         }
 
-        const data = await putUser(body);
+        const data = await putUser(body, currentUser);
 
         if (!data.status) {
             return res.status(422).json(data);

@@ -1,6 +1,6 @@
 const { User, Role } = require('../db');
 
-module.exports = async (body) => {
+module.exports = async (body, currentUser) => {
     try {
         //Esta esperando recibir los siguientes parametros por body de la siguiente manera:
         //{
@@ -16,6 +16,9 @@ module.exports = async (body) => {
         if (!user) {
             return { status: false, message: 'Error al encontrar el usuario' };
         }
+        if (user.sid === currentUser.sid) {
+            return { status: false, message: 'No puedes cambiar tu propio rol' };
+        }    
 
         const viewerRole = await Role.findOne({ where: { role: "viewer" } });
         const producerRole = await Role.findOne({ where: { role: "producer" } });
