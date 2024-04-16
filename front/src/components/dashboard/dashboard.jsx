@@ -459,7 +459,7 @@ export default function Dashboard({link, title, sid}) {
                                                                     ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
                                                                     : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                                 }
-                                                                {title === "Users" && item.rol !== "viewer" && <Button emoji={'🚷'} label={''} color={'red'} /*callback={()=>{rolChange(item.sid, "viewer")}}*/></Button>}
+                                                                {title === "Users" && item.rol !== "viewer" && <Button emoji={'🚷'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "viewer")}}></Button>}
                                                                 {title === "Users" && item.rol !== "admin" && <Button emoji={'🛡️'} label={''} color={'yellow'} callback={()=>{rolChange(item.sid, "admin")}}></Button>}
                                                             </div>
                                                         </td>
