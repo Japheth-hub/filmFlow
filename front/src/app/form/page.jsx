@@ -20,7 +20,7 @@ const MovieForm = () => {
   const [director, setDirector] = useState('');
   const [genreOptions, setGenreOptions] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
-  const [countryOptions, setCountryOptions] = useState([]); 
+  const [countryOptions, setCountryOptions] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [description, setDescription] = useState('');
   const [poster, setPoster] = useState(null);
@@ -28,7 +28,7 @@ const MovieForm = () => {
   const [movie, setMovie] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [year, setYear] = useState('');
   const [userRole, setUserRole] = useState('')
@@ -54,7 +54,7 @@ const MovieForm = () => {
     const handleBeforeUnload = (event) => {
       if (movieName || director || selectedGenres.length || selectedCountries.length || description || poster || trailer || movie || year) {
         event.preventDefault();
-        event.returnValue = ''; 
+        event.returnValue = '';
         return '';
       }
     };
@@ -66,34 +66,26 @@ const MovieForm = () => {
     };
   }, [movieName, director, selectedGenres, selectedCountries, description, poster, trailer, movie, year]);
 
-
   useEffect(() => {
     if(user){
-      updateLocaleStorage(user)
-    }
-
-
-    const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
-      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-      : null)
-
-      setUserLocalStorage(userstorage);        
-      
-    }, [user]);
-
-
-    useEffect(()=>{
-
-      if(userLocalStorage.role) {
-          try {
-            setUserRole(userLocalStorage.role)
-          } catch (error) {
-            console.error(error)
-          }
+      updateLocaleStorage(user).then(
+        response => {
+          setUserLocalStorage(response.role)
         }
-    },[userLocalStorage])
+      )
+    }
+  }, [user]);
 
+  useEffect(()=>{
 
+    if(userLocalStorage) {
+        try {
+          setUserRole(userLocalStorage)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+  },[userLocalStorage])
 
   const toggleMediaType = () => {
     setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
@@ -110,7 +102,7 @@ const MovieForm = () => {
     const posterCleanup = updateURL(poster, 'poster');
     const trailerCleanup = updateURL(trailer, 'trailer');
     const movieCleanup = updateURL(movie, 'movie');
-  
+
     return () => {
       if (posterCleanup) posterCleanup();
       if (trailerCleanup) trailerCleanup();
@@ -127,9 +119,9 @@ const MovieForm = () => {
       .catch(error => {
         console.error('Error fetching genre options:', error);
       });
-      axios.get(`${URL}countries`) 
+      axios.get(`${URL}countries`)
       .then(response => {
-        setCountryOptions(response.data); 
+        setCountryOptions(response.data);
       })
       .catch(error => {
         console.error('Error fetching country options:', error);
@@ -162,9 +154,9 @@ const MovieForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); 
-   
-  
+    setIsLoading(true);
+
+
     const validationSelect = validateSelectForm({
       selectedGenres,
       selectedCountries,
@@ -178,13 +170,13 @@ const MovieForm = () => {
       movie,
       year
     });
-    
+
     // Fusionamos los errores de ambas validaciones
     const mergedErrors = {
       ...validationSelect.errors,
       ...validation.errors
     };
-  
+
     // Verificamos si hay errores en la fusión de ambas validaciones
     if (Object.keys(mergedErrors).length > 0) {
       setErrors(mergedErrors);
@@ -215,21 +207,21 @@ const MovieForm = () => {
         posterReader.onload = () => resolve(posterReader.result);
         posterReader.onerror = reject;
       });
-  
+
       const trailerData = new Promise((resolve, reject) => {
         const trailerReader = new FileReader();
         trailerReader.readAsDataURL(trailer);
         trailerReader.onload = () => resolve(trailerReader.result);
         trailerReader.onerror = reject;
       });
-      
+
       const movieData = new Promise((resolve, reject) => {
         const movieReader = new FileReader();
         movieReader.readAsDataURL(movie);
         movieReader.onload = () => resolve(movieReader.result);
         movieReader.onerror = reject;
       });
-  
+
       const [posterDataURL, movieDataURL, trailerDataURL] = await Promise.all([posterData, trailerData, movieData]);
       const userSid = user.sid;
       const data = {
@@ -293,7 +285,7 @@ const MovieForm = () => {
       setSuccessMessage('');
       setErrorMessage('Error al enviar datos: ' + error.message);
     }
-    setIsLoading(false); 
+    setIsLoading(false);
   };
 
   const handlePosterChange = (e) => {
@@ -320,7 +312,6 @@ const MovieForm = () => {
       setSelectedCountries([...selectedCountries, country]);
     }
   };
-
   return (
     <CheckRole userRole={userRole} requiredRoles={["producer","admin"]}>
     <div className={style["movie-form-container"]}>
@@ -441,7 +432,7 @@ const MovieForm = () => {
             </div>
             <div className={style["form-group"]}>
               <label htmlFor="trailerFile" className={style["form-label"]}>Seleccionar Trailer:</label>
-              <input 
+              <input
                 type="file"
                 id="trailerFile"
                 onChange={handleTrailerChange}
@@ -473,7 +464,7 @@ const MovieForm = () => {
             <h2>Vista Previa</h2>
       <div className={style['detail-content']}>
         <div className={style['poster-description-container']}>
-          <div className={style['container-info']}> 
+          <div className={style['container-info']}>
             <img src={mediaURL.poster} alt={name + ' poster'} className={style['poster-image']} />
             <div className={style["'description-container-info'"]}>
             <span className={style['italic-dark']}><h3>{previewData.name}</h3></span>
@@ -503,7 +494,7 @@ const MovieForm = () => {
       </div>
     </div>
    </div>
- </CheckRole>
+  </CheckRole>
   );
 };
 export default withPageAuthRequired(MovieForm);

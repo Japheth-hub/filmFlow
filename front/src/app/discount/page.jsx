@@ -27,29 +27,24 @@ const Discount = () =>{
 
     useEffect(() => {
         if(user){
-          updateLocaleStorage(user)
+            updateLocaleStorage(user).then(
+                response => {
+                    setUserLocalStorage(response.role)
+                }
+            )
         }
+    }, [user]);
     
-        const userstorage =(window.localStorage.getItem('FilmFlowUsr') 
-          ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-          : null)
+    useEffect(()=>{
     
-          setUserLocalStorage(userstorage);        
-          
-        }, [user]);
-    
-    
-        useEffect(()=>{
-    
-          if(userLocalStorage.role) {
-              try {
-                setUserRole(userLocalStorage.role)
-              } catch (error) {
+        if(userLocalStorage) {
+            try {
+                setUserRole(userLocalStorage)
+            } catch (error) {
                 console.error(error)
-              }
             }
-        },[userLocalStorage])
-
+        }
+    },[userLocalStorage])
         
     useEffect(() => {
         const fetchData = async () => {
@@ -62,7 +57,7 @@ const Discount = () =>{
                 console.error("Error fetching data:", error);
             }
         };
-      
+    
         fetchData();
     }, []);
 
@@ -198,9 +193,8 @@ const Discount = () =>{
     }
     
     return(
-        <CheckRole userRole={userRole} requiredRoles="admin">
+        <CheckRole userRole={userRole} requiredRoles={"admin"}>
         <div className={style.discountContainer}>
-
             <h2>Generador de códigos de descuento</h2>
 
             <div className={style.columnContainer}>
@@ -273,7 +267,7 @@ const Discount = () =>{
                 <Button label="Crea tu codigo!" color="primary" callback={generateDiscountCode} />
             </div>
         </div>
-    </CheckRole>
+        </CheckRole>
     )
 }
 

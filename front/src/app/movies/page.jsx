@@ -174,12 +174,13 @@ const Movies = ({ params }) => {
             <div className={style.optionsField}>
               <label>Países </label>
               {queryParams && 
-                <Multiselect name="country" initial={queryParams.country ? queryParams.country: null} items={countries} callback={handleChange} type="select" />
+                <Multiselect className={style.optionStyle} name="country" initial={queryParams.country ? queryParams.country: null} items={countries} callback={handleChange} type="select" />
               }
             </div>
             <div className={style.optionsField}>
               <label>Ordernar por </label>
-              <select
+              <select 
+                className={style.optionStyle}
                 name="orderType"
                 value={queryParams?.orderType || ""}
                 onChange={handleChange}
@@ -192,6 +193,7 @@ const Movies = ({ params }) => {
             <div className={style.optionsField}>
               <label>Orden </label>
               <select
+                className={style.optionStyle}
                 name="order"
                 value={queryParams?.order || ""}
                 onChange={handleChange}
@@ -204,6 +206,7 @@ const Movies = ({ params }) => {
             <div className={style.optionsField}>
               <label>Películas </label>
               <select
+                className={style.optionStyle}
                 name="elemPagination"
                 value={pagination.step}
                 onChange={handleElemPagination}
