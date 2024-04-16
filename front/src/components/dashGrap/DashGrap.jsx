@@ -9,7 +9,7 @@ import { movieGenre, userDay, salesDay, revrankGenre, totalSalesMonth,
 import TooltipInfoGrap from "../ttInfoGrap/TooltipInfoGrap";
 
 const DashGrap = ({sid}) => {
-    const { admin } = JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+    const { role } = JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
     const [totalMonth, setTotalMonth] = useState('')
     const [moviesDays, setMoviesDays] = useState('')
     const [totalUser, setTotalUser] = useState('')
@@ -114,7 +114,7 @@ const DashGrap = ({sid}) => {
     return(
         <div>
             {
-                admin 
+                role 
                 ?(<div className={style.contentGrap}>
         {/* GRAPHIC */}
                     <div className={style.card}>
@@ -174,8 +174,7 @@ const DashGrap = ({sid}) => {
                     </div>
                 </div>)
                 :(<div className={style.contentGrap}>
-                    <DashArea chartData={salesXday}/>
-                    <DashBar chartData={movieXgenre}/>
+                    <h2>No tiene privilegios suficientes para ver esta sección</h2>
                 </div>)
             }
         </div>
