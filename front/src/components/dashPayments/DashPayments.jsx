@@ -56,13 +56,13 @@ export default function DashUsers({title, link, sid}) {
                     const { data } = await axios.get(`${link}${sid}/?role=producers`);
                     const clearData = data.map((user) => ({
                         id: user.id,
-                        name: user.name,
-                        // sid: user.sid,
-                        email: user.email,
-                        phone: user.phone,
-                        payment_method: user.payment_method,
-                        payment_account: user.payment_account,
-                        payment_amount: user.payment_amount,
+                        nombre: user.name,
+                        sid: user.sid,
+                        correo: user.email,
+                        celular: user.phone,
+                        metodo: user.payment_method,
+                        cuenta: user.payment_account,
+                        monto: user.payment_amount,
                     }));
     
                     const filteredData = clearData.filter(user => user.payment_amount !== null);
@@ -89,7 +89,7 @@ export default function DashUsers({title, link, sid}) {
                             <tr>
                                 {column && column.length > 0 &&
                                     column.map((item, index) => {
-                                        return <th className={style.th} key={index}>{item.toUpperCase()}</th>
+                                        return (item !== "id" && item !== "sid") && <th className={style.th} key={index}>{item.toUpperCase()}</th>
                                     })
                                 }
                                 <th className={style.th}>ACTIONS</th>
@@ -100,12 +100,10 @@ export default function DashUsers({title, link, sid}) {
                                     body.map((item, index) => (
                                         <tr key={index}>
                                         {column.map((prop, i) => ( 
-                                                i === 0 
-                                                ? <td className={style.td} key={i}>{item[prop]}</td>
-                                                : <td className={style.td} key={i}>{item[prop]}</td>
+                                                (prop !== "id"  && prop !== "sid") && <td className={style.td} key={i}>{item[prop]}</td>
                                                 ))}
                                                 <td className={style.td}>
-                                                    <Button emoji={'💬'} color={'green'} callback={()=>{sendPayment(item.sid, item.payment_amount)}}></Button>
+                                                    <Button emoji={'💬'} color={'green'} callback={()=>{sendPayment(item.sid, item.monto)}}></Button>
                                                 </td>
                                         </tr>       
                                     ))

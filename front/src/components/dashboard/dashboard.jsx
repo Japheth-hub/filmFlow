@@ -454,7 +454,7 @@ export default function Dashboard({link, title, sid}) {
                             <tr>
                                 {column && column.length > 0 &&
                                     column.map((item, index) => {
-                                        return item !== "id" && <th className={style.th} key={index}>{item.toUpperCase()}</th>
+                                        return (item !== "id" && item !== "sid") && <th className={style.th} key={index}>{item.toUpperCase()}</th>
                                     })
                                 }
                                 {title !== 'Ventas' && <th className={style.th}>ACTIONS</th>}
@@ -466,7 +466,7 @@ export default function Dashboard({link, title, sid}) {
                                     pagina.map((item, index) => (
                                             <tr key={index}>
                                             {column.map((prop, i) => ( 
-                                                    prop !== "id"  && (
+                                                    (prop !== "id"  && prop !== "sid") && (
                                                         title === "Movies" && prop === 'status'
                                                         ? (<td key={i}>
                                                         <select className={style[item[prop]]} name="status" onChange={(e)=>{changeStatus(e, item.id)}} defaultValue={item[prop]} value={item[prop]}>
