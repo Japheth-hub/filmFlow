@@ -29,6 +29,7 @@ export default function Dashboard({link, title, sid}) {
     const [currentDate, setCurrentDate] = useState(new Date().toISOString().slice(0, 10));
     const [display, setDisplay] = useState("none")
     const [placeholder, setPlaceholder] = useState("Buscar")
+    const [rolType, setRolType] = useState("default");
     const porPagina = 10
 
     const { error, isLoading, user } = useUser();
@@ -89,9 +90,9 @@ export default function Dashboard({link, title, sid}) {
         setSelectGenre("Genero");
         setStatus("Status")
         setPage(1)
+        setRolType("default");
         setCodeType('default')
         setCurrentDate(new Date().toISOString().slice(0, 10))
-        body.sort((a, b) => a.id - b.id)
     }
 
     async function handleOrder(tipo){
@@ -315,12 +316,29 @@ export default function Dashboard({link, title, sid}) {
         }
     }
 
+    function handleRol(e){
+        const rol = e.target.value
+        const newBody = body2.filter((user) => user.rol === rol)
+        if (newBody.length > 0) {
+            setRolType(rol)
+            setBody(newBody);
+            setPage(1);
+        } else {
+            Swal.fire({
+                icon: "info",
+                title: "¡Información!",
+                text: `No hay usuarios con este rol ${rol}`,
+            });
+        }
+    }
+
     function showModal(display){
         setDisplay(display)
     }
 
     useEffect(()=>{
         async function datos(type){
+            limpiar()
             let datos
             switch(type){
                 case "Movies":
@@ -341,7 +359,7 @@ export default function Dashboard({link, title, sid}) {
                     break
                 case "Promos":
                     datos = await showDiscount();
-                    setPlaceholder("Buscar Pelicula/Genero");
+                    setPlaceholder("Buscar Pelicula/Genero...");
                     break
                 default :
                     break
@@ -395,6 +413,14 @@ export default function Dashboard({link, title, sid}) {
                     </select>
                     <input className={style.calendar} type="date" id="fecha" name="fecha" value={currentDate} onChange={(e)=>{handleDate(e, codeType)}}/>
                 </>)}
+                {title === 'Users' && (<>
+                    <select className={style.status} defaultValue='default' value={rolType} onChange={handleRol}>
+                        <option value="default" disabled>Selecciona Rol</option>
+                        <option value="viewer">Viewer</option>
+                        <option value="producer">Producer</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </>)}
                 {title === 'Movies' && 
                     (<>
                         <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duracion'}></Button>
@@ -412,7 +438,7 @@ export default function Dashboard({link, title, sid}) {
                         </select>
                     </>)}
                 {title === "Promos" && <Link href='/discount'><Button label={"Crear Promo"} /*callback={()=>{showModal("block")}}*//></Link>}
-                <input className={style.searchTable} type="text" onChange={handleSearch} placeholder='Search...' value={search} />
+                <input className={style.searchTable} type="text" onChange={handleSearch} placeholder={placeholder} value={search} />
             </div>
             <div className={style.paginado}>
                 <button onClick={()=>{masMenos(false);}}>{'◀'}</button>
@@ -428,7 +454,7 @@ export default function Dashboard({link, title, sid}) {
                             <tr>
                                 {column && column.length > 0 &&
                                     column.map((item, index) => {
-                                        return <th className={style.th} key={index}>{item.toUpperCase()}</th>
+                                        return item !== "id" && <th className={style.th} key={index}>{item.toUpperCase()}</th>
                                     })
                                 }
                                 {title !== 'Ventas' && <th className={style.th}>ACTIONS</th>}
@@ -440,8 +466,9 @@ export default function Dashboard({link, title, sid}) {
                                     pagina.map((item, index) => (
                                             <tr key={index}>
                                             {column.map((prop, i) => ( 
-                                                    title === "Movies" && prop === 'status'
-                                                    ? (<td key={i}>
+                                                    prop !== "id"  && (
+                                                        title === "Movies" && prop === 'status'
+                                                        ? (<td key={i}>
                                                         <select className={style[item[prop]]} name="status" onChange={(e)=>{changeStatus(e, item.id)}} defaultValue={item[prop]} value={item[prop]}>
                                                             <option value="approved">Aprobado</option>
                                                             <option value="pending" disabled>Pendiente</option>
@@ -449,7 +476,7 @@ export default function Dashboard({link, title, sid}) {
                                                         </select>
                                                     </td>)
                                                     : <td className={style.td} key={i}>{item[prop]}</td> && title === "Movies" && prop === "name" ? <td className={style.td} key={i}><Link href={`detail/${item.id}`}>{item[prop]}</Link></td> : <td className={style.td} key={i}>{item[prop]}</td>
-                                                    ))}
+                                                )))}
                                                     { title !== "Ventas" && 
                                                         <td className={style.td}>
                                                             <div className={style['btn-actions']}>
