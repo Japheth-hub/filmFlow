@@ -8,13 +8,13 @@ export const showMovies = async () => {
     const clearData = data.map((movie) => {
       return {
         id: movie.id,
-        name: movie.name || "",
-        duration: movie.duration,
+        nombre: movie.name || "",
+        duracion: movie.duration,
         status: movie.status,
-        user: movie.user ? movie.user.name : "Admin",
-        price: movie.price,
-        genre: movie.genres.map((genero) => genero.name).join("/"),
-        deleted: movie.deletedAt ? movie.deletedAt.slice(0, 10) : "Active",
+        usuario: movie.user ? movie.user.name : "Admin",
+        precio: movie.price,
+        genero: movie.genres.map((genero) => genero.name).join("/"),
+        eliminado: movie.deletedAt ? movie.deletedAt.slice(0, 10) : "Active",
       };
     });
     return clearData;
@@ -29,12 +29,12 @@ export const showUsers = async (sid) => {
     const clearData = data.map((user) => {
       return {
         id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.roleName,
+        nombre: user.name,
+        correo: user.email,
+        rol: user.roleName,
         sid: user.sid,
-        created: user.createdAt.slice(0, 10),
-        deleted: user.deletedAt ? user.deletedAt.slice(0, 10) : "Active"
+        creado: user.createdAt.slice(0, 10),
+        eliminado: user.deletedAt ? user.deletedAt.slice(0, 10) : "Active"
       };
     });
     return clearData;
@@ -48,10 +48,13 @@ export const showReviews = async () => {
     const { data } = await axios(`${URL}reviews`);
     const clearData = data.map((review) => {
       return {
-        ...review,
-        movie: review.movie || "",
-        update: review.update.slice(0, 10),
-        deleted: review.deleted ? review.deleted.slice(0, 10) : "Active",
+        id: review.id,
+        pelicula: review.movie || "",
+        usuario: review.user || "",
+        comentario: review.comment,
+        puntos: review.points,
+        actualizado: review.update.slice(0, 10),
+        eliminado: review.deleted ? review.deleted.slice(0, 10) : "Active",
       };
     });
     return clearData;
@@ -66,14 +69,14 @@ export const showDiscount = async () => {
     const clearData = data.map((discount)=>{
       return {
         id: discount.id,
-        code: discount.code,
-        percentage: discount.percentage,
-        used: discount.used,
-        starts: discount.starts.slice(0, 10),
-        ends: discount.ends.slice(0, 10),
-        movie: discount.movies?.map((movie) => movie.name).join("/") || "",
-        genre: discount.genres?.map((genre) => genre.name).join("/") || "",
-        created: discount.createdAt.slice(0, 10)
+        codigo: discount.code,
+        porcentaje: discount.percentage,
+        // used: discount.used,
+        inicio: discount.starts.slice(0, 10),
+        fin: discount.ends.slice(0, 10),
+        pelicula: discount.movies?.map((movie) => movie.name).join("/") || "",
+        genero: discount.genres?.map((genre) => genre.name).join("/") || "",
+        creado: discount.createdAt.slice(0, 10)
       };
     })
     return clearData
@@ -86,53 +89,53 @@ export const showOrder = async (order, tipo, body) => {
   let newBody
   if (tipo === "Name") {
     if (!order) {
-      newBody = body.sort((a, b) => a.name.localeCompare(b.name));
+      newBody = body.sort((a, b) => a.nombre.localeCompare(b.nombre));
     } else {
-      newBody = body.sort((a, b) => b.name.localeCompare(a.name));
+      newBody = body.sort((a, b) => b.nombre.localeCompare(a.nombre));
     }
   } else if (tipo === "Duration") {
     if (!order) {
-      newBody = body.sort((a, b) => b.duration - a.duration);
+      newBody = body.sort((a, b) => b.duracion - a.duracion);
     } else {
-      newBody = body.sort((a, b) => a.duration - b.duration);
+      newBody = body.sort((a, b) => a.duracion - b.duracion);
     }
   } else if (tipo === "Movie") {
     if (!order) {
       newBody = body.sort((a, b) => {
-        if (!a.movie) return 1;
-        if (!b.movie) return -1;
-        return a.movie.localeCompare(b.movie);
+        if (!a.pelicula) return 1;
+        if (!b.pelicula) return -1;
+        return a.pelicula.localeCompare(b.pelicula);
       });
     } else {
       newBody = body.sort((a, b) => {
-        if (!a.movie) return 1;
-        if (!b.movie) return -1;
-        return b.movie.localeCompare(a.movie);
+        if (!a.pelicula) return 1;
+        if (!b.pelicula) return -1;
+        return b.pelicula.localeCompare(a.pelicula);
       });
     }
   } else if (tipo === "Points") {
     if (!order) {
-      newBody = body.sort((a, b) => b.points - a.points);
+      newBody = body.sort((a, b) => b.puntos - a.puntos);
     } else {
-      newBody = body.sort((a, b) => a.points - b.points);
+      newBody = body.sort((a, b) => a.puntos - b.puntos);
     }
   } else if (tipo === "Role") {
     if (!order) {
-      newBody = body.sort((a, b) => a.role.localeCompare(b.role));
+      newBody = body.sort((a, b) => a.rol.localeCompare(b.rol));
     } else {
-      newBody = body.sort((a, b) => b.role.localeCompare(a.role));
+      newBody = body.sort((a, b) => b.rol.localeCompare(a.rol));
     }
   } else if (tipo === "Percentage") {
     if (!order) {
-      newBody = body.sort((a, b) => a.percentage - b.percentage);
+      newBody = body.sort((a, b) => a.porcentaje - b.porcentaje);
     } else {
-      newBody = body.sort((a, b) => b.percentage - a.percentage);
+      newBody = body.sort((a, b) => b.porcentaje - a.porcentaje);
     }
   } else if (tipo === "Amount") {
     if (!order) {
-      newBody = body.sort((a, b) => a.amount - b.amount);
+      newBody = body.sort((a, b) => a.monto - b.monto);
     } else {
-      newBody = body.sort((a, b) => b.amount - a.amount);
+      newBody = body.sort((a, b) => b.monto - a.monto);
     }
   }
   return newBody
@@ -169,12 +172,12 @@ export const showPurchases = async (sid) => {
         id: purchase.id,
         stripeId: purchase.stripeId,
         status: purchase.status,
-        method: purchase.method,
-        currency: purchase.currency,
-        amount: purchase.amount,
-        createdAt: purchase.createdAt.slice(0, 10),
-        user: purchase.user.name || "",
-        email: purchase.user.email || ""
+        metodo: purchase.method,
+        moneda: purchase.currency,
+        monto: purchase.amount,
+        creado: purchase.createdAt.slice(0, 10),
+        usuario: purchase.user.name || "",
+        correo: purchase.user.email || ""
       }
     })
     return clearData
