@@ -8,6 +8,7 @@
   font-size: 1.3em;
   border-radius: 5px;
   margin-top: 2px;
+  cursor: pointer;
 }
 
 .order {
@@ -31,18 +32,16 @@
     min-width: 150px;
   }
 }
-.optionsField {
+.optionsField select{
   margin: 10px;
-}
-
-.optionStyle{
   background-color: $mainColor;
   padding: 5px 10px;
   color: $neutralLight;
   border: 0;
   font-family: $mainFont;
-  font-size: 1em;
+  font-size: 0.9em;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .genres {
