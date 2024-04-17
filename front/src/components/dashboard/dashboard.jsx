@@ -28,6 +28,7 @@ export default function Dashboard({link, title, sid}) {
     const [codeType, setCodeType] = useState("default");
     const [currentDate, setCurrentDate] = useState(new Date().toISOString().slice(0, 10));
     const [display, setDisplay] = useState("none")
+    const [placeholder, setPlaceholder] = useState("Buscar")
     const porPagina = 10
 
     const { error, isLoading, user } = useUser();
@@ -64,7 +65,7 @@ export default function Dashboard({link, title, sid}) {
                     });
                     const updatedBody = body.map((item) => {
                     if (item.sid === sid) {
-                        return { ...item, role: rolToChange };
+                        return { ...item, rol: rolToChange };
                     }
                     return item;
                     });
@@ -78,7 +79,7 @@ export default function Dashboard({link, title, sid}) {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -162,7 +163,7 @@ export default function Dashboard({link, title, sid}) {
     function handleGenre(e){
         const genero = e.target.value
         setSelectGenre(genero)
-        const newBody = body2.filter((movie) => movie.genre.includes(genero))
+        const newBody = body2.filter((movie) => movie.genero.includes(genero))
         if(newBody.length === 0 || !newBody){
             Swal.fire({
                 icon: 'info',
@@ -222,15 +223,15 @@ export default function Dashboard({link, title, sid}) {
 
     function handleSearch(e){
         let search = []
-        title === "Movies"  ? search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase())) : ""
-        title === "Users"   ? search = body2.filter((data) => data.name.toLowerCase().includes(e.target.value.toLowerCase())) : ""
-        title === "Reviews" ? search = body2.filter((data) => data.movie?.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === "Movies"  ? search = body2.filter((data) => data.nombre.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === "Users"   ? search = body2.filter((data) => data.nombre.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === "Reviews" ? search = body2.filter((data) => data.pelicula?.toLowerCase().includes(e.target.value.toLowerCase())) : ""
         title === 'Promos'
-        ? search = body2.filter((data) => data.movie === "" 
-            ? data.genre.toLowerCase().includes(e.target.value.toLowerCase())
-            : data.movie.toLowerCase().includes(e.target.value.toLowerCase()))
+        ? search = body2.filter((data) => data.pelicula === "" 
+            ? data.genero.toLowerCase().includes(e.target.value.toLowerCase())
+            : data.pelicula.toLowerCase().includes(e.target.value.toLowerCase()))
         : "" 
-        title === 'Ventas' ? search = body2.filter((data) => data.email.toLowerCase().includes(e.target.value.toLowerCase())) : ""
+        title === 'Ventas' ? search = body2.filter((data) => data.correo.toLowerCase().includes(e.target.value.toLowerCase())) : ""
         if(search.length > 0){
             setSearch(e.target.value)
             setBody(search)
@@ -293,15 +294,15 @@ export default function Dashboard({link, title, sid}) {
         let newBody = []
         switch(type){
             case 'start':
-                    newBody = body2.filter((code) => code.starts > date)
+                    newBody = body2.filter((code) => code.inicio > date)
                     setBody(newBody)
                 break
             case 'current':
-                    newBody = body2.filter((code) => code.starts <= date && code.ends >= date);
+                    newBody = body2.filter((code) => code.inicio <= date && code.fin >= date);
                     setBody(newBody);
                 break
             case 'finished':
-                    newBody = body2.filter((code) => code.ends < date)
+                    newBody = body2.filter((code) => code.fin < date)
                     setBody(newBody);
                 break
             default:
@@ -324,21 +325,25 @@ export default function Dashboard({link, title, sid}) {
             switch(type){
                 case "Movies":
                     datos = await showMovies();
+                    setPlaceholder("Buscar Pelicula ...")
                     break
                 case "Users":
                     datos = await showUsers(sid);
+                    setPlaceholder("Buscar Usuario ...");
                     break
                 case "Reviews":
                     datos = await showReviews();
+                    setPlaceholder("Buscar Pelicula ...");
                     break
                 case "Ventas":
                     datos = await showPurchases(sid);
+                    setPlaceholder("Buscar Email ...");
                     break
                 case "Promos":
                     datos = await showDiscount();
+                    setPlaceholder("Buscar Pelicula/Genero");
                     break
                 default :
-                    console.log('No hay Datos para mostrar')
                     break
             }
             setPage(1);
@@ -371,17 +376,17 @@ export default function Dashboard({link, title, sid}) {
             <h3 className={style.title}>{title}</h3>
             <div className={style.orderFilters}>
                 <Button emoji={'🔄'} label={'Limpiar'} callback={()=>{limpiar()}}></Button>
-                {title === "Users" && <Button callback={()=>{handleOrder('Role')}} emoji={order ? '🔻' : '🔺'} label={'Role'}></Button>}
+                {title === "Users" && <Button callback={()=>{handleOrder('Role')}} emoji={order ? '🔻' : '🔺'} label={'Rol'}></Button>}
                 {title === 'Reviews'
                 ? (<>
                     <Button callback={()=>{handleOrder('Movie')}} emoji={order ? '🔻' : '🔺'} label={'Movie'}></Button>
                     <Button callback={()=>{handleOrder('Points')}} emoji={order ? '🔻' : '🔺'} label={'Points'}></Button>
                 </>)
-                    : title !== "Promos" && title !== 'Ventas' && <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Name'}></Button>
+                    : title !== "Promos" && title !== 'Ventas' && <Button callback={()=>{handleOrder('Name')}} emoji={order ? '🔻' : '🔺'} label={'Nombre'}></Button>
                 }
-                {title === 'Ventas' && <Button callback={()=>{handleOrder('Amount')}} emoji={order ? '🔻' : '🔺'} label={'Amount'}></Button>}
+                {title === 'Ventas' && <Button callback={()=>{handleOrder('Amount')}} emoji={order ? '🔻' : '🔺'} label={'Montos'}></Button>}
                 {title === 'Promos' && (<>
-                    <Button callback={()=>{handleOrder('Percentage')}} emoji={order ? '🔻' : '🔺'} label={'Percentage'}></Button> 
+                    <Button callback={()=>{handleOrder('Percentage')}} emoji={order ? '🔻' : '🔺'} label={'Porcentaje'}></Button> 
                     <select className={style.status} defaultValue='default' value={codeType} onChange={handleDiscount}>
                         <option value="default" disabled>Selecciona tipo</option>
                         <option value="start">Por Iniciar</option>
@@ -392,12 +397,12 @@ export default function Dashboard({link, title, sid}) {
                 </>)}
                 {title === 'Movies' && 
                     (<>
-                        <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duration'}></Button>
+                        <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duracion'}></Button>
                         <select className={style.status} name="status" onChange={handleStatus} defaultValue='Status' value={status}>
                             <option value="Status" disabled>Status</option>
-                            <option value="approved">Approved</option>
-                            <option value="pending">Pending</option>
-                            <option value="declined">Declined</option>
+                            <option value="approved">Aprovado</option>
+                            <option value="pending">Pendiente</option>
+                            <option value="declined">Declinado</option>
                         </select>
                         <select name="genre" className={style.genreSelect} defaultValue="Genero" value={selectGenre} onChange={handleGenre}>
                             <option value="Genero" disabled>Selecciona un genero</option>
@@ -438,9 +443,9 @@ export default function Dashboard({link, title, sid}) {
                                                     title === "Movies" && prop === 'status'
                                                     ? (<td key={i}>
                                                         <select className={style[item[prop]]} name="status" onChange={(e)=>{changeStatus(e, item.id)}} defaultValue={item[prop]} value={item[prop]}>
-                                                            <option value="approved">Approved</option>
-                                                            <option value="pending" disabled>Pending</option>
-                                                            <option value="declined">Declined</option>
+                                                            <option value="approved">Aprobado</option>
+                                                            <option value="pending" disabled>Pendiente</option>
+                                                            <option value="declined">Declinado</option>
                                                         </select>
                                                     </td>)
                                                     : <td className={style.td} key={i}>{item[prop]}</td> && title === "Movies" && prop === "name" ? <td className={style.td} key={i}><Link href={`detail/${item.id}`}>{item[prop]}</Link></td> : <td className={style.td} key={i}>{item[prop]}</td>
@@ -450,12 +455,12 @@ export default function Dashboard({link, title, sid}) {
                                                             <div className={style['btn-actions']}>
                                                                 {title === "Promos"
                                                                 ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
-                                                                : item.deleted === "Active"
+                                                                : item.eliminado === "Active"
                                                                     ? <Button emoji={'🗑️'} label={''} color={'red'} callback={()=>{deleteAction(item.id)}}></Button>
                                                                     : <Button emoji={'✅'} label={''} color={'green'} callback={()=>{restoreAction(item.id)}}></Button>
                                                                 }
-                                                                {title !== "Reviews" && title !== "Promos" && <Button emoji={'✏️'} label={''} color={'blue'}></Button>}
-                                                                {title === "Users" && item.role !== "admin" && ( <Button emoji={'🛡️'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "admin")}}></Button> )}
+                                                                {title === "Users" && item.rol !== "viewer" && <Button emoji={'🚷'} label={''} color={'red'} callback={()=>{rolChange(item.sid, "viewer")}}></Button>}
+                                                                {title === "Users" && item.rol !== "admin" && <Button emoji={'🛡️'} label={''} color={'yellow'} callback={()=>{rolChange(item.sid, "admin")}}></Button>}
                                                             </div>
                                                         </td>
                                                     }

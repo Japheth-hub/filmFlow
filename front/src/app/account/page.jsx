@@ -32,6 +32,7 @@ const Account = () =>  {
     }
   }, [])
 
+  
   async function fetchData(){
     try {
       const { data } = await axios(`${NEXT_PUBLIC_URL}purchases/${user.sid}`);
@@ -42,7 +43,7 @@ const Account = () =>  {
       console.error(error)
     }
   }
-
+  
   async function fetchProducerMovies(user) {
     try {
       const { data } = await axios.get(`${NEXT_PUBLIC_URL}movies?admin=true&userSid=${user.sid}`)
@@ -50,10 +51,10 @@ const Account = () =>  {
         setProducerMovies(data)
       }
     } catch (error) {
-      console.error(error.response.data.message)
+      console.error(error.response.data.message + ' que hayas creado')
     }
   }
-
+  
   async function fetchProducerInfo(user) {
     try {
       const { data } = await axios.get(`${NEXT_PUBLIC_URL}users/producer/${user.sid}`)
@@ -63,12 +64,17 @@ const Account = () =>  {
       console.error(error.response.data.message)
     }
   }
-
+  
   useEffect(()=>{
     fetchData()
-    fetchProducerMovies(user)
-    fetchProducerInfo(user)
-  }, [user])
+  }, [])
+  
+  useEffect(() => {
+    if (userLocalStorage && userLocalStorage.role === "producer") {
+      fetchProducerMovies(user)
+      fetchProducerInfo(user)
+    }  
+  }, [userLocalStorage])
 
   if (error) {
     return <div>Error en su session</div>;
