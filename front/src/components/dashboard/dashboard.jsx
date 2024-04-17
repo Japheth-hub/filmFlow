@@ -426,7 +426,7 @@ export default function Dashboard({link, title, sid}) {
                         <Button callback={()=>{handleOrder('Duration')}} emoji={order ? '🔻' : '🔺'} label={'Duracion'}></Button>
                         <select className={style.status} name="status" onChange={handleStatus} defaultValue='Status' value={status}>
                             <option value="Status" disabled>Status</option>
-                            <option value="approved">Aprovado</option>
+                            <option value="approved">Aprobado</option>
                             <option value="pending">Pendiente</option>
                             <option value="declined">Declinado</option>
                         </select>

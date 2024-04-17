@@ -57,7 +57,7 @@ export default function DashUsers({title, link, sid}) {
                     const clearData = data.map((user) => ({
                         id: user.id,
                         name: user.name,
-                        sid: user.sid,
+                        // sid: user.sid,
                         email: user.email,
                         phone: user.phone,
                         payment_method: user.payment_method,
