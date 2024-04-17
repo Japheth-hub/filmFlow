@@ -62,6 +62,8 @@
     display: flex;
     border-bottom: 2px solid $mainColor;
     border-radius: 2px;
+    
+
 
   }
 
@@ -75,18 +77,21 @@
 
   }
   .image-preview-container {
-    width: 200px;
-    height: 350px;
+    width: 180px !important;
+    height: 270px !important;
     top: 10px;
     bottom: 15px;
+    
+
 
     
   }
   .poster-image {
-    width: 200px !important;; 
-    height: 300px !important;;
+    width: 180px !important;
+    height: 270px !important;
     top: 10px;
     bottom: 10px;
+
 
   }
   .country-ul{
@@ -96,16 +101,21 @@
     
     width: 400px;
     height: 250px;
+
+    
+
   }
   .edit-video-image{
     width: 300px;
     height: 150px;
+
   }
   .file-group {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 48%
+    
   }
   
   .italic-dark {
@@ -127,10 +137,12 @@
     margin-left: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    
   }
   .media-container {
     text-align: left;
     margin-top: 20px;
+
     
   }
 
@@ -145,7 +157,7 @@
   // }
   .info-container img {
     width: 300px;
-    height: 450px;
+    height: 400px;
     border-radius: 5px;
     margin-bottom: 15px;
   }

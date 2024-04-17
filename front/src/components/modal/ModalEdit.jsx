@@ -417,10 +417,10 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                             
                               <div className={style["image-preview-container"]}>
                               <video src={editedMovie ? window.URL.createObjectURL(editedMovie) : movieData.movie} controls alt={editedMovie + ' movie'} className={style["edit-video-image"]} />
-                              </div>
                             
                             <button onClick={() => handleSave('movie')}disabled={isLoading}>{isLoading ? 'Enviando...' : 'Enviar'}</button>
                             <button onClick={() => toggleEditMode('movie')}>Cancelar</button>
+                              </div>
                         </>
                     ) : (
                         <>  <p><label className={style['italic-dark']} >Pelicula:</label></p>
