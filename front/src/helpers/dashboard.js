@@ -32,7 +32,7 @@ export const showUsers = async (sid) => {
         nombre: user.name,
         correo: user.email,
         rol: user.roleName,
-        // sid: user.sid,
+        sid: user.sid,
         creado: user.createdAt.slice(0, 10),
         eliminado: user.deletedAt ? user.deletedAt.slice(0, 10) : "Active"
       };
