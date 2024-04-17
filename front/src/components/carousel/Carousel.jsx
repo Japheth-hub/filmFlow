@@ -33,20 +33,21 @@ const Carousel = ({ movie, dim, autoplay }) => {
             }
         }
     }
+
     return (
-        <div className="container">
-            <div className={style.mainContainer}>                
-                {
-                    <CarouselItem 
-                        key={arrMovie[movieIndex].id} 
-                        elem={arrMovie[movieIndex]}
-                    />
-                }
-                <div className={style.leftArrow} onClick={() => changeMovie('prev')}>&#10092;</div>
-                <div className={style.rightArrow} onClick={() => changeMovie('next')}>&#10093;</div>                
-            </div>
+    <div className="container">
+        <div className={style.mainContainer}>                
+            {arrMovie && arrMovie.length > 0 &&
+                <CarouselItem 
+                    key={arrMovie[movieIndex].id} 
+                    elem={arrMovie[movieIndex]}
+                />
+            }
+            <div className={style.leftArrow} onClick={() => changeMovie('prev')}>&#10092;</div>
+            <div className={style.rightArrow} onClick={() => changeMovie('next')}>&#10093;</div>                
         </div>
-    )
+    </div>
+)
 }
 
 export default Carousel;

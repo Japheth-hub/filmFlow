@@ -19,8 +19,8 @@
   width: 100%;
   position: relative;
   align-items: center;
-
-  font: $mainFont;
+  font-family: $mainFont;
+  flex-wrap: wrap;
 
   li {
     flex: 1;
@@ -43,7 +43,6 @@
 }
 
 .card {
-  
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
@@ -51,6 +50,9 @@
   margin-bottom: 10px;
   width: 400px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: $neutralDark;
+  display: flex;
+  align-items:center;
 }
 
 .searchbar__image {
@@ -59,7 +61,7 @@
   margin-right: 10px; /* Espacio entre la imagen y el texto */
 }
 
-.userpic{
+.userpic {
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -87,7 +89,7 @@
     min-width: 200px;
     border-radius: 10px;
     color: $mainColor;
-    
+
     ul {
       padding-left: 10px;
       list-style: none;
@@ -96,22 +98,23 @@
     li {
       font-size: 14px;
 
-      h5{
+      h5 {
         margin: 0px auto;
         text-align: center;
         font-size: 1.5rem;
         border-bottom: 1px solid $mainColor;
       }
-    
-      p{
+
+      p {
         text-align: start;
         font-size: 1.4rem;
         font-weight: 500;
         padding: 3px 8px;
         border-radius: 10px;
-        transition: all .3s;
+        transition: all 0.3s;
+        color: $mainColor;
       }
-      p:hover{
+      p:hover {
         background-color: $mainColor;
         color: white;
       }
@@ -121,7 +124,7 @@
         text-align: center;
         font-size: 14px;
 
-        button{
+        button {
           font-size: 1.1rem;
           font-weight: bold;
           border-radius: 10px;
@@ -130,15 +133,24 @@
           margin: 0px auto;
           padding: 3px 15px;
           box-shadow: 2px 2px 2px $mainColor;
-          transition: all .3s;
+          transition: all 0.3s;
         }
-        button:hover{
+        button:hover {
           background-color: $mainColor;
           color: white;
           box-shadow: none;
         }
-
       }
+    }
+  }
+}
+@media only screen and (max-width: $breakpointMD) {
+  /* CSS rules that apply when the screen width is 492 pixels or less */
+  /* For example: */
+  .navList {
+    justify-content: center;
+    > div {
+      margin-top: 20px;
     }
   }
 }

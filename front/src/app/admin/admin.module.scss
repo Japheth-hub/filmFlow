@@ -25,6 +25,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: 1200px;
 }
 
 .welcome{
@@ -32,11 +33,18 @@
     margin: 8% auto;
     text-shadow: 2px 0px 2px $mainColor, 0px 2px 2px $mainColor, -2px 0px 2px $mainColor, 0px -2px 2px $mainColor;
     color: rgba(235, 187, 241, 0.932);
+    text-align: center;
 }
 
 .table{
-    width: 100%;
+    max-width: 100%;
     padding: 5px;
+    color: black;
+
+    th, td{
+        max-width: 200px;
+        word-wrap: break-word;
+    }
 }
 .thead{
     background-color: $mainColor;
@@ -48,11 +56,17 @@
 .th{
     font-size: 1.2rem;
     padding: 5px 10px;
-    max-width: 150px;
 }
 .td{
     text-align: center;
     font-weight: 700;
+}
+
+.tdDefault{
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.5rem;
+    padding: 20px 5px;
 }
 
 .menu {
@@ -120,7 +134,7 @@
     position: relative;
     margin: 0px;
     padding: 0px;
-    height: 800px;
+    height: 1200px;
 }
 .content{
     margin-left: 6%;
@@ -137,7 +151,8 @@
 
 .genreSelect,
 .searchTable,
-.status{
+.status,
+.calendar{
     background-color: $mainColor;
     padding: 5px 10px;
     color: $neutralLight;
@@ -147,9 +162,11 @@
     border-radius: 5px;
     margin-top: 10px;
 }
-.searchTable{
+.searchTable, 
+.calendar{
     border: 2px solid $mainColor;
-    background-color: rgba(139, 51, 240, 0.5);
+    color: white;
+    background-color: rgba(139, 51, 240, 0.3);
 }
 
 .paginado{
@@ -211,4 +228,16 @@
 }
 .declined{
     background-color: red;
+}
+.modalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

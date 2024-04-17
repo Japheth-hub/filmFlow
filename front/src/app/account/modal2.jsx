@@ -3,7 +3,7 @@ import style from './modal.module.scss';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
-const Modal2 = ({ formData, onClose }) => {
+const Modal2 = ({ formData, onClose, user }) => {
     const URL = process.env.NEXT_PUBLIC_URL;
 
     const handleAcceptTerms = async () => {
@@ -18,15 +18,29 @@ const Modal2 = ({ formData, onClose }) => {
             cancelButtonColor: '#d33'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                console.log(result)
                 try {
                     await axios.put(`${URL}users/producer`, formData);
-                    onClose(); 
+                    if(user){
+                        const upUser = async() => {
+                            try {
+                                const { data } = await axios.post(`${URL}users`, user)
+                                if (typeof window !== 'undefined') {
+                                    window.localStorage.setItem(
+                                        'FilmFlowUsr', JSON.stringify({...user, role:data.role})
+                                    )
+                                } 
+                            } catch (error) {
+                                console.error("Error updating user:", error);
+                            }
+                        }
+                        upUser()
+                    }
+                    onClose();
                     Swal.fire(
                         '¡Datos enviados!',
                         'Los datos han sido enviados correctamente.',
                         'success'
-                    );
+                    ).then(location.reload());
                 } catch (error) {
                     console.error("Error al enviar datos:", error);
                     Swal.fire(

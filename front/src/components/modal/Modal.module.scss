@@ -13,7 +13,7 @@
       transform: translate(-50%, -50%);
       
       border-radius: 25px;
-      border: 2px $mainColor solid;
+      border: 2px solid $mainColor;
       opacity: 1;
       pointer-events: unset;
       z-index: 1;
@@ -24,7 +24,9 @@
     }
     
     .modalContent {
-      background-color: #fefefe;
+      background-color: rgba(255, 255, 255);
+      
+      color: black;
       width: 600px;
       padding: 3%;
       font-size: 1.7em;
@@ -54,11 +56,13 @@
   .container-info {
     display: flex;
     align-items: flex-start;
+
   }
   .poster-description-container {
     display: flex;
-    border-bottom: 1px solid #ddd;
-    border-radius: 5px;
+    border-bottom: 2px solid $mainColor;
+    border-radius: 2px;
+
   }
 
   .description-container-info {
@@ -68,24 +72,28 @@
     margin-left: 15px;
     padding-right: 15px;
 
+
   }
   .image-preview-container {
     width: 200px;
-    height: 30  0px;
+    height: 350px;
     top: 10px;
     bottom: 15px;
+
     
   }
   .poster-image {
-    width: 200px;
-    height: 300px;
+    width: 200px !important;; 
+    height: 300px !important;;
     top: 10px;
-    display:inline
+    bottom: 10px;
+
   }
   .country-ul{
     list-style: none;
   }
   .video-image{
+    
     width: 400px;
     height: 250px;
   }
@@ -101,10 +109,13 @@
   }
   
   .italic-dark {
-    font-style: italic;
-    font-weight: bold;
+    font-style: italic ;
+    font-weight: bold ;
+    right: 10px ;
     list-style: none;
     font-size: 20px;
+
+
 
   }
   .form-input{
@@ -123,15 +134,15 @@
     
   }
 
-  .media-container button {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    cursor: pointer;
-  }
+  // .media-container button {
+  //   background-color: #333;
+  //   color: white;
+  //   padding: 10px 20px;
+  //   border: none;
+  //   border-radius: 5px;
+  //   margin-bottom: 10px;
+  //   cursor: pointer;
+  // }
   .info-container img {
     width: 300px;
     height: 450px;

@@ -28,6 +28,14 @@ const Nav = (props)=> {
       if(userLocalStorage === null) setUserLocalStorage(JSON.parse(window.localStorage.getItem('FilmFlowUsr')))
     };
 
+  useEffect(() => {  
+    setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
+      ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
+      : null);
+  }, [])
+  
+    const isAdmin = userLocalStorage?.role === "admin" ? true : false;    
+
     const handleSearch = async (query) => {
       
   
@@ -39,7 +47,7 @@ const Nav = (props)=> {
   
       try {
         const response = await axios(
-        `${NEXT_PUBLIC_URL}movies?search=${query}`,
+        `${NEXT_PUBLIC_URL}movies?search=${query}&admin=${isAdmin}`,
         );
         
         const data = response.data;
@@ -62,12 +70,6 @@ const Nav = (props)=> {
       window.localStorage.removeItem("FilmFlowUsr");
     }
 
-    useEffect(() => {  
-      setUserLocalStorage(window.localStorage.getItem('FilmFlowUsr') 
-        ? JSON.parse(window.localStorage.getItem('FilmFlowUsr'))
-        : null);
-    }, [])
-    
     
 
     return(
@@ -95,7 +97,7 @@ const Nav = (props)=> {
                           <Link key={index} href = {`/detail/${result.id}`}>
                             <li>
                               <div className={styles.card} onClick={()=>router.push(`/detail/${result.id}`)}>
-                                <div>{result.name}</div>
+                                
                                 <div>
                                   <img
                                     src={result.poster}
@@ -103,6 +105,7 @@ const Nav = (props)=> {
                                     className={styles.searchbar__image}
                                     />
                                 </div>
+                                <div>{result.name}</div>
                               </div>
                             </li>
                           </Link>
@@ -130,7 +133,7 @@ const Nav = (props)=> {
                                       {user ? <h5>{user.nickname}</h5> : null}
                                     </li>
                                     <li>
-                                      {userLocalStorage && userLocalStorage.admin 
+                                      {userLocalStorage && userLocalStorage.role === "admin" 
                                         ? <Link href="/admin">
                                             <p>Tablero</p>
                                           </Link>
@@ -146,10 +149,10 @@ const Nav = (props)=> {
                                     </li>
 
                                     <li> 
-                                        {userLocalStorage && userLocalStorage.admin ?
-                                        <Link href="/form">
+                                        {userLocalStorage && userLocalStorage.role !== "viewer" 
+                                        ? <Link href="/form">
                                             <p>Agregar película</p>
-                                        </Link>
+                                          </Link>
                                         : null }
                                     </li>
 

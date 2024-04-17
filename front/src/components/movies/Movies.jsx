@@ -37,18 +37,15 @@ const Movies = ({movie}) => {
 
     return (
         <div className={`container ${style.bg}`}>
-            {
-            movie.map((elem, index) => {
+            {movie && movie.length > 0 && movie.map((elem, index) => {
                 if(index >= elemIndex.bottom && index <= elemIndex.top){
                     return <Movie key={elem.id} elem={elem}/>
-                }})
-            }
+                }
+            })}
             <div className={style.leftArrow} onClick={() => changeMovie('prev')}>&#10092;</div>
             <div className={style.rightArrow} onClick={() => changeMovie('next')}>&#10093;</div>
         </div>
-
-
-    )
+    );
 }
 
 export default Movies;

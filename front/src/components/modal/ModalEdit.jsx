@@ -19,11 +19,11 @@ const Modal = ({ isOpen, onClose, movieData }) => {
     const [editedName, setEditedName] = useState(movieData.name)
     const [editedDirector, setEditedDirector] = useState(movieData.director)
     const [editedPoster, setEditedPoster] = useState(null)
-    const [poster, setPoster] = useState('')
     const [editedTrailer, setEditedTrailer] = useState(null)
-    const [trailer, setTrailer] = useState('')
     const [editedMovie, setEditedMovie] = useState(null)
-    const [movie, setMovie] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+    const [mediaType, setMediaType] = useState('trailer');
+
 
 
 
@@ -66,15 +66,16 @@ const Modal = ({ isOpen, onClose, movieData }) => {
       };
       
       const handlePosterChange = (e) => {
-        setEditedPoster(e.target.files[0]);
+         setEditedPoster(e.target.files[0]);
+         
       };
-      const handleTrailerChange = (e) => {
-        console.log(e.target.files[0]);
-        setEditedTrailer(e.target.files[0]);
-        console.log(editedTrailer);
+      const handleTrailerChange =  (e) => {
+        
+         setEditedTrailer(e.target.files[0]);
+       
       };
-      const handleMovieChange = (e) => {
-        setEditedMovie(e.target.files[0]);
+      const handleMovieChange =  (e) => {
+         setEditedMovie(e.target.files[0]);
       };
       
       
@@ -105,9 +106,25 @@ const Modal = ({ isOpen, onClose, movieData }) => {
 
     };
 
+
+    const toggleMediaType = () => {
+      setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
+    };
+
+
+
+    const readFileAsync = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+      });
+    };
     
     
     const handleSave = async (field) => {
+     setIsLoading(true)
  
       const res = await Swal.fire({
         icon: "warning",
@@ -120,47 +137,21 @@ const Modal = ({ isOpen, onClose, movieData }) => {
    
     try {
       
-      if(editedPoster !== null){
-      const posterDataURL = new Promise((resolve, reject) => {
-        const posterReader = new FileReader();
-        posterReader.readAsDataURL(editedPoster);
-        console.log(posterReader);
-        posterReader.onload = () => resolve(posterReader.result);
-        posterReader.onerror = reject;
-      });
-      const posterData = await posterDataURL
-      setPoster(posterData)
-      
-    }
-    if(editedTrailer !== null){
-      const trailerDataURL = await new Promise((resolve, reject) => {
-        const trailerReader = new FileReader();
-        trailerReader.readAsDataURL(editedTrailer);
-        console.log(trailerReader);
-        trailerReader.onload = () => resolve(trailerReader.result);
-        trailerReader.onerror = reject;
-      });
-      const trailerData = await trailerDataURL
-      setTrailer(trailerData)
-      
-    
-    }
-      if(editedMovie !== null){
-      const movieDataURL = new Promise((resolve, reject) => {
-        const movieReader = new FileReader();
-        movieReader.readAsDataURL(editedMovie);
-        movieReader.onload = () => resolve(movieReader.result);
-        movieReader.onerror = reject;
-      });
-      const movieInfo = await movieDataURL
-      setMovie(movieInfo)
+      let posterData, trailerData, movieURL;
 
+    if (editedPoster !== null) {
+      posterData = await readFileAsync(editedPoster);
     }
-      
-      
+    if (editedTrailer !== null) {
+      trailerData = await readFileAsync(editedTrailer);
+    }
+    if (editedMovie !== null) {
+      movieURL = await readFileAsync(editedMovie);
+    }
+
     
      
-      if(res.isConfirmed){
+      if(res.isConfirmed ){
           switch(field){
             case 'name': 
               await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {name: editedName})
@@ -171,7 +162,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
               
             break
             case 'poster' :
-              await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {posterFile: poster})
+              await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {posterFile: posterData})
               
             break 
             case 'genre' :
@@ -182,10 +173,10 @@ const Modal = ({ isOpen, onClose, movieData }) => {
               await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {countries: selectedCountries})
               break
             case 'trailer':
-              await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {trailerFile: trailer})
+              await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {trailerFile: trailerData})
               break
             case 'movie':
-              await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {movieFile: movie})
+              await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {movieFile: movieURL})
               break
 
 
@@ -198,6 +189,8 @@ const Modal = ({ isOpen, onClose, movieData }) => {
 
 
           }}
+          setIsLoading(false)
+ 
           toggleEditMode(field);
     } catch (error) {
       console.error('Axios request error:', error);
@@ -229,7 +222,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                               <img src={window.URL.createObjectURL(editedPoster)} alt={editedPoster.name + ' poster'} className={style['poster-image']} />
                               </div>
                             )}
-                            <button onClick={() => handleSave('poster')}>Guardar</button>
+                            <button onClick={() => handleSave('poster')} disabled={isLoading}>{isLoading ? 'Enviando...' : 'Enviar'}</button>
                             <button onClick={() => toggleEditMode('poster')}>Cancelar</button>
                         </>
                     ) : (
@@ -260,7 +253,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                         <span>{movieData.name}</span>
                     )}
                   </span>
-                  <p><span className={style['italic-dark']}>Dirigida por: 
+                  <p><span className={style['italic-dark']}>{'Dirigida por: '}  
                   {movieData.edit ? (
                         editMode.director 
                             ? <>
@@ -379,8 +372,10 @@ const Modal = ({ isOpen, onClose, movieData }) => {
             </div>
             
             <div className={style['media-container']}>
-              
-            {movieData.edit ? (
+            <button onClick={toggleMediaType}>
+            {mediaType === 'trailer' ? 'Ver Película' : 'Ver Trailer'}
+            </button>
+            {mediaType === 'trailer'  ? (
                     editMode.trailer ? (
                       
                         <><label htmlFor="trailerFile" className={style["italic-dark"]}>Seleccionar Trailer:</label>
@@ -396,7 +391,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                               <video src={editedTrailer ? window.URL.createObjectURL(editedTrailer) : movieData.trailer} controls alt={editedTrailer + ' trailer'} className={style["edit-video-image"]} />
                               </div>
                             
-                            <button onClick={() => handleSave('trailer')}>Guardar</button>
+                            <button onClick={() => handleSave('trailer')}disabled={isLoading}>{isLoading ? 'Enviando...' : 'Enviar'}</button>
                             <button onClick={() => toggleEditMode('trailer')}>Cancelar</button>
                         </>
                     ) : (
@@ -407,12 +402,8 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                             <button onClick={() => toggleEditMode('trailer')}>Editar</button>
                         </>
                     )
-                ) : (
-                  <video src={movieData.trailer} className={style["video-image"]}/>
-                )}
-                </div>
-                <div className={style['media-container']}>
-                {movieData.edit ? (
+                ) : 
+                  (
                     editMode.movie ? (
                       
                         <><label htmlFor="movieFile" className={style["italic-dark"]}>Seleccionar Pelicula:</label>
@@ -428,7 +419,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                               <video src={editedMovie ? window.URL.createObjectURL(editedMovie) : movieData.movie} controls alt={editedMovie + ' movie'} className={style["edit-video-image"]} />
                               </div>
                             
-                            <button onClick={() => handleSave('movie')}>Guardar</button>
+                            <button onClick={() => handleSave('movie')}disabled={isLoading}>{isLoading ? 'Enviando...' : 'Enviar'}</button>
                             <button onClick={() => toggleEditMode('movie')}>Cancelar</button>
                         </>
                     ) : (
@@ -437,9 +428,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                             <button onClick={() => toggleEditMode('movie')}>Editar</button>
                         </>
                     )
-                ) : (
-                  null
-                )}
+                ) }
                 </div> 
                
             

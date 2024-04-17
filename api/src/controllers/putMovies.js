@@ -11,7 +11,6 @@ cloudinary.config({
 
 module.exports = async (id, body) => {  // Solo necesitamos el ID y el cuerpo
     try {
-        console.log(body);
         const data = {};
         const movie = await Movie.findOne({ where: { id } });
         
@@ -21,14 +20,7 @@ module.exports = async (id, body) => {  // Solo necesitamos el ID y el cuerpo
         }
 
         
-        const uploadFileToCloudinary = async (file, folder) => {
-            try {
-              const uploadResponse = await cloudinary.uploader.upload(file.path, { folder });
-              return uploadResponse.secure_url;
-            } catch (error) {
-              throw new Error(`Error uploading file to Cloudinary: ${error.message}`);
-            }
-          };
+       
         for (let key in body) {
             if (key !== 'posterFile' && key !== 'trailerFile' && key !== 'movieFile', key !== 'genres', key !== 'countries') {
         
