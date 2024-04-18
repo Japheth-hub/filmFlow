@@ -46,7 +46,8 @@ module.exports = async (id, body) => {  // Solo necesitamos el ID y el cuerpo
                 .end(posterBuffer);
         })
 
-        const poster = cloudinaryPosterResponse.url
+        // const poster = cloudinaryPosterResponse.url
+        const poster = cloudinaryPosterResponse.secure_url;
        
         movie.poster = poster
         
