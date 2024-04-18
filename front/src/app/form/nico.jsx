@@ -4,7 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import style from './form.module.css'
-import Modal from '@/components/modal/Modal'
+import Modal from '@/components/modal/ModalEdit'
 import { validateMovieForm, validateSelectForm } from './validateMovieForm '
 import Swal from 'sweetalert2'
 

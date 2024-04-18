@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
         }
 
         const data = await putMovies(id, body)
-
+        console.log(data);
         if(data.message){
             res.status(404).json(data)
             return 

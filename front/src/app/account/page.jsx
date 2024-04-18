@@ -7,6 +7,7 @@ import Button from "@/components/button/Button";
 import { useState } from "react";
 import axios from 'axios'
 import Modal from "./modal"
+import ModalEdit from '@/components/modal/ModalEdit'
 import Loading from '@/components/loading/loading'
 
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL;
@@ -18,6 +19,8 @@ const Account = () =>  {
   const [producerInfo, setProducerInfo] = useState({})
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userLocalStorage,setUserLocalStorage] = useState(null);
+  const [previewEditOpen, setPreviewEditOpen] = useState(false); 
+  const [previewMovieData, setPreviewMovieData] = useState(null);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -84,6 +87,26 @@ const Account = () =>  {
       </div>
     );
   }
+  const closePreviewModal = () => {
+    setPreviewEditOpen(false);
+  };
+  const openPreviewModal = (movie) => {
+    setPreviewMovieData({
+      id: movie.id,
+      poster: movie.poster,
+      name: movie.name,
+      genres: movie.genres.map(genre => genre.name),
+      countries : movie.countries.map(country => country.name),
+      director : movie.director,
+      description : movie.description,
+      movie: movie.movie,
+      trailer: movie.trailer,
+      edit: true
+
+  })
+  setPreviewEditOpen(true)
+
+  }
 
   return (
     <div className={style["contenedor"]}>
@@ -124,14 +147,21 @@ const Account = () =>  {
         ? <div className={style["movies"]} >
           <h3>Tus Peliculas</h3>
           <div className={style["lista"]}>
+  
             {producerMovies.length > 0 ? producerMovies.map((movie) => (
-              <Link key={movie.id} href={`/detail/${movie.id}`}>
                 <div className={style["movie"]}>
+              <Link key={movie.id} href={`/detail/${movie.id}`}>
                   <img src={movie.poster} alt={movie.name} />
                   <p>{movie.name}</p>
-                </div>
               </Link>
-            )) : <h3 className={style['sinCompras']}>Aun no tienes Peliculas para ver</h3>
+                  <Button emoji={'✏️'} label={'Editar'} color={'green'} callback={() => openPreviewModal(movie)}></Button>
+                  <ModalEdit isOpen={previewEditOpen} onClose={closePreviewModal} movieData={previewMovieData}  />
+                </div>
+            ))
+            
+            
+            
+            : <h3 className={style['sinCompras']}>Aun no tienes Peliculas para ver</h3>
             
           }
           </div>
