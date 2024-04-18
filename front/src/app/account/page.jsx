@@ -132,7 +132,7 @@ const Account = () =>  {
           <h3>Tus Peliculas Compradas</h3>
           <div className={style["lista"]}>
             {movies.length > 0 ? movies.map((movie) => (
-              <Link key={movie.id} href={`/detail/+`}>
+              <Link key={movie.id} href={`/detail/${movie.id}`}>
                 <div className={style["movie"]}>
                   <img src={movie.poster} alt={movie.name} />
                   <p>{movie.name}</p>

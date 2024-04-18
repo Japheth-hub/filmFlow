@@ -319,7 +319,7 @@ const renderStarSelector = () => {
               </div>
               <p>{review.comment}</p>
             </div>
-                {user && user.email === review.user.email  && 
+                {user && user.email === review.user?.email  && 
                     <div>
                       <Button emoji={'✏️'} color={'green'} callback={()=>{showModal('block', review.id)}}></Button>
                       <Button emoji={'🗑️'} color={'red'} callback={()=>{deleteReview(review.id)}}></Button>

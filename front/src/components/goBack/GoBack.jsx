@@ -6,12 +6,13 @@ import Image from 'next/image'
 const GoBack = () => {
     const router = useRouter()
     return(
-        <div onClick={() => router.back()}>
+        <div style={{cursor: 'pointer'}} onClick={() => router.back()}>
             <Image
                 src={goBackImg}
                 width={25}
                 height={25}
                 alt="volver"
+                style={{backgroundColor: 'white', borderRadius: '5px'}}
             />
         </div>
     )
