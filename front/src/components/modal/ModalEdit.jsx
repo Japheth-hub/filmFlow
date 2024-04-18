@@ -2,6 +2,7 @@ import style from './Modal.module.scss';
 import axios from 'axios';
 import { useState, useEffect, use } from 'react';
 import Swal from 'sweetalert2';
+import { validateModalEdit, validateSelectForm } from './validateModalEdit ';
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL
 
 
@@ -23,6 +24,10 @@ const Modal = ({ isOpen, onClose, movieData }) => {
     const [editedMovie, setEditedMovie] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [mediaType, setMediaType] = useState('trailer');
+    const [errors, setErrors] = useState({});
+    const [isNameSaveDisabled, setIsNameSaveDisabled] = useState(false);
+    const [isDirectorSaveDisabled, setIsDirectorSaveDisabled] = useState(false);
+
 
 
 
@@ -49,6 +54,19 @@ const Modal = ({ isOpen, onClose, movieData }) => {
             console.error('Error fetching country options:', error);
           });
       }, []);
+
+      // useEffect(() => {
+      //   const validation = validateModalEdit({
+      //     editedName,
+      //     editedDirector,
+      //     editedPoster,
+      //     editedTrailer,
+      //     editedMovie,
+
+      //   })
+      //   setErrors(validation.errors)
+      // }, [editedName, editedDirector, editedPoster, editedTrailer, editedMovie, selectedGenres, selectedCountries])
+
       const toggleGenre = (genre) => {
         if (selectedGenres.includes(genre)) {
           setSelectedGenres(selectedGenres.filter(selectedGenre => selectedGenre !== genre));
@@ -57,55 +75,61 @@ const Modal = ({ isOpen, onClose, movieData }) => {
         }
       };
 
-      const toggleCountry = (country) => {
-        if (selectedCountries.includes(country)) {
-          setSelectedCountries(selectedCountries.filter(selectedCountry => selectedCountry !== country));
+    const toggleCountry = (country) => {
+      if (selectedCountries.includes(country)) {
+        setSelectedCountries(selectedCountries.filter(selectedCountry => selectedCountry !== country));
         } else {
           setSelectedCountries([...selectedCountries, country]);
         }
-      };
+    };
       
-      const handlePosterChange = (e) => {
-         setEditedPoster(e.target.files[0]);
+    const handlePosterChange = (e) => {
+        setEditedPoster(e.target.files[0]);
          
-      };
-      const handleTrailerChange =  (e) => {
+    };
+    const handleTrailerChange =  (e) => {
         
-         setEditedTrailer(e.target.files[0]);
+        setEditedTrailer(e.target.files[0]);
        
       };
-      const handleMovieChange =  (e) => {
-         setEditedMovie(e.target.files[0]);
-      };
+    const handleMovieChange =  (e) => {
+        setEditedMovie(e.target.files[0]);
+    };
       
-      
-       
-      
-    
 
-
-    
     const toggleEditMode = (field) => {
       
         setEditMode(prevState => ({ ...prevState, [field]: !prevState[field] }));
         
     };
     
-   
-
-
-
-    
+  
     const handleChange = (e, field) => {
       
       if (field === 'name') {
+        
         setEditedName(e.target.value);
+        const nameErrors = validateModalEdit({editedName : e.target.value})
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          editedName: nameErrors.errors.editedName || ''
+        }));
+        console.log(nameErrors.errors.editedName);
+        nameErrors.errors.editedName ? setIsNameSaveDisabled(true) : setIsNameSaveDisabled(false)
+
     } else if (field === 'director') {
         setEditedDirector(e.target.value);
+        const directorErrors = validateModalEdit({editedDirector: e.target.value})
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          editedDirector: directorErrors.errors.editedDirector || ''
+        }));
+        directorErrors.errors.editedDirector ? setIsDirectorSaveDisabled(true) : setIsDirectorSaveDisabled(false)
     } 
 
     };
 
+    console.log('soy errors',errors?.editedName);
 
     const toggleMediaType = () => {
       setMediaType(prevMediaType => prevMediaType === 'trailer' ? 'movie' : 'trailer');
@@ -124,8 +148,98 @@ const Modal = ({ isOpen, onClose, movieData }) => {
     
     
     const handleSave = async (field) => {
-     setIsLoading(true)
- 
+      setIsLoading(true)
+      console.log(field);
+
+  
+    try {
+          
+    let posterData, trailerData, movieURL;
+          
+    if (editedPoster !== null) {
+      posterData = await readFileAsync(editedPoster);
+     }
+    if (editedTrailer !== null) {
+
+      trailerData = await readFileAsync(editedTrailer);
+    }
+    if (editedMovie !== null) {
+      movieURL = await readFileAsync(editedMovie);
+    }
+    switch(field){
+      case 'poster':
+        const posterValidation = validateModalEdit({ poster: posterData });
+        console.log('a', posterValidation.errors.poster);
+
+        if(posterValidation.errors.poster){
+        setIsLoading(false)
+
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Advertencia!',
+          text: posterValidation.errors.poster,
+        });
+        return
+      }
+        break
+      case 'trailer':
+        console.log(trailerData);
+        const trailerValidation = validateModalEdit({ trailer: trailerData });
+        console.log('a', trailerValidation.errors.trailer);
+  
+        if(trailerValidation.errors.trailer){
+        setIsLoading(false)
+  
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Advertencia!',
+          text: trailerValidation.errors.trailer,
+        });
+        return
+      }
+        break
+      case 'movie':
+        const movieValidation = validateModalEdit({ movie: movieURL });  
+        if(movieValidation.errors.movie){
+        setIsLoading(false)
+  
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Advertencia!',
+          text: movieValidation.errors.movie,
+        });
+        return
+      }
+        break
+      case 'genre':
+        const genreValidation = validateSelectForm({genre : selectedGenres})
+        if(genreValidation.errors.genre){
+          setIsLoading(false)
+          Swal.fire({
+            icon: 'warning',
+            title: '¡Advertencia!',
+            text: genreValidation.errors.genre,
+          });
+          return
+        } 
+          break
+      case 'countries':
+        const countriesValidation = validateSelectForm({countries: selectedCountries})
+        if(countriesValidation.errors.countries){
+          setIsLoading(false)
+          Swal.fire({
+            icon: 'warning',
+            title: '¡Advertencia!',
+            text: countriesValidation.errors.countries,                  
+          })
+          return
+        } 
+          break
+
+      }
+      
+
+    
       const res = await Swal.fire({
         icon: "warning",
         title: "¿Estás seguro?",
@@ -134,26 +248,11 @@ const Modal = ({ isOpen, onClose, movieData }) => {
         confirmButtonText: "Sí",
         cancelButtonText: "Cancelar",
     });
-   
-    try {
-      
-      let posterData, trailerData, movieURL;
-
-    if (editedPoster !== null) {
-      posterData = await readFileAsync(editedPoster);
-    }
-    if (editedTrailer !== null) {
-      trailerData = await readFileAsync(editedTrailer);
-    }
-    if (editedMovie !== null) {
-      movieURL = await readFileAsync(editedMovie);
-    }
-
     
-     
-      if(res.isConfirmed ){
-          switch(field){
-            case 'name': 
+    if(res.isConfirmed ){
+   
+      switch(field){
+        case 'name': 
               await axios.put(`${NEXT_PUBLIC_URL}movies/${movieData.id}`, {name: editedName})
               
             break
@@ -210,7 +309,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                 {movieData.edit ? (
                     editMode.poster ? (
                       
-                        <><label htmlFor="posterFile" className={style["form-label"]}>Seleccionar Póster:</label>
+                        <><label htmlFor="posterFile" className={style["italic-dark"]}>Seleccionar Póster:</label>
                             <input
                                 type="file"
                                 id="posterFile"
@@ -222,61 +321,70 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                               <img src={window.URL.createObjectURL(editedPoster)} alt={editedPoster.name + ' poster'} className={style['poster-image']} />
                               </div>
                             )}
-                            <button onClick={() => handleSave('poster')} disabled={isLoading}>{isLoading ? 'Enviando...' : 'Enviar'}</button>
+                            <button onClick={() => handleSave('poster')} disabled={isLoading}>{isLoading ? 'Enviando...' : 'Guardar'}</button>
                             <button onClick={() => toggleEditMode('poster')}>Cancelar</button>
                         </>
                     ) : (
                         <>  
                             <img src={editedPoster ? window.URL.createObjectURL(editedPoster) : movieData.poster} alt={editedPoster + ' poster'} className={style['poster-image']} />
-                            <button onClick={() => toggleEditMode('poster')}>Editar</button>
+                            <button className={style.imageBtn} onClick={() => toggleEditMode('poster')}>Editar</button>
                         </>
                     )
                 ) : (
                     <img src={movieData.poster} alt={movieData.poster + ' poster'} className={style['poster-image']} />
                 )}
                 </div> 
+                </div>
                 <div className={style['description-container-info']}>
                   <span className={style['italic-dark']}>
                   {movieData.edit ? (
                         editMode.name 
-                            ? <>
+                            ? <div className={style.displayInput}>
                                 <input type="text" value={editedName} onChange={(e) => handleChange(e, 'name')} autoFocus />
-                                <button onClick={() => handleSave('name')}>Guardar</button>
+                                <div className={style.btn}>
+                                <button onClick={() => handleSave('name')} disabled={isNameSaveDisabled || isLoading}>{isLoading ? 'Enviando...' : 'Guardar'}</button>
                                 <button onClick={() => toggleEditMode('name')}>Cancelar</button>
 
-                              </>
-                            : <>
+                                </div>
+                                {errors?.editedName ? <p className={style["error-message"]}>{errors.editedName}</p> : null}
+                              </div>
+                            : <div className={style.displayInput}>
                                 <span>{editedName}</span>
                                 <button onClick={() => toggleEditMode('name')}>Editar</button>
-                              </>
+                                
+                              </div>
                     ) : (
                         <span>{movieData.name}</span>
                     )}
                   </span>
-                  <p><span className={style['italic-dark']}>{'Dirigida por: '}  
+                  
+                  <span className={style['italic-dark']}>{'Dirigida por: '}  
                   {movieData.edit ? (
                         editMode.director 
-                            ? <>
+                            ? <div className={style.displayInput}>
                                 <input type="text" value={editedDirector} onChange={(e) => handleChange(e, 'director')} autoFocus />
-                                <button onClick={() => handleSave('director')}>Guardar</button>
+                                <div className={style.btn}>
+                                <button onClick={() => handleSave('director')} disabled={isDirectorSaveDisabled || isLoading}>{isLoading ? 'Enviando...' : 'Guardar'}</button>
                                 <button onClick={() => toggleEditMode('director')}>Cancelar</button>
+                                </div>
+                                {errors?.editedDirector && <p className={style["error-message"]}>{errors.editedDirector}</p>}
 
-                              </>
-                            : <>
+                              </div>
+                            : <div className={style.displayInput}>
                                 <span>{editedDirector}</span>
                                 <button onClick={() => toggleEditMode('director')}>Editar</button>
-                              </>
+                              </div>
                     ) : (
                         <span>{movieData.director}</span>
                     )}
-                  </span></p>
+                  </span>
                   <div className={style['italic-dark']}>
                     <p>País:</p>
-                    <ul className={style['italic-dark']}>
+                    
                     {movieData.edit ? (
                         editMode.countries
-                            ? <>
-                                <select id="countries" value={selectedCountries} onChange={(e) => toggleCountry(e.target.value)} autoFocus>
+                            ? <div className={style.displayInput}>
+                                <select  id="countries" value={selectedCountries} onChange={(e) => toggleCountry(e.target.value)} autoFocus>
                                 <option value="">Selecciona pais</option>
                                 {countryOptions.map(country => (
                                   <option key={country.name} value={country.name}>{country.name.replace(/\b\w/g, c => c.toUpperCase())}</option>
@@ -284,57 +392,42 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                                 </select>
                                 <ul className={style["genre-list"]}>
                                 {selectedCountries.map(selectedCountry => (
+                                  
                                   <li key={selectedCountry}>
-                                    {selectedCountry.replace(/\b\w/g, c => c.toUpperCase())}{' '}
+                                    <div className={style.tags}>
+                                    <span>{selectedCountry.replace(/\b\w/g, c => c.toUpperCase())}{' '}</span>
                                     <button type="button" onClick={() => toggleCountry(selectedCountry)}>
                                       x
                                     </button>
+                                    </div>
                                   </li>
                                 ))}
                                 </ul>
+                                <div className={style.btn} >
                                 <button onClick={() => handleSave('countries')}>Guardar</button>
                                 <button onClick={() => toggleEditMode('countries')}>Cancelar</button>
-
-                              </>
-                            : <>
-                                 <span>{movieData.countries.map((country, index) => (
-                                    <li className={style['italic-dark']} key={index}>{country}</li>
+                                </div>
+                              </div>
+                            : <div className={style.displayInput}>
+                                 <span>{selectedCountries.map((country, index) => (
+                                    <li className={style['italic-dark']} key={index}>{country.replace(/\b\w/g, c => c.toUpperCase())} </li>
                                 ))}</span>
                                 <button onClick={() => toggleEditMode('countries')}>Editar</button>
-                              </>
+                              </div>
                     ) : (
                       <span>{movieData.countries.map((country, index) => (
                         <li className={style['italic-dark']} key={index}>{country}</li>
                     ))}</span>
                     )}
                     
-                    </ul>
+                    
                   </div>
-                  {movieData.edit ? null :
-                  <p><span className={style['italic-dark']}>Descripción: 
-                  </span></p>
-
-                  }
-                  {movieData.edit ? null
-                        // editMode.description 
-                        //     ? <>
-                        //         <input type="text-area" value={movieData.description} onChange={(e) => handleChange(e, 'description')} autoFocus />
-                        //         <button onClick={() => handleSave('description')}>Guardar</button>
-                        //         <button onClick={() => toggleEditMode('description')}>Cancelar</button>
-
-                        //       </>
-                        //     : <>
-                        //         <span>{movieData.description}</span>
-                        //         <button onClick={() => toggleEditMode('description')}>Editar</button>
-                        //       </>
-                     : 
-                        <span>{movieData.description}</span>
-                    }
+                 
                   <div className={style['italic-dark']}>
                       <p>Géneros:</p>
                   {movieData.edit ? (
                         editMode.genre
-                            ? <>
+                            ? <div className={style.displayInput}>
                                 <select id="genres" value={selectedGenres} onChange={(e) => toggleGenre(e.target.value)} autoFocus>
                                 <option value="">Selecciona géneros</option>
                                   {genreOptions.map(genre => (
@@ -350,16 +443,18 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                                     </li>
                                   ))}
                                 </ul>
+                                <div className={style.btn}>
                                 <button onClick={() => handleSave('genre')}>Guardar</button>
                                 <button onClick={() => toggleEditMode('genre')}>Cancelar</button>
+                                </div>
 
-                              </>
-                            : <>
+                              </div>
+                            : <div className={style.displayInput}>
                                  <span>{selectedGenres.map((genre, index) => (
                                     <li className={style['italic-dark']} key={index}>{genre.replace(/\b\w/g, c => c.toUpperCase())}</li>
                                 ))}</span>
                                 <button onClick={() => toggleEditMode('genre')}>Editar</button>
-                              </>
+                              </div>
                     ) : (
                       <span>{movieData.genres.map((genre, index) => (
                         <li className={style['italic-dark']} key={index}>{genre}</li>
@@ -368,7 +463,7 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                     
                   </div>
                 </div>
-              </div>
+              
             </div>
             
             <div className={style['media-container']}>
@@ -417,10 +512,10 @@ const Modal = ({ isOpen, onClose, movieData }) => {
                             
                               <div className={style["image-preview-container"]}>
                               <video src={editedMovie ? window.URL.createObjectURL(editedMovie) : movieData.movie} controls alt={editedMovie + ' movie'} className={style["edit-video-image"]} />
+                              </div>
                             
                             <button onClick={() => handleSave('movie')}disabled={isLoading}>{isLoading ? 'Enviando...' : 'Enviar'}</button>
                             <button onClick={() => toggleEditMode('movie')}>Cancelar</button>
-                              </div>
                         </>
                     ) : (
                         <>  <p><label className={style['italic-dark']} >Pelicula:</label></p>
